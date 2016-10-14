@@ -55,12 +55,14 @@
 	}
 	
 	#home_tab, #anime_tab, #characters_tab, #community_tab {
+		font-family: cursive;
 		font-size: 18px;
 		font-weight: bold;
-		color: white;
+		color:white;
 	}
 	
 	li {
+		font-family: cursive;
 		font-size: 16px;
 	}
 	
@@ -69,24 +71,25 @@
 	}
 	
 	.dropdown-menu li > a{
-		color:white; 
+		color:white;
 	}
 	
 	.nav .dropdown a:hover {
-		color:#3C50D2;
+		color:#4682B4;
 	}
 	
 	#home_tab:hover , #anime_tab:hover , #characters_tab:hover, #community_tab:hover{
-		color:#3C50D2;
+		color:#4682B4;
 	}
 	
 	#signup_button, #login_button {
-		color:white;
+		font-family: cursive;
 		font-weight: bold;
+		color:white;
 	}
 	
 	#signup_button:hover, #login_button:hover {
-		color:#3C50D2;
+		color:#4682B4;
 	}
 	
 }
