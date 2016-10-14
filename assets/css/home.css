@@ -1,0 +1,92 @@
+
+	html {
+		position: relative;
+    	min-height: 100%;
+	}
+
+	 body {
+		background-color: #fff;
+		font: 13px/20px normal Helvetica, Arial, sans-serif;
+		color: #4F5155;
+		margin: 0 0 100px; /* bottom = footer height */
+   		padding: 25px;
+	}
+
+	h1 {
+		color: #444;
+		text-align:center;
+		background-color: transparent;
+		border-bottom: 1px solid #D0D0D0;
+		font-size: 25px;
+		font-weight: normal;
+		margin: 0 0 14px 0;
+		padding: 14px 15px 10px 15px;
+	}
+
+	.container {
+		width:100%;
+	}
+
+	#footer {
+	    background-color: #3C50D2;
+	    position: absolute;
+	    left: 0;
+	    bottom: 0;
+	    height:50px;
+	    width: 100%;
+	    overflow:hidden;
+	}
+	
+	#footerContainer {
+		text-align: center;
+	}
+	#footerContainer a{
+		padding-left: 5px;
+	}
+
+	@media (min-width: 979px) {
+  		ul.nav li.dropdown:hover > ul.dropdown-menu {
+    	display: block;
+  	}
+	
+	ul.nav a:hover {
+		color: black;
+		background-color: #222222;
+	}
+	
+	#home_tab, #anime_tab, #characters_tab, #community_tab {
+		font-size: 18px;
+		font-weight: bold;
+		color: white;
+	}
+	
+	li {
+		font-size: 16px;
+	}
+	
+	.dropdown:hover, .dropdown-menu{
+		background-color: #222222;
+	}
+	
+	.dropdown-menu li > a{
+		color:white; 
+	}
+	
+	.nav .dropdown a:hover {
+		color:#3C50D2;
+	}
+	
+	#home_tab:hover , #anime_tab:hover , #characters_tab:hover, #community_tab:hover{
+		color:#3C50D2;
+	}
+	
+	#signup_button, #login_button {
+		color:white;
+		font-weight: bold;
+	}
+	
+	#signup_button:hover, #login_button:hover {
+		color:#3C50D2;
+	}
+	
+}
