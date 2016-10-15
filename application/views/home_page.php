@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<div class="container">
+<div id="container">
 	<?php include 'navigation.php';?>
 	
 	<div id="footer">
