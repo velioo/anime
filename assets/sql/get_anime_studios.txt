@@ -1,0 +1,3 @@
+select a.name "Anime", s.name "Studio"
+from animes a, rel_anime_studios b, studios s
+where b.anime_id = a.id and b.studio_id = s.id 

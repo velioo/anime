@@ -10,10 +10,321 @@ class Home extends CI_Controller {
 	public function goHome() {
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'home.css';
-		$this->load->helper('url');
+		$data['javascript'] = "home.js";
 		$this->load->view('home_page', $data);
 	}
 	
+	public function insert_animes() {
+		$myfile = fopen("./assets/txt/Animes3.txt", "r") or die("Unable to open file!");
+		$counter = 1;
+		$image_counter = 301;
+		$name;
+		$studios;
+		$episodes;
+		$source;
+		$genres;
+		$info;
+		$type;	
+		$air_date;
+		$many_tags = FALSE;
+		$skip_time_date = FALSE;
+		while ($line = fgets($myfile)) {
+			switch($counter) {
+				case 1:
+					$name = trim($line);
+					break;
+				case 2:
+					$studios = trim($line);
+					break;
+				case 3:
+					$episodes = substr($line, 0, strpos($line, ' '));
+					break;
+				case 4:
+					$source = trim($line);
+					break;
+				case 5:
+					break;
+				case 6:
+					if(strpos($line, rtrim($name)) !== FALSE)  {
+						$temp = explode(" ", $name);
+						$genres = trim(substr($line, 0, strpos($line, $temp[0])));
+						$info = substr($line, ((strpos($line, trim(end($temp)))) + (strlen(trim(end($temp))))), strlen($line));
+						$info = trim($info);
+						if (strpos($line, "[Written") !== FALSE) {
+							$temp = explode("[Written", $info);
+							if(isset($temp[1])) {
+								if(((strpos($temp[1], "-") !== FALSE) and ((strpos($temp[1], ",") !== FALSE)))) {
+									$temp2 = explode("]", $temp[1]);
+									$type_date = trim($temp2[1]);
+									$type = substr($type_date, 0, strpos($type_date, ' '));
+									$temp2 = explode(" ", $type_date);
+									$air_date = $temp2[2] . ' ' . $temp2[3] . ' ' . $temp2[4];
+									$skip_time_date = TRUE;
+								}
+								$info = trim($temp[0]);		
+							} 
+						} else if(strpos($line, "(Source:") !== FALSE) {
+							$temp = explode("(Source:", $info);
+							if(isset($temp[1])) {
+								if(((strpos($temp[1], "-") !== FALSE) and ((strpos($temp[1], ",") !== FALSE)))) {
+									$temp2 = explode(")", $temp[1]);
+									$type_date = trim($temp2[1]);
+									$type = substr($type_date, 0, strpos($type_date, ' '));
+									$temp2 = explode(" ", $type_date);
+									$air_date = $temp2[2] . ' ' . $temp2[3] . ' ' . $temp2[4];
+									$skip_time_date = TRUE;
+								}
+								$info = trim($temp[0]);
+							} 
+						} else if(strpos($info, " TV - ") !== FALSE){
+							$type = "TV";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "TV") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("TV -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " Movie -") !== FALSE) {
+							$type = "Movie";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "Movie") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("Movie -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " OVA -") !== FALSE) {
+							$type = "Ova";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "Ova") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("OVA -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " Special -") !== FALSE) {
+							$type = "Special";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "Special") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("Special -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						}
+						
+					} else {
+						$genres = trim($line);
+						$many_tags = TRUE;
+					}
+					break;
+				case 7:
+					if($many_tags == TRUE) {
+						$temp = explode(" ", $name);
+						$info = substr($line, ((strpos($line, trim(end($temp)))) + (strlen(trim(end($temp))))), strlen($line));
+						$info = trim($info);
+						if (strpos($line, "[Written") !== FALSE) {
+							$temp = explode("[Written", $info);
+							if(isset($temp[1])) {
+								if((strpos($temp[1], "-") !== FALSE) and ((strpos($temp[1], ",") !== FALSE))) {
+									$temp2 = explode("]", $temp[1]);
+									$type_date = trim($temp2[1]);
+									$type = substr($type_date, 0, strpos($type_date, ' '));
+									$temp2 = explode(" ", $type_date);
+									$air_date = $temp2[2] . ' ' . $temp2[3] . ' ' . $temp2[4];
+									$skip_time_date = TRUE;
+								}
+								$info = trim($temp[0]);
+							}
+						} else if(strpos($info, "(Source:") !== FALSE ) {
+							$temp = explode("(Source:", $info);
+							if(isset($temp[1])) {
+								if((strpos($temp[1], "-") !== FALSE and ((strpos($temp[1], ",") !== FALSE)))) {
+									$temp2 = explode(")", $temp[1]);
+									$type_date = trim($temp2[1]);
+									$type = substr($type_date, 0, strpos($type_date, ' '));
+									$temp2 = explode(" ", $type_date);
+									$air_date = $temp2[2] . ' ' . $temp2[3] . ' ' . $temp2[4];
+									$skip_time_date = TRUE;
+								}
+								$info = trim($temp[0]);
+							}
+						} else if(strpos($info, " TV - ") !== FALSE){
+							$type = "TV";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "TV") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("TV -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " Movie -") !== FALSE) {
+							$type = "Movie";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "Movie") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("Movie -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " OVA -") !== FALSE) {
+							$type = "Ova";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "OVA") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("OVA -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						} else if(strpos($info, " Special -") !== FALSE) {
+							$type = "Special";
+							$temp = explode(" ", $info);
+							$length = count($temp);
+							for($i = 0; $i < $length; $i++) {
+								if($temp[$i] == "Special") {
+									$air_date = $temp[$i + 2] . ' ' . $temp[$i + 3] . ' ' . $temp[$i + 4];
+								}
+							}
+							$temp = explode("Special -", $info);
+							$info = trim($temp[0]);
+							$skip_time_date = TRUE;
+						}
+						
+					} else {
+						if($skip_time_date == TRUE) {
+							if((strpos($line, 'Watch') === FALSE)) {
+								$name = $line;
+								$counter = 1;
+								$image_counter++;
+							} else {
+								$counter = 10;
+							}
+						} else {
+							$info = $info . "<br/>" . $line;
+						}	
+					}
+					break;	
+				case 8:
+					if($many_tags == TRUE) {
+						if($skip_time_date == TRUE) {
+							if((strpos($line, 'Watch') === FALSE)) {
+								$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+								$many_tags = FALSE;
+								$skip_time_date = FALSE;
+								$name = trim($line);
+								$counter = 1;
+								$image_counter++;
+							} else {
+								$counter = 10;
+							}
+						} else {
+							$info = $info . "<br/>" . $line;
+						}
+					} else {
+						$info = trim($info . "<br/>" . $line);
+					}
+					break;
+				case 9:
+					if($many_tags == TRUE) {
+						$info = trim($info . "<br/>" . $line);
+					} else {
+						$type = substr($line, 0, strpos($line, ' '));
+						$arr = explode(" ", $line);
+						$air_date = $arr[2] . ' ' . $arr[3] . ' ' . $arr[4];
+						$air_date = rtrim($air_date, ",");
+					}
+					break;
+				case 10:
+					if($many_tags == TRUE) {
+						$type = substr($line, 0, strpos($line, ' '));
+						$arr = explode(" ", $line);
+						$air_date = $arr[2] . ' ' . $arr[3] . ' ' . $arr[4];
+						$air_date = rtrim($air_date, ",");
+					}
+					
+					if((strpos($line, 'Watch') === FALSE) and ($many_tags == FALSE)) {
+						$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+						$name = trim($line);
+						$counter = 1;
+						$image_counter++;
+					}
+
+					break;	
+				case 11:
+					if((strpos($line, 'Watch') === FALSE) and ($many_tags == FALSE)) {
+						$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+						$name = $line;
+						$counter = 1;
+						$image_counter++;
+					} else if((strpos($line, 'Watch') === FALSE) and ($many_tags == TRUE)){
+						$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+						$name = trim($line);
+						$counter = 1;
+						$image_counter++;
+					} else {
+						$counter = 10;
+					}
+					$many_tags = FALSE;
+					break;
+			}
+			
+			if(($counter == 10) and ($many_tags == FALSE)) {
+				$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+				$counter = 0;
+				$image_counter++;
+				$skip_time_date = FALSE;
+			}
+			if(($counter == 10) and ($skip_time_date == TRUE)) {
+				$this->insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter);
+				$counter = 0;
+				$image_counter++;
+				$skip_time_date = FALSE;
+				$many_tags = FALSE;
+			}
+			$counter++;
+		}
+		fclose($myfile);
+	}
 	
+	public function insert_alldata($name, $episodes, $air_date, $info, $type, $source, $studios, $genres, $image_counter) {
+		$name = rtrim($name);
+		$cover_image = asset_url() . "cover_images/{$image_counter}.jpg";
+		$this->load->model('insert_model');
+		$anime_info = array('name' => addslashes($name),
+				'episodes' => addslashes($episodes),
+				'air_date' => addslashes($air_date),
+				'info' => addslashes($info),
+				'type' => addslashes($type),
+				'source' => addslashes($source),
+				'studios' => addslashes($studios),
+				'genres' => addslashes($genres),
+				'cover_image' => addslashes($cover_image)
+		);
+		var_dump($anime_info);
+		//$this->insert_model->insert_anime($anime_info);
+	}
 	
 }
+?>

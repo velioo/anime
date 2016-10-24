@@ -1,0 +1,4 @@
+select a.name "Anime"
+from animes a, rel_anime_studios b, studios s
+where b.anime_id = a.id and b.studio_id = s.id and s.name = 'Production I.G' and a.name in 
+(SELECT a.name from animes a, rel_anime_studios b, studios s where b.anime_id = a.id and b.studio_id = s.id and s.name = 'Wit Studio')

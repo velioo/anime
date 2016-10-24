@@ -1,0 +1,65 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+h1 {
+	font-size: 30px;
+	text-align: center;
+	color: #3C50D2;
+	padding: 14px 15px 10px 15px;
+	border-bottom: 1px solid #D0D0D0;
+}
+
+label {
+	font-size: 16px;
+	display: inline-block;
+	width:170px;
+	text-align:right;
+}
+
+.signuplogin_container {
+	padding-left:50px;
+}
+
+.signuplogin_container input {
+	border: 2px solid #dadada;
+	font-size: 16px;
+	height:40px;
+	width:250px;
+	margin-top:20px;
+	margin-left:10px;
+	border-radius: 3px;
+	display: inline-block;
+}
+
+.signuplogin_container input:hover {
+	outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+#table_first_row {
+	color:#cb3434;
+	text-decoration: none;
+}
+
+#table_first_row:hover {
+	color:#651a1a;
+}
+
+#submit {
+	color:white;
+	background-color: #222222;
+	font-size: 14px;
+	width:100px;
+	margin-left:180px;
+}
+
+#anchor {
+	margin-left:180px;
+}
+
+.error {
+	color:red;
+	display:inline;
+}
+
