@@ -5,10 +5,10 @@
       	<img alt="None" src="<?php echo asset_url()."imgs/V-Anime.png"?>" id="logo" width="150px" height="50px" style="margin-top: -12px;">
       </a>
     </div>
-    <br><br><br>
+    <br/>
        <!-- Hidden dropdown  for small screens -->
     <div class="dropdown" id="small_menu_dropdown_div">
-  	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive;">Menu
+  	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive; font-size:10px;">Menu
 		  <span class="caret"></span></button>
 		  <ul class="dropdown-menu multi-level" role="menu" id="dropdown_list" style="border-radius: 0px;">
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
@@ -34,7 +34,6 @@
 	</div>
 	<!-- -------------------------------- -->
     <ul class="nav navbar-nav">
-	      <li><a href="<?php echo base_url(); ?>">Home</a></li>
 	      <li class="dropdown">
 		      <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Anime</a>
 	      <ul class="dropdown-menu">
@@ -68,7 +67,7 @@
 				    <option value="lists" class="navigation_small_search_option">Lists</option>
 				</select>
 				<input type="text" name="search" id="search_box">
-				<input type="submit" name="submit" value="Search" id="search_submit">
+				<input type="submit" name="submit" value="Search">
 		</form>
 	</div>
 	

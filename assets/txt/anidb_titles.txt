@@ -1,0 +1,1 @@
+http://anidb.net/api/animetitles.xml.gz

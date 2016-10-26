@@ -1,0 +1,15 @@
+public function delete_files() {
+	$lines = file("./assets/txt/picture_urls.txt", FILE_IGNORE_NEW_LINES);
+	$dir = "./assets/anidb_pictures/*";
+	foreach(glob($dir) as $file)
+	{
+		if(!is_dir($file)) {
+			$basename = basename($file);
+			if (!in_array($basename, $lines)) {
+				unlink($file);
+			}
+			
+		}
+	}
+
+}

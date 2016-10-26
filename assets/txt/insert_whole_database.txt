@@ -1,0 +1,14 @@
+public function insert_anidb() {
+	set_time_limit(0);
+	$this->load->model('insert_model');
+	$myfile = fopen("./assets/txt/Anidb_insert.txt", "r") or die("Unable to open file!");
+	
+	while ($line = fgets($myfile)) {
+		if(strpos($line, 'INSERT') === FALSE) {
+			$id = substr($line, 1, (strpos($line, ',') - 1));
+			$line =  trim($line);
+			$line =  rtrim($line, ",");
+			$this->insert_model->insert_anime($id, $line);
+		}
+	}
+}

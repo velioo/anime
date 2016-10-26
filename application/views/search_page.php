@@ -20,7 +20,7 @@
 					<?php foreach ($animes_matched as $anime) { ?>
 			 		<?php if ($counter == 0) echo '<div class="row">';?>
 			 		<?php if (($counter % 3 == 0) and ($counter != 0)) echo '</div> <br/> <div class="row">';?>
-	 				 <div class="col-sm-4"><?php echo $anime['name'] . "<br/>";?><a href="#"><img src="<?php echo $anime['cover_image'];?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  style="width:160px; height:235px;"></a>
+	 				 <div class="col-sm-4"><?php echo $anime['name'] . "<br/>";?><a href="#"><img src="<?php echo asset_url(); $path = substr($anime['cover_image'], (strpos($anime['cover_image'], "assets/") + 7), strlen($anime['cover_image'])); echo $path;?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'" style="width:160px; height:235px;"></a>
 	 					<?php echo "<br/>"?> Episodes: <?php if($anime['episodes'] > 0) echo $anime['episodes']; else echo "?";?>
 	 				 </div>		
 	 				 <?php $counter++;?>

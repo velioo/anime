@@ -1,0 +1,13 @@
+public function write_anidb() {
+	$this->load->model('insert_model');
+	$this->insert_model->write_pictures_to_file();
+}
+
+function write_pictures_to_file() {
+	$query = $this->db->query("SELECT picture FROM anidb");
+	$myfile = fopen("./assets/txt/picture_urls.txt", "w") or die("Unable to open file!");
+	foreach ($query->result_array() as $url) {
+		fwrite($myfile, $url['picture'] . "\n");
+	}
+	fclose($myfile);
+}

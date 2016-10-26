@@ -8,7 +8,7 @@ class Login extends CI_Controller {
 	public function login_page() {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
-		$data['javascript'] = "";
+		$data['javascript'] = 'home.js';
 		$data['header'] = 'Please, Login';
 		$this->load->view('login_page', $data);
 	}
@@ -57,7 +57,7 @@ class Login extends CI_Controller {
 				$data['incorrect'] = 'Username or password is incorrect !';
 				$data['title'] = 'Login';
 				$data['css'] = 'login.css';
-				$data['javascript'] = '';
+				$data['javascript'] = 'home.js';
 				$data['header'] = 'Please, Login';
 				$this->load->view('login_page', $data);
 			}

@@ -1,0 +1,14 @@
+public function update_anidb() {
+	$this->load->model('insert_model');
+	$anidb_id;
+	$myfile = fopen("./assets/txt/Anidb_insert.txt", "r") or die("Unable to open file!");
+	while ($line = fgets($myfile)) {
+		if(strpos($line, 'INSERT') === FALSE) {
+			$temp = explode(",", $line);
+			$anidb_id = $temp[1];
+			$anidb_id = trim($anidb_id);			
+			$id = substr($line, 1, (strpos($line, ',') - 1));
+			$this->insert_model->update_picture($id, $anidb_id);
+		}
+	}
+}
