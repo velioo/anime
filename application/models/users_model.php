@@ -85,6 +85,17 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
+	function update_user_info($id, $bio, $age, $gender, $country) {
+		$bio = addslashes($bio);
+		$bio = htmlspecialchars($bio);
+		$age = intval($age);
+		$gender = addslashes($gender);
+		$gender = htmlspecialchars($gender);
+		$country = addslashes($country);
+		$country = htmlspecialchars($country);
+		$this->db->query("UPDATE users SET bio = '{$bio}', age = {$age}, gender = '{$gender}', country = '{$country}' WHERE id = $id");
+	}
+	
 	/*
 	function getFirstNames() {
 		$query = $this->db->query('SELECT first_name FROM phonebook');

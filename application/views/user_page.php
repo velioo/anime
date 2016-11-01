@@ -8,65 +8,84 @@
 ?>
 
 <script type="text/javascript">
-	function showEditFields() {
-		editUserInfo(false, 0);		
-		$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');
-		
-		var e = document.getElementsByClassName("error");
-		for (i = 0; i < e.length; i++) {
-			e[i].style.marginTop = "155px";
-		}
-		 e = document.getElementsByClassName("error_a");
-		for (i = 0; i < e.length; i++) {
-			e[i].style.marginTop = "155px";
-		}
-		
-	}
+	$(document).ready(function() {
+		document.getElementById("timeline").style.opacity = "1";	
+		$("#save_user_info").on('click', function(e){
+		    e.preventDefault(); 
+		  
+		    var textValue = document.getElementById("user_description_area").value;
+			var ageValue = document.getElementById("age_edit").value;
+			var genderValue = document.getElementById("gender_edit").value;
+			var locationValue = document.getElementById("location_edit").value;
+		    
+		    $.ajax({
+		          method: "POST",
+		          url: '<?php echo site_url("UserUpdates/update_user_info")?>',
+		          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
+		        })
+		      .done(function( msg ) {
+					
+		      });    
+		});	
+
+	});
 </script>
 
 <div id="wrap">
-	<?php $random_num = time();?>
-	<div id="user-bar" style="background-image:url('<?php if($results['cover_image'] != "") echo asset_url() . "user_cover_images/" . $results['cover_image'] . "?rand={$random_num}"; else echo asset_url() . "user_cover_images/Default.jpg"?>'); ">
-		<div class="container-fluid top-container">		
-			<a href="#" class="thumbnail"><div id="user_image_div"><img src="<?php echo asset_url() . "user_profile_images/" . $results['profile_image'] ."?rand={$random_num};"?>" onerror="this.src='<?php echo asset_url()."user_profile_images/Default.png"?>'"  alt="Image" id="user_image"></div></a>
-			<?php if($is_you) {?>
-			<div id="edit_div">
-				<?php if($this->session->flashdata('error')) { 
-						  if(strpos($this->session->flashdata('error'), "You did not select a file to upload") == FALSE)
-						  	echo $this->session->flashdata('error');
-					  } 
-					  if($this->session->flashdata('error_a')) {
-					  	if(strpos($this->session->flashdata('error_a'), "You did not select a file to upload") == FALSE)
-					  		echo $this->session->flashdata('error_a');
-					  }
-				?>
-				<button class="btn btn-primary dropdown-toggle" id="show_edits" onClick="showEditFields()">Edit</button>			
-				<form action="<?php echo site_url("UserUpdates/update_profile")?>" method="post" enctype="multipart/form-data">
-					<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
-					<input type="file" name="edit_avatar" accept="image/*" id="edit_avatar_button"><label for="edit_avatar_button" id="edit_avatar_label"><span class="glyphicon glyphicon-pencil"></span> Edit Avatar</label>
-			<?php }?>		
-					<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $results['top_offset'];?>">
-			<?php if($is_you) {?>		
-					<input type="submit" name="submit_info" id="submit_info" value="Save">
-				</form>
+	<?php include 'user_profile_top.php';?>
+	<div class="container-fluid scrollable content" id="user_content">
+		<br>
+		<div id="personal_info_div">
+			<div class="div_title">
+				<p>About <?php echo $results['username'];?>
+				<?php if($is_you) {?>
+					<span class="fa fa-pencil edit_icon" id="edit_user_info" onClick="showUserInfoEdit()" ></span> 
+					<button class="btn btn-primary save_button" id="save_user_info"  onClick="showUpdateUserInfoContent()">Save</button>
+				<?php }?>
+				</p>			
 			</div>
+			<div class="div_content" id="show_content_div">
+				<p id="user_description"><?php echo htmlspecialchars($results['bio']);?></p>
+				<p class="personal_info">Joined on: <?php echo $results['joined_on'];?></p>
+				<?php if($results['show_age'] == 1) {?>
+					<p class="personal_info" id="age">Age: <?php echo $results['age'];?></p>
+				<?php }?>	
+				<?php if($results['gender'] != "") {?>
+				<?php if($results['gender'] == "male") {?>
+					<p class="personal_info" id="gender">Gender: <i class="fa fa-mars"></i></p>
+				<?php } else if($results['gender'] == "female"){?>
+					<p class="personal_info">Gender: <i class="fa fa-venus"></i><p>
+				<?php } else { ?>
+					<p class="personal_info">Gender: <i class="fa fa-genderless"></i></p>
+				<?php }}?>
+				<?php if($results['country'] != "") {?>
+					<p class="personal_info" id="country"><i class="fa fa-home"></i> Lives in: <?php echo "<strong>" . $results['country'] . "</strong>";?></p>	
+				<?php }?>			
+			</div>
+			<?php if($is_you) {?>
+				<div class="div_content" id="edit_content_div">
+					<label for="user_bio" style="margin-right:10px;">Description </label>
+					<textarea name="user_bio" rows="4" cols="43"  id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
+					<br><br>
+					<label for="age_edit" style="margin-right:10px;">Age </label><input name="age_edit" type="text" id="age_edit" placeholder="Write your age..." value="<?php echo $results['age']?>">
+					<br><br>
+					<label for="gender_edit" style="margin-right:10px;">Gender </label>
+					<select name="gender_edit" id="gender_edit">
+					  <option value="male" <?php if($results['gender'] == "male") echo "selected='selected'"?>>Male</option>
+					  <option value="female" <?php if($results['gender'] == "female") echo "selected='selected'"?>>Female</option>
+					  <option value="unknown" <?php if($results['gender'] == "unknown") echo "selected='selected'"?>>Unknown</option>
+					</select>
+					<br><br>
+					<label for="location_edit"><i class="fa fa-home"></i>Location </label>
+					<input type="text"  name="location_edit" id="location_edit" value="<?php echo $results['country'];?>">
+				</div>
 			<?php }?>
 		</div>
-	</div>
-	<div class="container-fluid scrollable content">
-		<h1><?php echo $header;?></h1>
-		<button onclick="myFunction()">Try it</button>
-		<p id="demo"></p>
-		<?php if($is_you) { ?>
-	
-				
-		<?php } else { ?>
-				
-		<?php }?>	
 
-		<br/><br/><br/>
 	</div>
 </div>
+
+
 
 	
 <?php include 'footer.php';?>

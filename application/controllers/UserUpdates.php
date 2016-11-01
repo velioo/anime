@@ -30,9 +30,9 @@ class UserUpdates extends CI_Controller {
          
          $config['upload_path']          = './assets/user_profile_images/';
          $config['allowed_types']        = 'gif|jpg|png';
-         $config['max_size']             = 1024;
-         $config['max_width']            = 1000;
-         $config['max_height']           = 1000;
+         $config['max_size']             = 2048;
+         $config['max_width']            = 2000;
+         $config['max_height']           = 2000;
          $config['file_name'] = $this->session->userdata['id'] . ".jpg";
          $config['overwrite'] = TRUE;
          
@@ -88,6 +88,17 @@ class UserUpdates extends CI_Controller {
 			return $file_name;
 		}
 	
+	}
+	
+	public function update_user_info() {
+		$this->load->model('users_model');		
+		$bio = $_POST['textAreaValue']; 
+		$age = $_POST['age'];
+		$gender = $_POST['gender'];
+		$location= $_POST['location'];
+		
+		$this->users_model->update_user_info($this->session->userdata['id'], $bio, $age, $gender, $location);
+
 	}
 	
 }

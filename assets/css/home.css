@@ -7,7 +7,7 @@
 
 	body {
 		height:100%;
-		background-color: #fff;
+		background-color: #E9E9E9;
 		color: #4F5155;
    		padding-top:63px;
 	}
@@ -314,7 +314,7 @@
              #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px;
         -webkit-font-smoothing: antialiased;
 		font-family:serif;	
-		background: linear-gradient(to bottom,rgba(0,0,0,0) , rgba(0,0,0,1) );
+		background: linear-gradient(to bottom,rgba(0,0,0,0) , rgba(0,0,0,1));
 		-webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
 	}
 	

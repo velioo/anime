@@ -3,18 +3,27 @@
 
 body {
 	padding-top:63px;
+	background-color:#E9E9E9;
+}
+
+#user_content {
+	border-radius: 2px;
+	margin-top: 20px;
+	/* background-color: rgba(211, 211, 211, 0.5); */
+	background: none;
+	border:none;
 }
 
 .top-container {
 	position:realative;
-	height:400px;
+	height:500px;
 	width: 100%;
 	padding-top: 100px;
 }
 
 #user-bar {
 	position:relative;
-	height:400px;
+	height:450px;
 	width:100%;
 	margin-top: -60px;
 	background-repeat: repeat;
@@ -22,23 +31,58 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover; 
+    -webkit-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+	-moz-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+	box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
 }
 
 #user_image_div {
-	width:130px;
-	height:130px;
+	width:110px;
+	height:110px;
 }
 
 .thumbnail {
 	position:absolute;
 	background: transparent;
 	bottom:0;
+	margin-bottom:50px;
 }
 
 #user_image {
 	height: 100%;
 	width: 100%;
 	object-fit: cover;
+	cursor:default;
+}
+
+#username {
+	position:absolute;
+	bottom:0;
+	margin-bottom:60px;
+	margin-left:130px;
+	font-weight:500;
+	color:white;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+#user_navigation_div {
+	position: absolute;
+	bottom:0;
+	margin-bottom:10px;
+}
+
+#user_navigation_div > a button {
+	background-color: #23272D;
+	outline:none;
+	border:1px solid #23272D;
+	font-weight: 700;
+	opacity: .7;
+	transition: .3s ease-in-out;
+	
+}
+#user_navigation_div > a button:hover {
+	opacity:1;
 }
 
 #show_edits {
@@ -101,6 +145,7 @@ body {
 
 #edit_avatar_label {
 	margin-left:-830px;
+	margin-top:40px;
 }
 
 #submit_info:hover, #edit_cover_label:hover, #edit_avatar_label:hover {
@@ -115,8 +160,94 @@ h1 {
 
 #edit_div {
 	position: relative;
-	left:88%;
-	top:40%;
+	left:85%;
+	top:42%;
+}
+
+#personal_info_div {
+	width:450px;
+	height:auto;
+	border-radius: 2px;
+}
+
+.div_title {
+	background-color: rgba(211, 211, 211, 0.5);
+	padding-top:5px;
+	padding-left:10px;
+	padding-bottom:1px;
+}
+
+.div_title > p {
+	font-size: 16px;
+	font-family: cursive;
+}
+
+.div_content  {
+	background-color: white;
+	padding-top:20px;
+	padding-left:10px;
+	padding-bottom:10px;
+}
+
+.edit_icon {
+	float: right; 
+	margin-right: 5px;
+	margin-top: 5px;
+	display:inline-block;
+	cursor:pointer;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.edit_icon:hover {
+	color:red;
+}
+
+#user_description {
+	margin-bottom: 30px;
+}
+
+#edit_content_div {
+	display:none;
+}
+
+.save_button {
+	float:right;
+	outline:none;
+	border:none;
+	background-color:#23272D;
+	display:none;
+	font-size: 11px;
+	margin-right: 10px;
+	opacity: 0.8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.save_button:hover {
+	opacity: 1;
+	background-color:#23272D;
+}
+
+.save_button:focus {
+	outline:none;
+	background-color:#23272D;
+}
+
+.btn.btn-primary.save_button:active {
+	background-color:#23272D;
+}
+
+#user_description_area {
+	margin-left:10px;
+	margin-top:10px;
+	max-width:410px;
+	border: 1px solid rgba(211, 211, 211, 1);
+}
+
+#age_edit, #gender_edit, #location_edit {
+	border: 1px solid rgba(211, 211, 211, 1);
+	padding-left:5px;
 }
 
 .error {
