@@ -29,67 +29,79 @@ class SearchC extends CI_Controller {
 		
 	}
 	
-	public function search_anime($order=SORT_ASC) {
+	public function search_anime() {			
 		$this->load->model('search_model');
-		if($this->input->get('search') !== NULL) {
-			$anime = $this->input->get('search');
-			$query = $this->search_model->search_animes($anime);
-		} else {
-			$query = $this->search_model->search_animes($this->input->get('last_search'));
-		}
-		
-		if($this->input->get('sort_selected') !== NULL)
-			$sort_by = $this->input->get('sort_selected');
-		else {
-			$sort_by = 'name';
-		}
-		
-		if($query) {
-			$data['animes_matched'] = $query;
-			if(isset($anime)) {
-				if($anime == '')
-					$data['header'] = 'All animes';
-				else
-					$data['header'] = 'Results for "' . $anime . '"';
-			} else {
-				if($this->input->get('last_search') == '')
-					$data['header'] = 'All animes';
-				else
-					$data['header'] = 'Results for "' . $this->input->get('last_search') . '"';
-			}
+		$this->load->library('pagination');
 
-			if($this->input->get('sort_order') !== NULL) {
-				$order = $this->input->get('sort_order');
-				switch ($order) {
-					case "ASC":
-						$order = SORT_ASC;
-						break;
-					case "DESC":
-						$order = SORT_DESC;
-						break;
-					default:
-						$order = SORT_ASC;
-						break;
-				}
-			}
-			
-			if($this->input->get('sort_selected') !== NULL) {
-				$data['sort_type'] = $this->input->get('sort_selected');
-			} else {
-				$data['sort_type'] = 'name';
-			}
-			
-			$data['animes_matched'] = $this->array_sort($data['animes_matched'], $sort_by, $order);
+		$config['base_url'] = site_url("SearchC/search_anime");
+		$config['per_page'] = 15;
+		$config['num_links'] = 4;
+		$config['use_page_numbers'] = TRUE;
+		$config['page_query_string'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['query_string_segment'] = 'page';
+		
+		$config['full_tag_open'] = "<ul class='pagination'>";
+		$config['full_tag_close'] ="</ul>";
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+		$config['next_tag_open'] = "<li>";
+		$config['next_tagl_close'] = "</li>";
+		$config['prev_tag_open'] = "<li>";
+		$config['prev_tagl_close'] = "</li>";
+		$config['first_tag_open'] = "<li>";
+		$config['first_tagl_close'] = "</li>";
+		$config['last_tag_open'] = "<li>";
+		$config['last_tagl_close'] = "</li>";
+		
+		
+		if($this->input->get('search') !== NULL) { //get user search
+			$anime = $this->input->get('search');					
 		} else {
-			$data['header'] = 'Browse Animes';
+			$anime = $this->input->get('last_search');//get last search if user sorts results, goes to next page
 		}
 		
-		if(isset($anime))
-			$data['last_search'] = $anime;
-		else 
-			$data['last_search'] = $this->input->get('last_search');
+		if($this->input->get('sort_selected') !== NULL) {// check which sort option is selected
+			$sort_by = $this->input->get('sort_selected');
+		} else {
+			$sort_by = 'slug';
+		}
+				
+		 if($this->input->get('sort_order') !== NULL) {
+		 	if($sort_by == 'start_date')
+		 		$order = "DESC";
+		 	else if($sort_by == 'average_rating')
+		 		$order = "DESC";
+			else	
+				$order = $this->input->get('sort_order');
+		} else {
+			$order = "ASC";
+		}
 		
+		if($this->input->get('page') != NULL) { //calculate the offset for next page
+			$start =$this->input->get('page') * 15 - 15;
+		} else {
+			$start = 0;
+		}
+		
+		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order);
+		$config['total_rows'] = $this->search_model->get_anime_count($anime);
+		
+		if($query) {		
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();		
+			$data['animes_matched'] = $query;			
+			//$data['animes_matched'] = $this->array_sort($data['animes_matched'], $sort_by, $order);
+		} else {
+			$data['header'] = 'Browse Anime';
+		}
+		
+		$data['sort_by'] = $sort_by;
+		$data['last_search'] = $anime;	
 		$data['title'] = 'V-Anime';
+		$data['header'] = 'Browse Anime';
 		$data['css'] = 'login.css';
 		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
@@ -161,7 +173,7 @@ class SearchC extends CI_Controller {
 		$this->load->view('search_page', $data);
 	}
 	
-	function array_sort($array, $on, $order=SORT_ASC) {
+/* 	function array_sort($array, $on, $order=SORT_ASC) {
 	    $new_array = array();
 	    $sortable_array = array();
 	
@@ -193,7 +205,7 @@ class SearchC extends CI_Controller {
 	    }
 	
 	    return $new_array;
-	}
+	} */
 }
 
 ?>

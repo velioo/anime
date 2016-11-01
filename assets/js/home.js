@@ -4,16 +4,37 @@ function myFunction() {
     document.getElementById("demo").innerHTML = "Width: " + w + "<br>Height: " + h;
 }
 
-function reScale() {
+function reScale() {	
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-	if(window.innerWidth <= 1150) {
-		var e = document.getElementsByClassName("container-fluid");J
-		for (i = 0; i < e.length; i++) {
-		    e[i].style.width = width + "px";
+	
+	if($('#user-bar').length > 0) {
+		var offset = document.getElementById("top_offset").getAttribute("value");
+		document.getElementById("user-bar").style.width = width + "px";
+		document.getElementById("user-bar").style.backgroundPosition = "0px" + " -" + (offset* width) + "px";	
+		if($('#submit_cover_button').length > 0) {
+			document.getElementById("submit_cover_button").style.marginRight = width/6 + "px";	
+			document.getElementById("edit_cover_label").style.marginRight =  width/5 + "px";
 		}
-		document.getElementById("slider").style.height = height/2 + "px";
 	}
+
+	var e = document.getElementsByClassName("container-fluid");
+	for (i = 0; i < e.length; i++) {
+		if(width <= 1150) {	
+		    e[i].style.width = width + "px";
+		} else {
+			e[i].style.width = "1150px";
+		}
+	}
+	
+	if(width <= 1150) {	
+		if ($('#signup_button').length > 0) {
+			document.getElementById("signup_button").style.marginRight = "-21px";	
+		}
+	} else {
+		document.getElementById("signup_button").style.marginRight = "0px";
+	}
+	
 }
 
 function putCaret() {
@@ -29,7 +50,8 @@ window.addEventListener("resize", function(){
 			document.getElementById("submit_button").style.marginRight = "70px";
 		else
 			document.getElementById("submit_button").style.marginRight = "0px";
-	}
+	} 
+	
 	reScale();
 	putCaret();
 });
@@ -45,7 +67,18 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.getElementById("submit_button").style.marginRight = "70px";
 		document.getElementById("search").style.marginRight = "0px";
 	}
+	
+	if($('.text-over-img').length > 0) {
+		var e = document.getElementsByClassName("text-over-img");
+		for(i = 0; i < e.length; i++) {
+			var text = e[i].innerHTML;
+			if(text.length >= 29) {
+				e[i].style.marginTop = "-52px";
+			}
+
+		}
+		
+	}
 	reScale();
 	putCaret();
 });
-

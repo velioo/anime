@@ -7,6 +7,7 @@
 		<h3 id="main_title">Welcome To V-Anime</h3>
 		<h5>Latest Anime</h5>
 	    <?php include 'slider.php';?>
+	    <br/>
 	    <button onclick="myFunction()">Try it</button>
 		<p id="demo"></p>
 	

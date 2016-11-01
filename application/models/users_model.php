@@ -20,6 +20,18 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
+	function update_cover_image($id, $image) {
+		$this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$id}");
+	}
+	
+	function update_avatar_image($id, $image) {
+		$this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$id}");
+	}
+	
+	function update_cover_offset($id, $offset) {
+		$this->db->query("UPDATE users SET top_offset = '{$offset}' WHERE id = {$id}");
+	}
+	
 	function check_if_username_exists($username) {
 		$query = $this->db->query("SELECT username FROM users WHERE username = '{$username}'");
 
@@ -54,7 +66,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function get_user_info_logged($username) {
-		$query = $this->db->query("SELECT username,email,joined_on FROM users WHERE username='{$username}'");
+		$query = $this->db->query("SELECT * FROM users WHERE username='{$username}'");
 
 		if ($query->num_rows() == 1) {
 			return $query->row_array();
@@ -64,7 +76,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function get_user_info($username) {
-		$query = $this->db->query("SELECT username,joined_on FROM users WHERE username='{$username}'");
+		$query = $this->db->query("SELECT username,joined_on,country,profile_image,cover_image,top_offset,gender,bio,life_anime,last_online,total_episodes,age,show_age FROM users WHERE username='{$username}'");
 		
 		if ($query->num_rows() == 1) {
 			return $query->row_array();

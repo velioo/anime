@@ -2,20 +2,23 @@
 class Login extends CI_Controller {
 	
 	public function index() {
-		$this->login_page();
+		$this->login_page(TRUE);
 	}
 	
-	public function login_page() {
+	public function login_page($correct) {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
 		$data['javascript'] = 'home.js';
-		$data['header'] = 'Please, Login';
+		$data['header'] = 'Please, Login';		
+		if($correct == FALSE) 
+		 	$data['incorrect'] = 'Username or password is incorrect !';
+		
 		$this->load->view('login_page', $data);
 	}
 	
 	function write_data($username) {
 		$data['title'] = $username . '\'s profile';
-		$data['css'] = 'login.css';
+		$data['css'] = 'user.css';
 		$data['javascript'] = 'home.js';
 		$data['header'] = $username;
 		return $data;
@@ -32,7 +35,7 @@ class Login extends CI_Controller {
 			if(isset($this->session->userdata['is_logged_in'])) {
 				$this->profile($this->session->userdata['username']);
 			} else{
-				$this->login_page();
+				$this->login_page(FALSE);
 			}
 		} else {
 		
@@ -44,9 +47,8 @@ class Login extends CI_Controller {
 				$result = $this->users_model->get_user_info_logged($username);
 				if ($result != false) {
 					$data = array(
+							'id' => $result['id'],
 							'username' => $result['username'],
-							'email' => $result['email'],
-							'joined_on' => $result['joined_on'],
 							'is_logged_in' => true
 					);
 					
@@ -54,12 +56,7 @@ class Login extends CI_Controller {
 					redirect('home');
 				}
 			} else {
-				$data['incorrect'] = 'Username or password is incorrect !';
-				$data['title'] = 'Login';
-				$data['css'] = 'login.css';
-				$data['javascript'] = 'home.js';
-				$data['header'] = 'Please, Login';
-				$this->load->view('login_page', $data);
+				$this->login_page(FALSE);
 			}
 		}
 	}

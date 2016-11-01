@@ -60,14 +60,16 @@
 	
 	<div id="navigation_small_search">
 		<form action="<?php echo site_url("SearchC/search");?>" method="get" style="display: inline;">
-      			<select id="search_select" name="search_select">
+      			<select class="search_select" name="search_select">
 				    <option value="anime" selected="selected" class="navigation_small_search_option">Anime</option>
 				    <option value="characters" class="navigation_small_search_option">Characters</option>
 				    <option value="users" class="navigation_small_search_option">Users</option>
 				    <option value="lists" class="navigation_small_search_option">Lists</option>
 				</select>
 				<input type="text" name="search" id="search_box">
-				<input type="submit" name="submit" value="Search">
+				<button type="submit" name="submit" id="submit_button">
+				   <span class="glyphicon glyphicon-search" style="color:white;"></span>
+				</button>
 		</form>
 	</div>
 	
@@ -77,7 +79,7 @@
 		      		<a id="navigation_small_login" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a>
 		    <?php } else {?>
 				<div class="dropdown small_profile_menu">
-				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><?php echo $this->session->userdata['username'];?> 
+				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="small_user_button"><?php echo $this->session->userdata['username'];?> 
 				  </button>
 				  <ul class="dropdown-menu" style="min-width:50px;">
 				    <li><a href="<?php echo site_url("Login/profile/" . $this->session->userdata['username']) ?>" style="text-align: right;">Edit Page</a></li>
@@ -90,14 +92,16 @@
       	<ul class="nav navbar-nav navbar-right" id="right_navigation">
 	      	<li id="search">
 	      		<form action="<?php echo site_url("SearchC/search");?>" method="get">
-	      			<select id="search_select" name="search_select">
+	      			<select class="search_select" name="search_select">
 					    <option value="anime" selected="selected">Anime</option>
 					    <option value="characters">Characters</option>
 					    <option value="users">Users</option>
 					    <option value="lists">Lists</option>
 					</select>
 					<input type="text" name="search" id="search_box">
-					<input type="submit" name="submit" value="Search">
+					<button class="btn btn-primary dropdown-toggle" type="submit" name="submit" id="submit_button">
+					   <span class="glyphicon glyphicon-search" style="color:white;"></span>
+					</button>
 				</form> 
 			</li>
 			<?php if(!isset($this->session->userdata['is_logged_in'])) {?>

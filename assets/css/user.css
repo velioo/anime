@@ -1,0 +1,138 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+body {
+	padding-top:63px;
+}
+
+.top-container {
+	position:realative;
+	height:400px;
+	width: 100%;
+	padding-top: 100px;
+}
+
+#user-bar {
+	position:relative;
+	height:400px;
+	width:100%;
+	margin-top: -60px;
+	background-repeat: repeat;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+}
+
+#user_image_div {
+	width:130px;
+	height:130px;
+}
+
+.thumbnail {
+	position:absolute;
+	background: transparent;
+	bottom:0;
+}
+
+#user_image {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+}
+
+#show_edits {
+	background-color: #23272D;
+	border:none;
+	outline:none;
+	padding-left:40px;
+	padding-right:40px;
+	font-size: 15px;
+	display: block;
+	margin-left:30px;
+	margin-top:130px;
+}
+
+#show_edits:hover {
+	background-color: #2F343B;
+	opacity: 1;
+}
+
+#show_edits:active {
+	background:none;
+	outline:none;
+}
+
+#show_edits:focus {
+	background-color: #2F343B;
+}
+
+#edit_avatar_button, #edit_cover_button {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#submit_info, #edit_avatar_label, #edit_cover_label {
+	position:absolute;
+	margin-top:115px;
+	color:white;
+	background-color: #23272D;
+	outline:none;
+	border:none;
+	padding: 10px;
+	cursor: pointer;
+	display:none;
+	-webkit-touch-callout: none; 
+    -webkit-user-select: none;   /
+    -khtml-user-select: none;    
+    -moz-user-select: none;      
+    -ms-user-select: none;      
+    user-select: none;           
+}
+
+#submit_info {
+	margin-left:150px;
+	margin-top: 115px;
+}
+
+#edit_avatar_label {
+	margin-left:-830px;
+}
+
+#submit_info:hover, #edit_cover_label:hover, #edit_avatar_label:hover {
+	background-color:#2F343B;
+	opacity: 1;
+}
+
+h1 {
+	text-align: left;
+	color:#23272D;
+}
+
+#edit_div {
+	position: relative;
+	left:88%;
+	top:40%;
+}
+
+.error {
+	position:absolute;
+	margin-left:-40%;
+	margin-top:25px;
+	color:red;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.error_a {
+	position:absolute;
+	margin-left:-95%;
+	margin-top:25px;
+	color:red;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}

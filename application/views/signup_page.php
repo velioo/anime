@@ -16,7 +16,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			$username = set_value('username') == false ? '' : set_value('username');
 			$email = set_value('email') == false ? '' : set_value('email');
 					
-			echo form_open('SignUp/create_user'); 
+			echo form_open('SignUp/create_user', 'class="signloginform"'); 
 			echo form_label('Username', 'username');
 			echo form_input('username', set_value('username', $username) ); 
 			echo form_error('username', '<p class="error">*', '</p>');echo "<br/>";

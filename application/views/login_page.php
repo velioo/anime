@@ -21,7 +21,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 		<?php 
 		$username = set_value('username') == false ? '' : set_value('username');
 		
-			echo form_open('login/log_in');
+			echo form_open('login/log_in', 'class="signloginform"');
 			echo form_label('Username', 'username');
 			echo form_input('username', set_value('username', $username) ); echo "<br/>";
 			echo form_label('Password', 'password');

@@ -9,6 +9,13 @@ h1 {
 	border-bottom: 1px solid #D0D0D0;
 }
 
+h3 {
+	text-align: center;
+	color: #3C50D2;
+	padding: 14px 15px 10px 15px;
+	border-bottom: 1px solid #D0D0D0;
+}
+
 label {
 	font-size: 16px;
 	display: inline-block;
@@ -37,6 +44,10 @@ label {
     box-shadow: 0 0 10px #9ecaed;
 }
 
+.signloginform {
+	margin-left:20%;
+}
+
 #table_first_row {
 	color:#cb3434;
 	text-decoration: none;
@@ -48,10 +59,20 @@ label {
 
 #submit {
 	color:white;
-	background-color: #222222;
+	background-color: #2F343B;
 	font-size: 14px;
 	width:100px;
 	margin-left:180px;
+}
+
+.container-fluid.scrollable .pagination li a {
+	color: #2F343B;
+}
+
+.container-fluid.scrollable .pagination li.active a {
+	color:white;
+	background-color:#2F343B;
+	border-color: #2F343B;
 }
 
 #anchor {
