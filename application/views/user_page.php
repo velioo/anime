@@ -12,7 +12,6 @@
 		document.getElementById("timeline").style.opacity = "1";	
 		$("#save_user_info").on('click', function(e){
 		    e.preventDefault(); 
-		    showUpdateUserInfoContent();
 		    var textValue = document.getElementById("user_description_area").value;
 			var ageValue = document.getElementById("age_edit").value;
 			var genderValue = document.getElementById("gender_edit").value;
@@ -26,6 +25,7 @@
 		      .done(function( msg ) {
 					
 		      });    
+		    showUpdateUserInfoContent();
 		});	
 
 		$("#user_description_area").keyup(function(){

@@ -117,21 +117,27 @@ function showUpdateUserInfoContent() {
 	document.getElementById("edit_user_info").style.display = "block";
 	document.getElementById("save_user_info").style.display = "none";
 	document.getElementById("edit_content_div").style.display = "none";
-	document.getElementById("user_description").innerHTML = document.getElementById("user_description_area").value;
-	document.getElementById("age").innerHTML = "Age: " + document.getElementById("age_edit").value;
+	$("#user_description").text($("#user_description_area").val());
+	$("#age").text("Age: " + $("#age_edit").val());
+	
 	var gender_icon;
-	var gender = document.getElementById("gender_edit").value;
-	if(gender == "male") {
+	var gender = $("#gender_edit").val();
+
+	if(gender === "male") {
 		gender_icon = "<i class=\"fa fa-mars\"></i>";
-	}else if(gender == "female") {
+	} else if(gender === "female") {
 		gender_icon = "<i class=\"fa fa-venus\"></i>";
 	} else {
 		gender_icon = "<i class=\"fa fa-genderless\"></i>";
 	}
-	var gender_title = "Gender: ";
-	var res = gender_title.concat(gender_icon);
-	document.getElementById("gender").innerHTML = res;	
-	document.getElementById("country").innerHTML = "<i class=\"fa fa-home\"></i> Lives in: <strong>" + document.getElementById("location_edit").value + "</strong>";
+	
+	var gender = "Gender: " + gender_icon;	
+	$("#gender").html(gender);	
+	
+	var location = $("#location_edit").val();
+	
+	var country_content = "<i class=\"fa fa-home\"></i> Lives in: <strong>" + location + "</strong>";
+	$("#country").html(country_content);
 }
 
 
