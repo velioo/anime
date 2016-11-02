@@ -109,6 +109,7 @@ function showUserInfoEdit() {
 	document.getElementById("edit_user_info").style.display = "none";
 	document.getElementById("save_user_info").style.display = "inline-block";
 	document.getElementById("edit_content_div").style.display = "block";
+	$("#user_description_area_char_count").text("Left: " + (500 - $('#user_description_area').val().length));
 }
 
 function showUpdateUserInfoContent() {

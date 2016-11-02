@@ -12,7 +12,7 @@
 		document.getElementById("timeline").style.opacity = "1";	
 		$("#save_user_info").on('click', function(e){
 		    e.preventDefault(); 
-		  
+		    showUpdateUserInfoContent();
 		    var textValue = document.getElementById("user_description_area").value;
 			var ageValue = document.getElementById("age_edit").value;
 			var genderValue = document.getElementById("gender_edit").value;
@@ -28,6 +28,10 @@
 		      });    
 		});	
 
+		$("#user_description_area").keyup(function(){
+			  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
+		});
+
 	});
 </script>
 
@@ -40,7 +44,7 @@
 				<p>About <?php echo $results['username'];?>
 				<?php if($is_you) {?>
 					<span class="fa fa-pencil edit_icon" id="edit_user_info" onClick="showUserInfoEdit()" ></span> 
-					<button class="btn btn-primary save_button" id="save_user_info"  onClick="showUpdateUserInfoContent()">Save</button>
+					<button class="btn btn-primary save_button" id="save_user_info"  onClick="">Save</button>
 				<?php }?>
 				</p>			
 			</div>
@@ -64,8 +68,9 @@
 			</div>
 			<?php if($is_you) {?>
 				<div class="div_content" id="edit_content_div">
-					<label for="user_bio" style="margin-right:10px;">Description </label>
-					<textarea name="user_bio" rows="4" cols="43"  id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
+					<label for="user_bio" style="margin-right:10px;">Description </label><label for="user_bio" id="user_description_area_char_count">Left <?php ?></label>
+					<input type="hidden" value="">
+					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
 					<br><br>
 					<label for="age_edit" style="margin-right:10px;">Age </label><input name="age_edit" type="text" id="age_edit" placeholder="Write your age..." value="<?php echo $results['age']?>">
 					<br><br>
