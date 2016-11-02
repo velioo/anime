@@ -16,16 +16,20 @@
 			var ageValue = document.getElementById("age_edit").value;
 			var genderValue = document.getElementById("gender_edit").value;
 			var locationValue = document.getElementById("location_edit").value;
-		    
-		    $.ajax({
-		          method: "POST",
-		          url: '<?php echo site_url("UserUpdates/update_user_info")?>',
-		          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
-		        })
-		      .done(function( msg ) {
-					
-		      });    
-		    showUpdateUserInfoContent();
+		    if(!(ageValue <= 0)){
+			    $.ajax({
+			          method: "POST",
+			          url: '<?php echo site_url("UserUpdates/update_user_info")?>',
+			          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
+			        })
+			      .done(function( msg ) {
+						
+			      });    
+			    showUpdateUserInfoContent();
+			} else {
+				document.getElementById("wtf_age").style.display = "inline";
+				$("#wtf_age").text(" Baka...");
+			}
 		});	
 
 		$("#user_description_area").keyup(function(){
@@ -73,6 +77,7 @@
 					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
 					<br><br>
 					<label for="age_edit" style="margin-right:10px;">Age </label><input name="age_edit" type="text" id="age_edit" placeholder="Write your age..." value="<?php echo $results['age']?>">
+					<p id="wtf_age">dsad</p>
 					<br><br>
 					<label for="gender_edit" style="margin-right:10px;">Gender </label>
 					<select name="gender_edit" id="gender_edit">

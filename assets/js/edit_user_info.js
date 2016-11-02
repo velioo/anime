@@ -117,6 +117,7 @@ function showUpdateUserInfoContent() {
 	document.getElementById("edit_user_info").style.display = "block";
 	document.getElementById("save_user_info").style.display = "none";
 	document.getElementById("edit_content_div").style.display = "none";
+	document.getElementById("wtf_age").style.display = "none";
 	$("#user_description").text($("#user_description_area").val());
 	$("#age").text("Age: " + $("#age_edit").val());
 	

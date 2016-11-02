@@ -256,6 +256,11 @@ h1 {
 	padding-left:5px;
 }
 
+#wtf_age { 
+	display:none;	
+	color:red;
+}
+
 .error {
 	position:absolute;
 	margin-left:-40%;
