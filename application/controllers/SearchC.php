@@ -34,7 +34,7 @@ class SearchC extends CI_Controller {
 		$this->load->library('pagination');
 
 		$config['base_url'] = site_url("SearchC/search_anime");
-		$config['per_page'] = 15;
+		$config['per_page'] = 30;
 		$config['num_links'] = 4;
 		$config['use_page_numbers'] = TRUE;
 		$config['page_query_string'] = TRUE;
@@ -68,8 +68,11 @@ class SearchC extends CI_Controller {
 		} else {
 			$sort_by = 'slug';
 		}
+		
+		$user_sorted_results = FALSE;
 				
 		 if($this->input->get('sort_order') !== NULL) {
+		 	$user_sorted_results = TRUE;
 		 	if($sort_by == 'start_date')
 		 		$order = "DESC";
 		 	else if($sort_by == 'average_rating')
@@ -77,35 +80,88 @@ class SearchC extends CI_Controller {
 			else	
 				$order = $this->input->get('sort_order');
 		} else {
+			$user_sorted_results = FALSE;
 			$order = "ASC";
 		}
 		
 		if($this->input->get('page') != NULL) { //calculate the offset for next page
-			$start =$this->input->get('page') * 15 - 15;
+			$start =$this->input->get('page') * $config['per_page'] - $config['per_page'];
 		} else {
 			$start = 0;
 		}
 		
-		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order);
-		$config['total_rows'] = $this->search_model->get_anime_count($anime);
+		$temp = $anime;	
+		$anime = addslashes($anime);
+		$sort_by = addslashes($sort_by);
+		$order = addslashes($order);
 		
+		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $user_sorted_results);
+		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order);
+		
+		$anime = $temp;
+		
+		if(($anime != "") and $this->input->get('sort_order') !== NULL) {
+			$query = $this->array_sort($query, $sort_by, $order);
+			$data['sort_by'] = $sort_by;
+		} else if($anime == "") {
+			$data['sort_by'] = $sort_by;
+		} else {
+			$data['sort_by'] = "";
+		}
+
 		if($query) {		
 			$this->pagination->initialize($config);
 			$data['pagination'] = $this->pagination->create_links();		
 			$data['animes_matched'] = $query;			
 			//$data['animes_matched'] = $this->array_sort($data['animes_matched'], $sort_by, $order);
-		} else {
-			$data['header'] = 'Browse Anime';
 		}
 		
-		$data['sort_by'] = $sort_by;
 		$data['last_search'] = $anime;	
 		$data['title'] = 'V-Anime';
-		$data['header'] = 'Browse Anime';
+		if($anime == "")
+			$data['header'] = "Browse Anime";
+		else
+			$data['header'] = 'Results for ' . "\"" . $anime . "\"";
 		$data['css'] = 'login.css';
 		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 	}
+	
+	function array_sort($array, $on, $order="ASC") {
+		$new_array = array();
+		$sortable_array = array();
+	
+		if (count($array) > 0) {
+			foreach ($array as $k => $v) {
+				if (is_array($v)) {
+					foreach ($v as $k2 => $v2) {
+						if ($k2 == $on) {
+							$sortable_array[$k] = $v2;
+						}
+					}
+				} else {
+					$sortable_array[$k] = $v;
+				}
+			}
+	
+			switch ($order) {
+				case "ASC":
+					asort($sortable_array);
+					break;
+				case "DESC":
+					arsort($sortable_array);
+					break;
+			}
+	
+			foreach ($sortable_array as $k => $v) {
+				$new_array[$k] = $array[$k];
+			}
+		}
+	
+		return $new_array;
+	}
+
+	
 	
 	public function search_characters() {
 		$character = $this->input->get('search');
@@ -173,39 +229,7 @@ class SearchC extends CI_Controller {
 		$this->load->view('search_page', $data);
 	}
 	
-/* 	function array_sort($array, $on, $order=SORT_ASC) {
-	    $new_array = array();
-	    $sortable_array = array();
-	
-	    if (count($array) > 0) {
-	        foreach ($array as $k => $v) {
-	            if (is_array($v)) {
-	                foreach ($v as $k2 => $v2) {
-	                    if ($k2 == $on) {
-	                        $sortable_array[$k] = $v2;
-	                    }
-	                }
-	            } else {
-	                $sortable_array[$k] = $v;
-	            }
-	        }
-	
-	        switch ($order) {
-	            case SORT_ASC:
-	                asort($sortable_array);
-	            break;
-	            case SORT_DESC:
-	                arsort($sortable_array);
-	            break;
-	        }
-	
-	        foreach ($sortable_array as $k => $v) {
-	            $new_array[$k] = $array[$k];
-	        }
-	    }
-	
-	    return $new_array;
-	} */
+
 }
 
 ?>

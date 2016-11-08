@@ -33,6 +33,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function check_if_username_exists($username) {
+		$username = addslashes($username);
 		$query = $this->db->query("SELECT username FROM users WHERE username = '{$username}'");
 
 		if($query->num_rows() > 0) {
@@ -43,6 +44,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function check_if_email_exists($email) {
+		$email = addslashes($email);
 		$query = $this->db->query("SELECT email FROM users WHERE email = '{$email}'");
 	
 		if($query->num_rows() > 0) {
@@ -52,8 +54,7 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
-	function create_user() {
-		
+	function create_user() {		
 		$new_user_data = array (
 			'username' => $this->input->post('username'),
 			'email' => $this->input->post('email'),
@@ -85,6 +86,7 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
+	
 	function update_user_info($id, $bio, $age, $gender, $country) {
 		$bio = addslashes($bio);
 		$bio = htmlspecialchars($bio);
@@ -96,52 +98,38 @@ Class Users_model extends CI_Model {
 		$this->db->query("UPDATE users SET bio = '{$bio}', age = {$age}, gender = '{$gender}', country = '{$country}' WHERE id = $id");
 	}
 	
-	/*
-	function getFirstNames() {
-		$query = $this->db->query('SELECT first_name FROM phonebook');
-		
-		if($query->num_rows() > 0) {
-			return $query;
+	function get_id_by_email($email) {
+		$query = $this->db->query("SELECT id FROM users WHERE email = '{$email}'");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
 		} else {
-			return NULL;
-		}
-		
-	}
-	
-	function getUsers() {
-		$query = $this->db->query('SELECT * FROM phonebook');
-		
-		if($query->num_rows() > 0) {
-			return $query;
-		} else {
-			return NULL;
+			return FALSE;
 		}
 	}
 	
-	function getCityUsers($city) {
-		$query = $this->db->query("SELECT * FROM phonebook WHERE city='{$city}'");
-		if($query->num_rows() > 0) {
-			return $query;
-		} else {
-			return NULL;
+	function temp_reset_password($user_id, $temp_pass){
+		$this->db->query("INSERT INTO user_temp_passes(user_id, temp_pass) VALUES ({$user_id}, '{$temp_pass}')");
+	}
+	
+	function is_temp_pass_valid($temp_pass){
+		$query = $this->db->query("SELECT user_id, temp_pass FROM user_temp_passes WHERE temp_pass = '{$temp_pass}'");
+		
+		if($query->num_rows() == 1){
+			return $query->row_array();
+		}
+		else {
+			return FALSE;
 		}
 	}
-	
-	function insertUser($data) {
-		$this->db->insert('phonebook', $data);
+
+	function update_user_password($id, $password) {
+		$query = $this->db->query("UPDATE users SET password = '{$password}' WHERE id = {$id}");
+		return $query;
 	}
 	
-	function deleteUser($id) {
-		$this->db->where('id', $id);
-		$this->db->delete('phonebook');
-		
+	function delete_temp_pass($user_id) {
+		$this->db->query("DELETE FROM user_temp_passes WHERE user_id = {$user_id}");
 	}
-	
-	function updateUser($id, $data) {
-		$this->db->where('id', $id);
-		$this->db->update('phonebook', $data);
-	}
-	*/
 }
 
 ?>

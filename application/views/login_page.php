@@ -29,10 +29,10 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			if(isset($incorrect))
 				echo "<p class='error' style='margin-left:180px;'>*" . $incorrect . "</p>"; echo "<br/>";
 			echo form_submit('submit', 'Login', 'id=submit');echo "<br/>";echo "<br/>";
-			echo anchor('SignUp/signup_page', 'Create Account', 'id=anchor');
+			echo anchor('SignUp/signup_page', 'Click here to create an account', 'id=anchor');
 			echo form_close();
-			
 		?>
+		<a href="<?php echo site_url("login/forgotten_password")?>" id="forgot_password">Forgot your password?</a>
 	</div>
 	
 

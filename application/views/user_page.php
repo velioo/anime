@@ -8,6 +8,22 @@
 ?>
 
 <script type="text/javascript">
+
+	function showEditFields() {
+		editUserInfo(false, 0);		
+		$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');
+		
+		var e = document.getElementsByClassName("error");
+		for (i = 0; i < e.length; i++) {
+			e[i].style.marginTop = "155px";
+		}
+		 e = document.getElementsByClassName("error_a");
+		for (i = 0; i < e.length; i++) {
+			e[i].style.marginTop = "155px";
+		}
+		
+	}
+
 	$(document).ready(function() {
 		document.getElementById("timeline").style.opacity = "1";	
 		$("#save_user_info").on('click', function(e){
@@ -44,7 +60,7 @@
 	<div class="container-fluid scrollable content" id="user_content">
 		<br>
 		<div id="personal_info_div">
-			<div class="div_title">
+			<div class="div_title col-sm-12">
 				<p>About <?php echo $results['username'];?>
 				<?php if($is_you) {?>
 					<span class="fa fa-pencil edit_icon" id="edit_user_info" onClick="showUserInfoEdit()" ></span> 
@@ -52,7 +68,7 @@
 				<?php }?>
 				</p>			
 			</div>
-			<div class="div_content" id="show_content_div">
+			<div class="div_content col-sm-12" id="show_content_div">
 				<p id="user_description"><?php echo htmlspecialchars($results['bio']);?></p>
 				<p class="personal_info">Joined on: <?php echo $results['joined_on'];?></p>
 				<?php if($results['show_age'] == 1) {?>
@@ -62,16 +78,16 @@
 				<?php if($results['gender'] == "male") {?>
 					<p class="personal_info" id="gender">Gender: <i class="fa fa-mars"></i></p>
 				<?php } else if($results['gender'] == "female"){?>
-					<p class="personal_info">Gender: <i class="fa fa-venus"></i><p>
+					<p class="personal_info" id="gender">Gender: <i class="fa fa-venus"></i><p>
 				<?php } else { ?>
-					<p class="personal_info">Gender: <i class="fa fa-genderless"></i></p>
+					<p class="personal_info" id="gender">Gender: <i class="fa fa-genderless"></i></p>
 				<?php }}?>
 				<?php if($results['country'] != "") {?>
 					<p class="personal_info" id="country"><i class="fa fa-home"></i> Lives in: <?php echo "<strong>" . $results['country'] . "</strong>";?></p>	
 				<?php }?>			
 			</div>
 			<?php if($is_you) {?>
-				<div class="div_content" id="edit_content_div">
+				<div class="div_content col-sm-12" id="edit_content_div">
 					<label for="user_bio" style="margin-right:10px;">Description </label><label for="user_bio" id="user_description_area_char_count">Left <?php ?></label>
 					<input type="hidden" value="">
 					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
@@ -94,8 +110,5 @@
 
 	</div>
 </div>
-
-
-
 	
 <?php include 'footer.php';?>

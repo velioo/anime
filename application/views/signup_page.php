@@ -18,7 +18,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 					
 			echo form_open('SignUp/create_user', 'class="signloginform"'); 
 			echo form_label('Username', 'username');
-			echo form_input('username', set_value('username', $username) ); 
+			echo form_input('username', set_value('username', $username)); 
 			echo form_error('username', '<p class="error">*', '</p>');echo "<br/>";
 			echo form_label('Email', 'email');
 			echo form_input('email', set_value('email', $email));
@@ -30,8 +30,9 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_password('password_confirm', '');
 			echo form_error('password_confirm', '<p class="error">*', '</p>');echo "<br/>";
 			echo form_submit('submit', 'Sign Up !', 'id=submit');
-			echo form_close();
+			echo form_close();		
 		?>
+		<p id="accept_paragraph">By clicking Sign Up, you are indicating that you have read and agree to the <a href="#" class="accept">Terms of Use</a> and <a href="#" class="accept">Privacy Policy</a></p>
 		<br/><br/><br/>
 	</div>
 </div>

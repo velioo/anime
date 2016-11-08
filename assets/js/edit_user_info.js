@@ -1,23 +1,8 @@
-function showEditFields() {
-	editUserInfo(false, 0);		
-	$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');
-	
-	var e = document.getElementsByClassName("error");
-	for (i = 0; i < e.length; i++) {
-		e[i].style.marginTop = "155px";
-	}
-	 e = document.getElementsByClassName("error_a");
-	for (i = 0; i < e.length; i++) {
-		e[i].style.marginTop = "155px";
-	}
-	
-}
-
 function editUserInfo(file_chosen, filesize) {
 	var height = window.innerHeight;
-	var margin = height/1700000;
+	var margin = 1;
 	if(file_chosen == true) {
-		margin = filesize/120000000;
+		margin = filesize/120000;
 	}
 	document.getElementById("edit_cover_label").style.display = "block";
 	document.getElementById("edit_avatar_label").style.display = "block";
@@ -29,13 +14,13 @@ function editUserInfo(file_chosen, filesize) {
 	    $(this).mousemove(function(e){
 	      var offset = document.getElementById("top_offset").getAttribute("value");
 	      if(isNaN(offset)) {
-	    	  offset = 0.01;
+	    	  offset = 1;
 	      } else {
-	    	  offset = parseFloat(offset);
+	    	  offset = parseInt(offset);
 	      }
 	      if(e.clientY < prevY) { 
-			  if(offset >= 0.3) {
-			    offset = 0.3;
+			  if(offset >= 630) {
+			    offset = 630;
 			  } else {
 			    offset+=margin;
 			  }	
@@ -77,7 +62,7 @@ $(document).ready(function() {
 function changeCoverPosition() {
 	var width = window.innerWidth;
 	var offset = document.getElementById("top_offset").getAttribute("value");
-	document.getElementById("user-bar").style.backgroundPosition = "0px" + " -" + (offset* width) + "px";	
+	document.getElementById("user-bar").style.backgroundPosition = "0px" + " -" + (offset) + "px";	
 }
 
 function showCover(input) {
@@ -124,9 +109,9 @@ function showUpdateUserInfoContent() {
 	var gender_icon;
 	var gender = $("#gender_edit").val();
 
-	if(gender === "male") {
+	if(gender == "male") {
 		gender_icon = "<i class=\"fa fa-mars\"></i>";
-	} else if(gender === "female") {
+	} else if(gender == "female") {
 		gender_icon = "<i class=\"fa fa-venus\"></i>";
 	} else {
 		gender_icon = "<i class=\"fa fa-genderless\"></i>";

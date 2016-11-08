@@ -13,7 +13,7 @@
 		  <ul class="dropdown-menu multi-level" role="menu" id="dropdown_list" style="border-radius: 0px;">
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
 		  		<ul class="dropdown-menu">
-                  <li><a href="#">Browse Anime</a></li>
+                  <li><a href="<?php echo site_url('SearchC/search_anime?search=""')?>">Browse Anime</a></li>
                   <li><a href="#">Top Anime</a></li>
                  </ul>
 		  	</li>
@@ -37,7 +37,7 @@
 	      <li class="dropdown">
 		      <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Anime</a>
 	      <ul class="dropdown-menu">
-		      <li><a href="<?php echo base_url(); ?>">Browse Anime</a></li>
+		      <li><a href="<?php echo site_url('SearchC/search_anime?search=""')?>">Browse Anime</a></li>
 	      	  <li><a href="<?php echo base_url(); ?>">Top Anime</a></li>
 		  </ul>
 	  </li>
@@ -59,14 +59,14 @@
 	</ul>
 	
 	<div id="navigation_small_search">
-		<form action="<?php echo site_url("SearchC/search");?>" method="get" style="display: inline;">
+		<form class="search_form" name="small_search_form_name" action="<?php echo site_url("SearchC/search");?>" method="get" style="display: inline;">
       			<select class="search_select" name="search_select">
 				    <option value="anime" selected="selected" class="navigation_small_search_option">Anime</option>
 				    <option value="characters" class="navigation_small_search_option">Characters</option>
 				    <option value="users" class="navigation_small_search_option">Users</option>
 				    <option value="lists" class="navigation_small_search_option">Lists</option>
 				</select>
-				<input type="text" name="search" id="search_box">
+				<input type="text" name="search" id="small_search_box" placeholder="Search..."> 
 				<button type="submit" name="submit" id="submit_button">
 				   <span class="glyphicon glyphicon-search" style="color:white;"></span>
 				</button>
@@ -91,14 +91,14 @@
 	
       	<ul class="nav navbar-nav navbar-right" id="right_navigation">
 	      	<li id="search">
-	      		<form action="<?php echo site_url("SearchC/search");?>" method="get">
+	      		<form class="search_form" name="search_form_name" action="<?php echo site_url('SearchC/search');?>" method="get">
 	      			<select class="search_select" name="search_select">
 					    <option value="anime" selected="selected">Anime</option>
 					    <option value="characters">Characters</option>
 					    <option value="users">Users</option>
 					    <option value="lists">Lists</option>
 					</select>
-					<input type="text" name="search" id="search_box">
+					<input type="text" name="search" id="search_box" placeholder="Search...">
 					<button class="btn btn-primary dropdown-toggle" type="submit" name="submit" id="submit_button">
 					   <span class="glyphicon glyphicon-search" style="color:white;"></span>
 					</button>
