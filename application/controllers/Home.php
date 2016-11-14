@@ -26,51 +26,63 @@ class Home extends CI_Controller {
 		$this->insert_model->insert_anime($id, $values);
 	}
 	
-	public function write() {
+/* 	public function write() {
 		$this->load->model('insert_model');
 	
-		$myfile = fopen("synopsis_update_fix.sql", "r") or die("Unable to open file!");
+		$myfile = fopen("have_to_insert_into_animes.txt", "r") or die("Unable to open file!");
 	
 		while ($line = fgets($myfile)) {
 			$split_by_tab = explode("\t", $line);
-			
+			$values = array();
 			$id = $split_by_tab[0];
-			
-			$synopsis = $split_by_tab[5];
-			
 			$id = trim($id);
+			$id = "'" . $id."'";
+			$values[] = $id;
+			$slug = $split_by_tab[1];
+			$slug = str_replace("-", " ", $slug);
+			$values[] = "'" . $slug . "'";
+			$age_rating = $split_by_tab[2];
+			$values[] = "'".$age_rating."'";
+			$episode_count = $split_by_tab[3];
+			$values[] = "'".$episode_count."'";
+			$episode_length = $split_by_tab[4];
+			$values[] = "'".$episode_length."'";
+			$synopsis = $split_by_tab[5];
 			$synopsis = trim($synopsis);
 			$synopsis = addslashes($synopsis);
+			$synopsis = "'" . $synopsis . "'";
+			$values[] = $synopsis;
+			$youtube_video_id = $split_by_tab[6];
+			$values[] = "'" . $youtube_video_id . "'";
+			$cover_image_file_name = $split_by_tab[9];
+			$values[] = "'" . $cover_image_file_name ."'";
+			$age_rating_guide = $split_by_tab[15];
+			$values[] = "'".  $age_rating_guide."'";
+			$show_type = $split_by_tab[16];
+			$values[] = "'".$show_type."'";
+			$start_date = $split_by_tab[17];
+			$values[] = "'". $start_date."'";
+			$end_date = $split_by_tab[18];
+			$values[] = "'".$end_date."'";
+			$poster_image_file_name = $split_by_tab[20];
+			$values[] = "'".$poster_image_file_name."'";
+			$cover_image_top_offset = $split_by_tab[24];
+			$values[] = "'".$cover_image_top_offset."'";
+			$titles = $split_by_tab[26];
+			$titles = addslashes($titles);
+			$values[] = "'".$titles."'";
+			$canonical_title = $split_by_tab[27];
+			$values[] = "'".$canonical_title."'";
+			$abbreviated_titles = $split_by_tab[28];
+			$abbreviated_titles = rtrim($abbreviated_titles, "\n");
+			$values[] = "'".$abbreviated_titles."'";
 			
-/* 			$id = substr($split_by_comma[0], 2, (strlen($split_by_comma[0]) - 3));
-			$id = trim($id);
-			$synopsis = trim($split_by_comma[5]);
-			if( (substr($synopsis, -1) == '\'') and (substr($synopsis, -2) != "\\'")) {
-				$done = true;
-			} else {
-				$done = false;
-			}
-			$counter = 6;
-			while($done == false) {
-				$synopsis = $synopsis . "," . $split_by_comma[$counter];
-				if((substr($synopsis, -1) == '\'') and (substr($split_by_comma[$counter + 1],0, 1) == '\'')) {
-					$done = true;
-				}
-				$counter++;
-			}
-				
-			$synopsis = trim($synopsis);
-			$synopsis = substr($synopsis, 1, (strlen($synopsis) - 2));
-				
-			echo $synopsis . "<br/>"; */
+			$values = implode(", ", $values);
 			
- 	/* 		if($this->insert_model->check_if_anime_exists($id)) {
-				$this->insert_model->update_synopsis($id, $synopsis);
-				echo $id  . "    " . $synopsis . "<br/>";
-			}  */
+			//$this->insert_model->insert_anime($id, $values);
 		}
 		fclose($myfile);
-	}
+	} */
 	
 }
 ?>

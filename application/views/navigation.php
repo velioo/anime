@@ -6,7 +6,7 @@
       </a>
     </div>
     <br/>
-       <!-- Hidden dropdown  for small screens -->
+
     <div class="dropdown" id="small_menu_dropdown_div">
   	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive; font-size:10px;">Menu
 		  <span class="caret"></span></button>
@@ -32,7 +32,7 @@
 		    </li>
 		  </ul>
 	</div>
-	<!-- -------------------------------- -->
+
     <ul class="nav navbar-nav">
 	      <li class="dropdown">
 		      <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Anime</a>
@@ -82,7 +82,7 @@
 				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="small_user_button"><?php echo $this->session->userdata['username'];?> 
 				  </button>
 				  <ul class="dropdown-menu" style="min-width:50px;">
-				    <li><a href="<?php echo site_url("Login/profile/" . $this->session->userdata['username']) ?>" style="text-align: right;">Edit Page</a></li>
+				    <li><a href="<?php echo site_url("userUpdates/user_settings" . $this->session->userdata['username']) ?>" style="text-align: right;">Edit Page</a></li>
 				    <li><a href="<?php echo site_url("Login/logout"); ?>" style="text-align: right;">Logout</a></li>
 				  </ul>
 				</div>
@@ -111,7 +111,7 @@
       	   	   <li class="dropdown profile_menu">
 				  <a id="user_button" href="<?php echo site_url("Login/profile/" . $this->session->userdata['username']);?>" style="padding-top:10px;"><?php echo $this->session->userdata['username'];?></a>
 			      <ul class="dropdown-menu">
-				  	<li><a href="<?php echo base_url(); ?>" style="text-align: right;">Edit Profile</a></li>
+				  	<li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>
 			      	<li><a href="<?php echo site_url("Login/logout"); ?>" style="text-align: right;">Logout</a></li>
 				  </ul>
 			  </li>

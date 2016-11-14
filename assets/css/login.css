@@ -126,7 +126,6 @@ label {
 	color:#1D439B;
 }
 
-
 .second_paragraph {
 	text-align: center;
 	margin-bottom: 0px;
@@ -134,15 +133,15 @@ label {
 }
 
 .third_paragraph {
+	display: inline-block;
 	background-color: rgba(211, 211, 211, 1);
 	margin-bottom:0px;
 	text-align: center;
-	width:inherit;
+	width:368px;
 	word-wrap: break-word;
 	font-size: 9px;
-	height:60px;
 	line-height: 25px;
-	padding-top:5px;
+	padding-top:2px;
 	padding-left:2px;
 	padding-right:20px;
 	vertical-align: middle;
@@ -154,8 +153,19 @@ label {
 	background-color: #DEDEDE;
 }
 
-.anime_body {
+.fa.fa-angle-down, .fa.fa-angle-up {
+	display: inline-block;
+	position:absolute;
+	margin-top:-52px;
+	margin-left:352px;
+	padding-left:2px;
+	padding-right:2px;
+	border-radius: 5px;
+	background-color: #DEDEDE;
+	cursor:pointer;
+}
 
+.anime_body {
 	margin-top:-30px;
 	height:235px;
 	width:inherit;
@@ -190,7 +200,7 @@ label {
 
 .anime_footer {
 	height:30px;
-	width:inherit;
+	width:368px;
 	line-height: 25px;
 	padding-top:3px;
 	padding-bottom:3px;
@@ -204,6 +214,12 @@ label {
 
 .anime_date_paragraph {
 	display: inline-block;
+	width:155px;
+}
+
+.anime_rating_paragraph {
+	display: inline-block;
+	width:70px;
 }
 
 .tooltip{

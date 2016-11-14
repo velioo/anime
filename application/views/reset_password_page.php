@@ -1,6 +1,6 @@
-<?php include 'head.php'; include 'navigation.php';?>
+<?php include 'head.php';?>
 
-
+<?php include 'navigation.php';?>
 <?php 
 if (isset($this->session->userdata['is_logged_in'])) {
 	header("location: " . site_url("Login/log_in"));
@@ -15,7 +15,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 		<br/>
 		<?php 		
 			
-			echo form_open('login/update_password/' . $user_id, 'class="signloginform"');
+			echo form_open('login/update_forgotten_password/' . $user_id, 'class="signloginform"');
 			echo form_label('Password', 'password');
 			echo form_password('password', '');
 			echo form_error('password', '<p class="error">*', '</p>');echo "<br/>";

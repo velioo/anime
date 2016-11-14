@@ -27,7 +27,11 @@
 			<form action="<?php echo site_url("UserUpdates/update_profile")?>" method="post" enctype="multipart/form-data">
 				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
 				<input type="file" name="edit_avatar" accept="image/*" id="edit_avatar_button"><label for="edit_avatar_button" id="edit_avatar_label"><span class="glyphicon glyphicon-pencil"></span> Edit Avatar</label>
-		<?php }?>		
+		<?php } else { ?>
+		<div id="follow_div">
+			<button class="btn btn-primary" id="follow_button" onClick="">Follow</button>	
+		</div>
+		<?php }?>	
 				<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $results['top_offset'];?>">
 		<?php if($is_you) {?>		
 				<input type="submit" name="submit_info" id="submit_info" value="Save">

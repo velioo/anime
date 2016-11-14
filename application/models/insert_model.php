@@ -3,7 +3,6 @@ Class Insert_model extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-
 	}
 	
 	function insert_studio($studio) {
@@ -17,13 +16,14 @@ Class Insert_model extends CI_Model {
 	}
 	
 	function insert_anime($id, $values) {
-		$query = $this->db->query("SELECT id FROM animes WHERE id = '{$id}'");
+		$query = $this->db->query("SELECT id FROM animes WHERE id = {$id}");
 		if($query->num_rows() > 0) {
 			return;
 		} else {
-			$this->db->query("INSERT INTO `animes` (`slug`, `age_rating`, `episode_count`, `episode_length`, `synopsis`, `youtube_video_id`, 
-					`cover_image_file_names`, `average_rating`, `age_rating_guide`, `show_type`, `start_date`, `end_date`, `poster_image_file_name`, `cover_image_top_offset`, 
-					`started_airing_date_known`, 'titles', 'canonical_title', 'abbreviated_titles') VALUES {$values}");
+			$this->db->query("INSERT INTO `animes` (`id`, `slug`, `age_rating`, `episode_count`, `episode_length`, `synopsis`, `youtube_video_id`, 
+					`cover_image_file_name`, `age_rating_guide`, `show_type`, `start_date`, `end_date`, `poster_image_file_name`, `cover_image_top_offset`,
+					`titles`, `canonical_title`, `abbreviated_titles`) VALUES ({$values})");
+			echo $values;
 		}
 	}
 	

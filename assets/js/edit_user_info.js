@@ -42,7 +42,42 @@ function editUserInfo(file_chosen, filesize) {
 	});      
 
 }
-$(document).ready(function() {
+
+function updateDb(baseurl) {
+    var textValue = document.getElementById("user_description_area").value;
+	var ageValue = document.getElementById("age_edit").value;
+	var genderValue = document.getElementById("gender_edit").value;
+	var locationValue = document.getElementById("location_edit").value;
+    if(!(ageValue <= 0)){
+	    $.ajax({
+	          method: "POST",
+	          url: baseurl + '/userupdates/update_user_info',
+	          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
+	        })
+	      .done(function( msg ) {	  
+	      });    
+	     showUpdateUserInfoContent();
+	} else {
+		document.getElementById("wtf_age").style.display = "inline";
+		$("#wtf_age").text(" Baka...");
+	}
+};
+
+function fix_error_messages() {
+	var e = document.getElementsByClassName("error");
+	for (i = 0; i < e.length; i++) {
+		e[i].style.marginTop = "155px";
+	}
+	 e = document.getElementsByClassName("error_a");
+	for (i = 0; i < e.length; i++) {
+		e[i].style.marginTop = "155px";
+	}
+}
+
+$(document).ready(function() {	
+	$("#user_description_area").keyup(function(){
+		  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
+	});
 	$('#edit_cover_button').change(function(){
 		var file = this.files[0]
 		var size = file.size;
@@ -125,13 +160,3 @@ function showUpdateUserInfoContent() {
 	var country_content = "<i class=\"fa fa-home\"></i> Lives in: <strong>" + location + "</strong>";
 	$("#country").html(country_content);
 }
-
-
-
-
-
-
-
-
-
-

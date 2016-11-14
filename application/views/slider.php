@@ -11,7 +11,7 @@
   					<?php }?>
   					<div class="row">
 				<?php }?>			
-  				<div class="slide_div"><a href="#x" class="thumbnail"><img src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  alt="Image" class="img-responsive slide_img"></a>
+  				<div class="slide_div"><a href="<?php echo site_url("animeContent/show_anime_page/" . $anime['id']);?>" class="thumbnail"><img src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  alt="Image" class="img-responsive slide_img"></a>
                 	<p class="text-over-img" style="white-space: pre;"><?php  $temp = $anime['titles']; $titles = convert_titles_to_hash($temp); echo $titles[$anime['canonical_title']];?></p>
                 </div>		
 			    <?php $counter++;?>

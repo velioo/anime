@@ -42,6 +42,18 @@ function reScale() {
 			document.getElementById("edit_cover_label").style.marginRight =  width/5 + "px";
 		}
 	}
+	
+	if($('#anime-bar').length > 0) {
+		var offset = document.getElementById("top_offset").getAttribute("value");
+		document.getElementById("anime-bar").style.width = width + "px";
+		offset = parseInt(offset);
+		scale = parseInt(scale);
+		document.getElementById("anime-bar").style.backgroundPosition = "0px" + " -" + (offset + scale) + "px";	
+		if($('#submit_cover_button').length > 0) {
+			document.getElementById("submit_cover_button").style.marginRight = width/6 + "px";	
+			document.getElementById("edit_cover_label").style.marginRight =  width/5 + "px";
+		}
+	}
 
 	var e = document.getElementsByClassName("container-fluid");
 	for (i = 0; i < e.length; i++) {

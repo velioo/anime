@@ -12,7 +12,7 @@
    		padding-top:63px;
 	}
 
-	#main_title {
+	.main_title {
 		font-size: 30px;
 		text-align: center;
 		color: black;
@@ -268,7 +268,7 @@
 	
 	.container-fluid.scrollable {
 		 height: 100%;
-		 min-height:500px;
+		 min-height:600px;
 		 overflow-y: scrollable;
 		 border: 1px solid rgba(211, 211, 211, 0.5);
 		 background: rgba(211, 211, 211, 0.5);

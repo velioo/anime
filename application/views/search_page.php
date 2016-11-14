@@ -1,4 +1,13 @@
-<?php include 'head.php'; include 'navigation.php';?>
+<?php include 'head.php';?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('head').append('<script src="<?php echo asset_url() . "js/browse_animes.js";?>">');
+		addListeners();
+	});
+</script>
+
+<?php include 'navigation.php';?>
 
 <div id="wrap">
 	<div class="container-fluid scrollable content">
@@ -24,7 +33,7 @@
 		 				 $temp = $anime['titles'];	 				 
 		 				 $titles = convert_titles_to_hash($temp);	
 		 				 echo '<div class="col-sm-4">';
-		 				 echo "<p class='title_paragraph'><a href = '#' class = 'anime_title'>"  . $titles[$anime['canonical_title']] . "</a></p>";
+		 				 echo "<p class='title_paragraph'><a href = '" . site_url("AnimeContent/show_anime_page/" . $anime['id']) . "' class = 'anime_title'>"  . $titles[$anime['canonical_title']] . "</a></p>";
 		 				 if($anime['episode_count'] > 0) {
 		 				 	$episode_count = $anime['episode_count'];
 		 				 } else {
@@ -36,31 +45,7 @@
 		 				  else 
 		 				 	$ep = "eps";
 		 				 
-		 				 $show_type = "";
-		 				 	
-		 				 switch($anime['show_type']) {
-		 				 	case 0:
-		 				 		$show_type = "Unknown";
-		 				 		break;
-		 				 	case 1:
-		 				 		$show_type = "TV";
-		 				 		break;
-		 				 	case 2:
-		 				 		$show_type = "Special";
-		 				 		break;
-		 				 	case 3:
-		 				 		$show_type = "OVA";
-		 				 		break;
-		 				 	case 4:
-		 				 		$show_type = "ONA";
-		 				 		break;
-		 				 	case 5:
-		 				 		$show_type = "Movie";
-		 				 		break;
-		 				 	case 6:
-		 				 		$show_type = "Music";
-		 				 		break;
-		 				 }
+		 				 $show_type = get_type($anime['show_type']);
 		 				 	
 		 				 echo "<p class='second_paragraph'>" . $show_type . " | " . $episode_count . " " . $ep . "</p>";
 		 				 echo "<p class='third_paragraph'>";
@@ -69,44 +54,19 @@
 										echo " <span title='{$genre}'>" . $genre . "</span> ";
 	 								}
 		 				 		}
-							echo "</p>";
+						echo "</p>";
 	 				 ?>				 
 	 				 <?php $random_num = time();?>
 	 				 <div class="anime_body">
-	 				 	<a href="#"><img class="anime_poster" src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']. "?rand={$random_num}";?> " onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"></a> 			
+	 				 	<a href="<?php echo site_url("AnimeContent/show_anime_page/" . $anime['id']);?>"><img class="anime_poster" src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']. "?rand={$random_num}";?> " onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"></a> 			
 	 				 	<div class="anime_synopsis_block">
 	 				 		<p class="anime_synopsis"><?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?></p>
 	 				 	</div>
 	 				 </div>
 	 				 <div class="anime_footer">
-	 				 	<?php 
-	 				 		if($anime['start_date'] != "0000-00-00") {
-	 				 			$split_by_slash_date = explode("-", $anime['start_date']);
-	 				 			if($split_by_slash_date[1] == "00") {
-									$month_short = "???";
-	 				 			} else {
-			 				 		$start_date = date("F", strtotime($anime['start_date']));
-			 				 		$month_short = substr($start_date, 0, 3);
-	 				 			}
-	 				 			if($split_by_slash_date[2] == "00") {
-	 				 				$day = "??";
-	 				 			} else {
-		 				 			$day = $split_by_slash_date[2];			 			
-	 				 			}
-	 				 			if($split_by_slash_date[0] == "0000") {
-	 				 				$year = "????";
-	 				 			} else {
-	 				 				$year = $split_by_slash_date[0];
-	 				 			}
-		 				 		
-		 				 		$final_date = $month_short . " " . $day . ", " . $year;
-	 				 		} else {
-	 				 			$final_date = "??? ??, ????";
-	 				 		}
-	 				 		
-	 				 	?>
-	 				 
+	 				 	<?php $final_date = convert_date($anime['start_date']);?> 				 
 	 				 	<p class="anime_date_paragraph"><i title="Air date" class="fa fa-calendar" aria-hidden="true"></i> <?php echo $final_date;?></p>
+	 				 	<p class="anime_rating_paragraph"><i title="Rating" class="fa fa-star-o" aria-hidden="true"></i> <?php echo $anime['average_rating']?></p>
 	 				 </div>
 	 				 </div>		
 	 				 <?php $counter++;?>

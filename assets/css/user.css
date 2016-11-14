@@ -23,7 +23,7 @@ body {
 
 #user-bar {
 	position:relative;
-	height:450px;
+	height:12cm;
 	width:100%;
 	margin-top: -60px;
 	background-repeat: repeat;
@@ -93,7 +93,7 @@ body {
 	padding-right:40px;
 	font-size: 15px;
 	display: block;
-	margin-left:30px;
+	margin-left:69px;
 	margin-top:130px;
 }
 
@@ -163,6 +163,40 @@ h1 {
 	left:85%;
 	top:42%;
 }
+
+#follow_div {
+	position:relative;
+	left:85%;
+	top:42%;
+}
+
+#follow_button {
+	background-color:#4f74e3w;
+	border:none;
+	outline:none;
+	padding-left:50px;
+	padding-right:50px;
+	font-size: 15px;
+	display: block;
+	margin-left:30px;
+	margin-top:130px;
+	opacity: 1;
+}
+
+#follow_button:hover {
+	background-color: #4169e1;
+	opacity: 1;
+}
+
+#follow_button:active {
+	background:none;
+	outline:none;
+}
+
+#follow_button:focus {
+	background-color: #4169e1;
+}
+
 
 #personal_info_div {
 	width:450px;

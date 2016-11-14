@@ -1,5 +1,6 @@
-<?php include 'head.php'; include 'navigation.php';?>
+<?php include 'head.php';?>
 
+<?php include 'navigation.php';?>
 <?php 
 if (isset($this->session->userdata['is_logged_in'])) {
 	header("location: " . site_url("Login/log_in"));
@@ -16,7 +17,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			$username = set_value('username') == false ? '' : set_value('username');
 			$email = set_value('email') == false ? '' : set_value('email');
 					
-			echo form_open('SignUp/create_user', 'class="signloginform"'); 
+			echo form_open('SignUp/create_user', 'class="signloginform" autocomplete="off"'); 			
 			echo form_label('Username', 'username');
 			echo form_input('username', set_value('username', $username)); 
 			echo form_error('username', '<p class="error">*', '</p>');echo "<br/>";
@@ -33,6 +34,11 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_close();		
 		?>
 		<p id="accept_paragraph">By clicking Sign Up, you are indicating that you have read and agree to the <a href="#" class="accept">Terms of Use</a> and <a href="#" class="accept">Privacy Policy</a></p>
+		  <form action="<?php echo site_url("login/facebook_login");?>" method="post">
+			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook" style="width:300px;margin-left:32%;margin-top:50px;">
+			    <span class="fa fa-facebook"></span>Connect with Facebook
+			 </button>
+		 </form>
 		<br/><br/><br/>
 	</div>
 </div>

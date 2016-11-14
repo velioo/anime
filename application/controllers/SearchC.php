@@ -66,7 +66,11 @@ class SearchC extends CI_Controller {
 		if($this->input->get('sort_selected') !== NULL) {// check which sort option is selected
 			$sort_by = $this->input->get('sort_selected');
 		} else {
-			$sort_by = 'slug';
+			if($anime == "") {
+				$sort_by = 'start_date';
+			} else {
+				$sort_by = 'slug';
+			}
 		}
 		
 		$user_sorted_results = FALSE;
@@ -81,7 +85,11 @@ class SearchC extends CI_Controller {
 				$order = $this->input->get('sort_order');
 		} else {
 			$user_sorted_results = FALSE;
-			$order = "ASC";
+			if($anime == "") {	
+				$order = "DESC";
+			} else {
+				$order = "ASC";
+			}	
 		}
 		
 		if($this->input->get('page') != NULL) { //calculate the offset for next page

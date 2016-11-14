@@ -62,7 +62,7 @@ Class Search_model extends CI_Model {
 		
 		$anime = trim($anime);	
 		
-		if($user_sorted_results) {
+		if($user_sorted_results) { // if user sorted results sort by $sort_by 
 			$order_by_rnk = "";
 		} else {
 			$order_by_rnk = "rnk ASC,";
@@ -85,6 +85,10 @@ Class Search_model extends CI_Model {
 				WHERE titles LIKE '%{$anime}%'	
 				UNION
 				SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at
+					FROM animes WHERE MATCH(slug) AGAINST('{$anime}' IN BOOLEAN MODE)
+				UNION
+				SELECT 4 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
 				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM animes
 				WHERE synopsis LIKE '%{$anime}%'
 			
@@ -163,8 +167,7 @@ Class Search_model extends CI_Model {
 		
 		if(count($result_array) > 0) {
 			return $result_array;
-		} else {
-			
+		} else {		
 			$like_statement = "";
 			foreach ($split_anime as $a) {
 				$like_statement.=" or slug LIKE '{$a}%'";
@@ -172,7 +175,7 @@ Class Search_model extends CI_Model {
 			$like_statement = trim($like_statement);
 			$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 			
-			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
+			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
 					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
 					FROM animes WHERE {$like_statement} {$limit_offset}");
 			
@@ -186,7 +189,7 @@ Class Search_model extends CI_Model {
 				$like_statement = trim($like_statement);
 				$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 					
-				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
+				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
 						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
 						FROM animes WHERE {$like_statement} {$limit_offset}");
 				if($query->num_rows() > 0) {

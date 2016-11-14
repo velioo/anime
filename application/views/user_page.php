@@ -1,4 +1,4 @@
-<?php include 'head.php'; include 'navigation.php';?>
+<?php include 'head.php';?>
 
 <?php
 	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $results['username'])) 
@@ -8,52 +8,19 @@
 ?>
 
 <script type="text/javascript">
-
-	function showEditFields() {
-		editUserInfo(false, 0);		
-		$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');
-		
-		var e = document.getElementsByClassName("error");
-		for (i = 0; i < e.length; i++) {
-			e[i].style.marginTop = "155px";
-		}
-		 e = document.getElementsByClassName("error_a");
-		for (i = 0; i < e.length; i++) {
-			e[i].style.marginTop = "155px";
-		}
-		
-	}
-
 	$(document).ready(function() {
+		$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
 		document.getElementById("timeline").style.opacity = "1";	
-		$("#save_user_info").on('click', function(e){
-		    e.preventDefault(); 
-		    var textValue = document.getElementById("user_description_area").value;
-			var ageValue = document.getElementById("age_edit").value;
-			var genderValue = document.getElementById("gender_edit").value;
-			var locationValue = document.getElementById("location_edit").value;
-		    if(!(ageValue <= 0)){
-			    $.ajax({
-			          method: "POST",
-			          url: '<?php echo site_url("UserUpdates/update_user_info")?>',
-			          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
-			        })
-			      .done(function( msg ) {
-						
-			      });    
-			    showUpdateUserInfoContent();
-			} else {
-				document.getElementById("wtf_age").style.display = "inline";
-				$("#wtf_age").text(" Baka...");
-			}
-		});	
-
-		$("#user_description_area").keyup(function(){
-			  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
-		});
-
 	});
+	<?php if($is_you) { ?>
+	function showEditFields() {
+			editUserInfo(false, 0);		
+			$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');		
+		}
+	<?php }?>
 </script>
+
+<?php include 'navigation.php'; ?>
 
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>
@@ -64,7 +31,7 @@
 				<p>About <?php echo $results['username'];?>
 				<?php if($is_you) {?>
 					<span class="fa fa-pencil edit_icon" id="edit_user_info" onClick="showUserInfoEdit()" ></span> 
-					<button class="btn btn-primary save_button" id="save_user_info"  onClick="">Save</button>
+					<button class="btn btn-primary save_button" id="save_user_info"  onClick="updateDb(<?php echo "'" . site_url("userUpdates/update_user_info") . "'"; ?>)">Save</button>
 				<?php }?>
 				</p>			
 			</div>

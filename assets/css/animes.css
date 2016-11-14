@@ -1,0 +1,364 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+body {
+	padding-top:63px;
+	background-color:#E9E9E9;
+}
+
+#anime-bar {
+	position:relative;
+	height:10.5cm;
+	width:100%;
+	margin-top: -60px;
+	background-repeat: repeat;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+    -webkit-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+	-moz-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+	box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+}
+
+.top-container {
+	height:500px;
+	width: 100%;
+	padding-top: 50px;
+}
+
+#anime_content {
+	border-radius: 2px;
+	margin-top: 50px;
+	background: none;
+	border:none;
+}
+
+#anime_info {
+	background-color: white;
+	height:500px;
+}
+
+#anime_title_div {
+	text-align: center;
+	width: 100%;
+	vertical-align: top;
+	margin-top:20px;
+	border-bottom: 1px solid #DEDEDE;
+}
+
+#anime_title {
+	display: inline-block;
+	font-size: 22px;
+	font-weight: bolder;
+	color:black;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#type_episodes_div {
+	display:inline-block;
+	text-align: center;
+	width:221px;
+}
+
+#type_episodes {
+	letter-spacing: -0.9px;
+	font-size:17px;
+	margin-top:10px;
+	border-right: 1px solid #DEDEDE;
+}
+
+#age_rating_div {
+	text-align: center;
+	display: inline-block;
+	width:60px;
+}
+
+#age_rating {
+	border-right: 1px solid #DEDEDE;
+}
+
+#air_end_date_div {
+	display: inline-block;
+	width:250px;
+	border-right: 1px solid #DEDEDE;
+	text-align: center;
+}
+
+.date {
+	display: inline;
+	letter-spacing: -0.9px;
+	font-size:16px;
+}
+
+#rating_div {
+	display: inline-block;
+	text-align: center;
+	border-right: 1px solid #DEDEDE;
+}
+
+.star-ratings-sprite {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+  font-size: 0;
+  height: 21px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 112px;
+  margin: 0 auto;
+}
+
+.star-ratings-sprite-rating {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    background-position: 0 100%;
+    float: left;
+    height: 21px;
+    display:inline;
+}
+
+#ranked_div {
+	text-align: center;
+	display: inline-block;
+	width:150px;
+	vertical-align: top;
+	margin-top:5px;
+}
+
+#poster_image {
+	border-radius: 3px;
+	display: inline-block;
+	margin-top:5px;
+	max-height:310px;
+	max-width:220px;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    padding-top: 170px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.6); 
+}
+
+#center_div {
+	margin: auto;
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 100%;
+    max-width: 400px;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+@-webkit-keyframes zoom_out {
+    from {-webkit-transform:scale(1)} 
+    to {-webkit-transform:scale(0)}
+}
+
+@keyframes zoom_out {
+    from {transform:scale(1)} 
+    to {transform:scale(0)}
+}
+
+.close {
+    position: relative;
+    top: 0;
+    right:0;
+    margin-right: -30px;
+    margin-top:-50px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+	border: none;
+}
+
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+
+#show_video {
+	margin-top:15px;
+	background-color: #2F343B;
+	color: rgba(255,255,255,0.8);
+	outline:none;
+	border:none;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+#show_video:focus, #show_video:active {
+	outline:none;
+	border:none;
+}
+
+#show_video:hover {
+	background-color: #21252B;
+	color: white;
+}
+
+#youtube_modal {
+	padding-top: 100px; 
+}
+
+.modal-content iframe{
+   margin: 0 auto;
+   display: block;
+}
+
+#center_video_div {
+	margin: auto;
+    display: block;
+    max-width: 1200px;
+    max-height:700px;
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+#synopsis_div {
+	display: inline-block;
+	width:600px;
+	vertical-align: top;
+	margin-top:10px;
+	padding-left:10px;
+}
+
+#synopsis {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#youtube_trailer_div {
+	display: inline-block;
+	margin-left:20px;
+	vertical-align: top;
+}
+
+#edit_div {
+	position: relative;
+	left:85%;
+	top:42%;
+}
+
+#show_edits {
+	background-color: #23272D;
+	border:none;
+	outline:none;
+	padding-left:40px;
+	padding-right:40px;
+	font-size: 15px;
+	display: block;
+	margin-left:69px;
+	margin-top:130px;
+}
+
+#show_edits:hover {
+	background-color: #2F343B;
+	opacity: 1;
+}
+
+#show_edits:active {
+	background:none;
+	outline:none;
+}
+
+#show_edits:focus {
+	background-color: #2F343B;
+}
+
+#edit_avatar_button, #edit_cover_button {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#submit_info, #edit_avatar_label, #edit_cover_label {
+	position:absolute;
+	margin-top:115px;
+	color:white;
+	background-color: #23272D;
+	outline:none;
+	border:none;
+	padding: 10px;
+	cursor: pointer;
+	display:none;
+	-webkit-touch-callout: none; 
+    -webkit-user-select: none;   /
+    -khtml-user-select: none;    
+    -moz-user-select: none;      
+    -ms-user-select: none;      
+    user-select: none;           
+}
+
+#submit_info {
+	margin-left:150px;
+	margin-top: 115px;
+}
+
+#edit_avatar_label {
+	margin-left:-830px;
+	margin-top:40px;
+}
+
+#submit_info:hover, #edit_cover_label:hover, #edit_avatar_label:hover {
+	background-color:#2F343B;
+	opacity: 1;
+}
+
+.error {
+	position:absolute;
+	margin-left:-40%;
+	margin-top:25px;
+	color:red;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.error_a {
+	position:absolute;
+	margin-left:-95%;
+	margin-top:25px;
+	color:red;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}

@@ -70,3 +70,4 @@ $lang['check_if_username_exists']		= 'Sorry, the username is already taken.';
 $lang['check_if_email_exists']		= 'Sorry, the email has already been registered.';
 $lang['check_if_email_exists_forgot']		= 'The email doesn\'t exist in our database.';
 $lang['only_alphanumeric']			= 'Only alphanumeric and underscore characters';
+$lang['without_special']			= 'Prohibited characters in username';

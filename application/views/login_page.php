@@ -1,5 +1,6 @@
-<?php include 'head.php'; include 'navigation.php';?>
+<?php include 'head.php';?>
 
+<?php include 'navigation.php';?>
 
 <?php 
 if (isset($this->session->userdata['is_logged_in'])) {
@@ -33,6 +34,12 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_close();
 		?>
 		<a href="<?php echo site_url("login/forgotten_password")?>" id="forgot_password">Forgot your password?</a>
+		
+		 <form action="<?php echo site_url("login/facebook_login");?>" method="post">
+			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook" style="width:300px;margin-left:32%;margin-top:50px;">
+			    <span class="fa fa-facebook"></span>Connect with Facebook
+			 </button>
+		 </form>
 	</div>
 	
 

@@ -1,11 +1,14 @@
 <?php
+$path =  $_SERVER['DOCUMENT_ROOT'] . '/anime/' . 'vendor/autoload.php';
+require_once $path;
+
 class Login extends CI_Controller {
 	
 	public function index() {
 		$this->login_page(TRUE);
 	}
 	
-	public function login_page($correct, $header = "Please Login") {
+	public function login_page($correct=TRUE, $header = "Please Login") {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
 		$data['javascript'] = 'home.js';
@@ -41,14 +44,14 @@ class Login extends CI_Controller {
 		
 			$this->load->model('users_model');
 			$query = $this->users_model->validate();
-			if($query) {
-				
+			if($query) {				
 				$username = $this->input->post('username');
 				$result = $this->users_model->get_user_info_logged($username);
 				if ($result != false) {
 					$data = array(
 							'id' => $result['id'],
 							'username' => $result['username'],
+							'email' => $result['email'],
 							'is_logged_in' => true
 					);
 					
@@ -152,7 +155,7 @@ class Login extends CI_Controller {
 	
 	}
 	
-	public function update_password($user_id) {
+	public function update_forgotten_password($user_id) {
 		  $this->load->library('form_validation');
 		  $this->load->model('users_model');
 		  
@@ -194,6 +197,177 @@ class Login extends CI_Controller {
 	    $this->output->set_header('Pragma: no-cache');
 	    $this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	}
+	
+	function facebook_login($connect_existing_account = "") {	
+		$fb = new Facebook\Facebook([
+		  'app_id' => APP_ID,
+		  'app_secret' => APP_SECRET,
+		  'default_graph_version' => 'v2.5',
+		]);
+		
+		$helper = $fb->getRedirectLoginHelper();
+		$permissions = ['email']; 
+		$loginUrl = $helper->getLoginUrl(site_url("login/facebook_login_callback/{$connect_existing_account}"), $permissions);
+		
+		redirect($loginUrl);
+	}
+	
+	function facebook_login_callback($connect_existing_account = "") {
+		$fb = new Facebook\Facebook([
+		  'app_id' => APP_ID,
+		  'app_secret' => APP_SECRET,
+		  'default_graph_version' => 'v2.5',
+		]);
+		
+		$helper = $fb->getRedirectLoginHelper();
+
+		try {
+		  $accessToken = $helper->getAccessToken();
+		  $response = $fb->get('/me?fields=id,name,email', $accessToken);
+		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+		  echo 'Graph returned an error: ' . $e->getMessage();
+		  exit;
+		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		  redirect("login/login_page/TRUE/There was an error connecting with Facebook");
+		}
+		
+		if (!isset($accessToken)) {
+		  if ($helper->getError()) {
+		    header('HTTP/1.0 401 Unauthorized');
+		    echo "Error: " . $helper->getError() . "\n";
+		    echo "Error Code: " . $helper->getErrorCode() . "\n";
+		    echo "Error Reason: " . $helper->getErrorReason() . "\n";
+		    echo "Error Description: " . $helper->getErrorDescription() . "\n";
+		  } else {
+		    header('HTTP/1.0 400 Bad Request');
+		    echo 'Bad request';
+		  }
+		  exit;
+		}
+		
+		$oAuth2Client = $fb->getOAuth2Client();
+		
+		$tokenMetadata = $oAuth2Client->debugToken($accessToken);
+		
+		$tokenMetadata->validateAppId(APP_ID); 
+		$tokenMetadata->validateExpiration();
+		
+		if (!$accessToken->isLongLived()) {
+		  try {
+		    $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+		  } catch (Facebook\Exceptions\FacebookSDKException $e) {
+		    echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
+		    exit;
+		  }
+		  echo '<h3>Long-lived</h3>';
+		  //var_dump($accessToken->getValue());
+		}
+		
+		$user = $response->getGraphUser();
+		$fb_user_id = $user['id'];
+		$email = $user['email'];
+		
+		$this->load->model('users_model');
+		
+		$query = $this->users_model->check_if_fb_acc_exist_and_return_user($fb_user_id);
+		
+		if($connect_existing_account != "connect") {
+			if($query) {			
+					$data = array(
+							'id' => $query['id'],
+							'username' => $query['username'],
+							'is_logged_in' => true,
+							'email' => $query['email'],
+							'fb_access_token' => (string) $accessToken
+					);
+					
+					$this->session->set_userdata($data);			
+					redirect("home");
+			} else {
+				
+				$email_available = $this->users_model->check_if_email_exists($email);		
+				
+				if(!$email_available) {
+					$data['header'] = 'Choose your Username and Email';
+					$email = FALSE;
+				} else {
+					$data['header'] = 'Choose your Username';
+				}
+	
+				$data['fb_access_token'] = (string) $accessToken;
+				$data['fb_user_id'] = $fb_user_id;
+				$data['fb_email'] = $email;
+				$data['title'] = "Sign Up";
+				$data['css'] = 'login.css';
+				$data['javascript'] = 'home.js';
+				$this->load->view('fb_user_signup', $data);
+				
+			}
+		} else {
+			if($query) {
+				$message = "This Facebook account is already connected with another account.";
+				redirect("userUpdates/user_settings/{$message}");
+			} else {
+				
+				if(($email != $this->session->userdata['email'])) {
+					$email_available = $this->users_model->check_if_email_exists($email);
+					if(!$email_available) {
+						$email = $this->session->userdata['email'];
+					} 
+				} else {
+					$email_available = TRUE;
+				}
+				
+				$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
+				
+				if($email_available)
+					$message = "";
+				else 
+					$message = "The email associated with your Facebook account was taken but you were still connected.";
+				
+				if($query) {
+					$data = array(
+							'id' => $this->session->userdata['id'],
+							'username' => $this->session->userdata['username'],
+							'is_logged_in' => true,
+							'email' => $query['email'],
+							'fb_access_token' => (string) $accessToken
+					);
+						
+					$this->session->set_userdata($data);
+				} else {
+					$message = "There was an error connecting your account.";
+				}
+				redirect("userUpdates/user_settings/{$message}");
+			}
+		}
+	}
+	
+	function facebook_connect() {
+		$this->load->model('users_model');
+		
+		$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);	
+		$facebook = "";
+		
+		if($query) {	
+			
+			$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);		
+			
+			if($query) {
+				redirect("userUpdates/user_settings");
+			} else {
+				$error = "Please add a password to your account before disconnecting Facebook";
+				redirect("userUpdates/user_settings/$error");
+			}
+			
+		} else {
+			$facebook = "connect";
+			$this->facebook_login($facebook);
+		}
+		
+		
+	}
+	
 	
 }
 
