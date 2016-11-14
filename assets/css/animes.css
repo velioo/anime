@@ -36,7 +36,8 @@ body {
 
 #anime_info {
 	background-color: white;
-	height:500px;
+	height:auto;
+	min-height:500px;
 }
 
 #anime_title_div {
@@ -162,7 +163,7 @@ body {
     margin: auto;
     display: block;
     width: 100%;
-    max-width: 400px;
+    max-width: 350px;
 }
 
 @-webkit-keyframes zoom {
@@ -216,30 +217,29 @@ body {
 #show_video {
 	margin-top:15px;
 	background-color: #2F343B;
-	color: rgba(255,255,255,0.8);
-	outline:none;
-	border:none;
+	width:210px;
+	height:117.6px;
+	background-size: cover;
+	background-position: 0px -19.6px;
+	color: rgba(255,255,255,0.7);
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
+	cursor: pointer;
+	text-align: center;
 }
 
-#show_video:focus, #show_video:active {
-	outline:none;
-	border:none;
-}
 
 #show_video:hover {
-	background-color: #21252B;
 	color: white;
+}
+
+.fa.fa-youtube-play {
+	font-size: 40px;
+	margin-top:40px;
 }
 
 #youtube_modal {
 	padding-top: 100px; 
-}
-
-.modal-content iframe{
-   margin: 0 auto;
-   display: block;
 }
 
 #center_video_div {
@@ -253,16 +253,37 @@ body {
     animation-duration: 0.6s;
 }
 
+#anime_video {
+   margin: 0 auto;
+   display: block;
+}
+
 #synopsis_div {
+	position: relative;
 	display: inline-block;
 	width:600px;
 	vertical-align: top;
 	margin-top:10px;
+	margin-bottom: 50px;
 	padding-left:10px;
+	color: #838A91;
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
-#synopsis {
-	font-family: Arial, Helvetica, sans-serif;
+.morecontent span {
+    display: none;
+}
+
+.morelink {
+    display: inline;
+    color: red;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.morelink:hover {
+	color: #651a1a;
 }
 
 #youtube_trailer_div {
@@ -286,7 +307,7 @@ body {
 	font-size: 15px;
 	display: block;
 	margin-left:69px;
-	margin-top:130px;
+	margin-top:100px;
 }
 
 #show_edits:hover {
@@ -303,7 +324,7 @@ body {
 	background-color: #2F343B;
 }
 
-#edit_avatar_button, #edit_cover_button {
+#edit_cover_button {
 	width: 0.1px;
 	height: 0.1px;
 	opacity: 0;
@@ -312,9 +333,9 @@ body {
 	z-index: -1;
 }
 
-#submit_info, #edit_avatar_label, #edit_cover_label {
+#submit_info, #edit_cover_label {
 	position:absolute;
-	margin-top:115px;
+	margin-top:90px;
 	color:white;
 	background-color: #23272D;
 	outline:none;
@@ -332,15 +353,10 @@ body {
 
 #submit_info {
 	margin-left:150px;
-	margin-top: 115px;
+	margin-top: 90px;
 }
 
-#edit_avatar_label {
-	margin-left:-830px;
-	margin-top:40px;
-}
-
-#submit_info:hover, #edit_cover_label:hover, #edit_avatar_label:hover {
+#submit_info:hover, #edit_cover_label:hover {
 	background-color:#2F343B;
 	opacity: 1;
 }

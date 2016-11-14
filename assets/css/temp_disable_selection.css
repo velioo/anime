@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-#user-bar {
+#user-bar, #anime-bar {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;

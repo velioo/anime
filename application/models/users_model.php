@@ -85,6 +85,15 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
+	function check_if_user_is_admin($id) {
+		$query = $this->db->query("SELECT users.id FROM users JOIN admins ON admins.user_id=users.id WHERE users.id = {$id}");	
+		if($query->num_rows() == 1) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
 	
 	function update_user_info($id, $bio, $age, $gender, $country) {
 		$bio = addslashes($bio);

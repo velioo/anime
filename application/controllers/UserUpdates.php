@@ -47,47 +47,6 @@ class UserUpdates extends CI_Controller {
          
          redirect("login/profile/{$this->session->userdata['username']}");
 	}
-		
-/* 	public function check_image_upload() {
-		$rootFolder = "anime";
-	
-		echo $_FILES['edit_cover']['name'];
-		die();
-		
-		if(!empty($_FILES['edit_cover']['name'])) {
-			
-			$errors= array();
-			$file_name = $_FILES['edit_cover']['name'];
-			$file_size =$_FILES['edit_cover']['size'];
-			$file_tmp =$_FILES['edit_cover']['tmp_name'];
-			$file_type=$_FILES['edit_cover']['type'];
-			$file_ext=@strtolower(end(explode('.',$_FILES['edit_cover']['name'])));
-	
-			$expensions= array("jpeg","jpg","png");
-	
-			if(in_array($file_ext,$expensions)=== false){
-				$errors[]="extension not allowed, please choose a JPEG or PNG file.";
-			}
-	
-			if($file_size > 5242880){
-				$errors[]='File size must be up to 5 MB';
-			}
-	
-			$target_file = $_SERVER['DOCUMENT_ROOT'] . "/$rootFolder/assets/user_cover_images/" .$file_name;
-	
-			if(empty($errors)==true){
-				move_uploaded_file($file_tmp, $target_file);
-			}else{
-				print_r($errors);
-			}
-	
-			return $file_name;
-		} else {
-			$file_name = "None";
-			return $file_name;
-		}
-	
-	} */
 	
 	public function update_user_info() {
 		$this->load->model('users_model');		
@@ -141,6 +100,12 @@ class UserUpdates extends CI_Controller {
 							'email' => $result['email'],
 							'is_logged_in' => true
 					);
+					
+					$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
+						
+					if($is_admin) {
+						$data['admin'] = TRUE;
+					}
 						
 					$this->session->set_userdata($data);
 				}

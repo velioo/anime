@@ -82,7 +82,7 @@ function putCaret() {
 }
 
 $(document).ready(function() {
-	window_width = window.innerWidth;
+	window_width = screen.width;
 	prev_window_width = window_width;
 	original_width = window_width;
 	$('.search_form').each(function(){

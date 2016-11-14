@@ -82,7 +82,8 @@
 				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="small_user_button"><?php echo $this->session->userdata['username'];?> 
 				  </button>
 				  <ul class="dropdown-menu" style="min-width:50px;">
-				    <li><a href="<?php echo site_url("userUpdates/user_settings" . $this->session->userdata['username']) ?>" style="text-align: right;">Edit Page</a></li>
+				  	<li><a href="<?php echo site_url("login/profile/" . $this->session->userdata['username']); ?>" style="text-align: right;">Profile</a></li>
+				    <li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>
 				    <li><a href="<?php echo site_url("Login/logout"); ?>" style="text-align: right;">Logout</a></li>
 				  </ul>
 				</div>

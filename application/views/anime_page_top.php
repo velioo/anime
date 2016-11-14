@@ -13,9 +13,8 @@
 				  }
 			?>
 			<button class="btn btn-primary" id="show_edits" onClick="showEditFields()">Edit</button>			
-			<form action="<?php echo site_url("animeUpdates/update_anime")?>" method="post" enctype="multipart/form-data">
+			<form action="<?php echo site_url("animeUpdates/update_anime/" . $anime['id']);?>" method="post" enctype="multipart/form-data">
 				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
-				<input type="file" name="edit_avatar" accept="image/*" id="edit_avatar_button"><label for="edit_avatar_button" id="edit_avatar_label"><span class="glyphicon glyphicon-pencil"></span> Edit Avatar</label>
 		<?php } ?> 	
 				<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $anime['cover_image_top_offset'];?>">
 		<?php if($is_admin) {?>		

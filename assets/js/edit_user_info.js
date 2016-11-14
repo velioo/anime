@@ -33,14 +33,13 @@ function editUserInfo(file_chosen, filesize) {
 			   }
 		   }
 		   document.getElementById("top_offset").setAttribute("value", offset);
-		   changeCoverPosition();
+		   changeCoverPosition("user-bar");
 	      prevY = e.clientY;
 	    });
 	});     
 	$('#user-bar').mouseup(function(){
 	  $(this).unbind("mousemove");
 	});      
-
 }
 
 function updateDb(baseurl) {
@@ -63,7 +62,7 @@ function updateDb(baseurl) {
 	}
 };
 
-function fix_error_messages() {
+/*function fix_error_messages() {
 	var e = document.getElementsByClassName("error");
 	for (i = 0; i < e.length; i++) {
 		e[i].style.marginTop = "155px";
@@ -72,7 +71,7 @@ function fix_error_messages() {
 	for (i = 0; i < e.length; i++) {
 		e[i].style.marginTop = "155px";
 	}
-}
+}*/
 
 $(document).ready(function() {	
 	$("#user_description_area").keyup(function(){
@@ -81,31 +80,37 @@ $(document).ready(function() {
 	$('#edit_cover_button').change(function(){
 		var file = this.files[0]
 		var size = file.size;
-		if(document.getElementById("edit_cover_button").value != "") {					
-			editUserInfo(true, size);	
-			showCover(this);
+		if(document.getElementById("edit_cover_button").value != "") {		
+			if($('#user-bar').length > 0) {
+				editUserInfo(true, size);	
+				showCover(this, "#user-bar");
+			} else {
+				editAnimeInfo(true, size);	
+				showCover(this, "#anime-bar");
+			}
+			
 		}	
 	});
 
 	$('#edit_avatar_button').change(function(){
 		if(document.getElementById("edit_avatar_button").value != "") {					
-			showAvatar(this);
+			showAvatar(this, "user-bar");
 		}	
 	});	
 });
 
-function changeCoverPosition() {
+function changeCoverPosition(bar) {
 	var width = window.innerWidth;
 	var offset = document.getElementById("top_offset").getAttribute("value");
-	document.getElementById("user-bar").style.backgroundPosition = "0px" + " -" + (offset) + "px";	
+	document.getElementById(bar).style.backgroundPosition = "0px" + " -" + (offset) + "px";	
 }
 
-function showCover(input) {
+function showCover(input, bar) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
-
+        
         reader.onload = function (e) {
-        	$('#user-bar').css('background-image', 'url(' + e.target.result + ')');
+        	$(bar).css('background-image', 'url(' + e.target.result + ')');
         }
 
         reader.readAsDataURL(input.files[0]);

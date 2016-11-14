@@ -9,65 +9,26 @@
 
 <?php 
 	if(isset($this->session->userdata['admin'])) {
-		$is_admin = TRUE;
+		if($this->session->userdata['admin'] === TRUE and $logged === TRUE) {
+			$is_admin = TRUE;
+		}
 	} else {
 		$is_admin = FALSE;
 	}
 ?>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
-		var image_width = $('#poster_image').css("width");
-		if(image_width > 0)
-	 		$('#type_episodes_div').css("width", image_width);
+$(document).ready(function() {
+	$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
+	$('head').append('<script src="<?php echo asset_url() . "js/anime_content.js";?>">');	
+});
 
-		var modalImg = document.getElementById("modal_image");
-		$("#poster_image").click(function(){
-			$('#anime_modal').css("display", "block");
-			var src = $(this).attr("src");
-		    $("#modal_image").attr("src", src);
-		});
-
-		$('#close_modal').click(function(){
-			$("#center_div").css("-webkit-animation-name", "zoom_out");
-			$("#center_div").css("animation-name", "zoom_out");
-			$("#center_div").css("-webkit-animation-duration", "0.3s");
-			$("#center_div").css("animation-duration", "0.3s");
-			setTimeout(function(){
-				 $('#anime_modal').css("display", "none"); 
-				 $("#center_div").css("-webkit-animation-name", "zoom");
-				 $("#center_div").css("animation-name", "zoom");
-				 $("#center_div").css("-webkit-animation-duration", "0.6s");
-				 $("#center_div").css("animation-duration", "0.6s");
-			}, 250);
-		});
-
-		var video_url = $("#anime_video").attr('src');
-		$("#anime_video").attr('src', '');
-
-	    $('#close_youtube_video_button').click(function() {
-			$("#center_video_div").css("-webkit-animation-name", "zoom_out");
-			$("#center_video_div").css("animation-name", "zoom_out");
-			$("#center_video_div").css("-webkit-animation-duration", "0.3s");
-			$("#center_video_div").css("animation-duration", "0.3s");
-			setTimeout(function(){
-		    	 $('#youtube_modal').css("display", "none");
-		    	 $("#anime_video").attr('src', '');
-				 $("#center_video_div").css("-webkit-animation-name", "zoom");
-				 $("#center_video_div").css("animation-name", "zoom");
-				 $("#center_video_div").css("-webkit-animation-duration", "0.6s");
-				 $("#center_video_div").css("animation-duration", "0.6s");
-			}, 250);
-		    
-	    });
-
-	    $('#show_video').click(function() {
-			 $('#youtube_modal').css("display", "block");
-			 $("#anime_video").attr('src', video_url);
-	    });
-		
-	});
+<?php if($is_admin) { ?>
+function showEditFields() {
+		editAnimeInfo(false, 0);		
+		$('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/temp_disable_selection.css";?>" type="text/css" />');	
+	}
+<?php }?>
 </script>
 
 <?php include 'navigation.php'; ?>
@@ -129,12 +90,14 @@
 				  <img class="modal-content" id="modal_image">
 			  </div>
 			</div>
-			<div id="synopsis_div">
-				<p id="synopsis"><?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?></p>
+			<div class="more" id="synopsis_div">
+				<?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?>		
 			</div>
 			<?php if($anime['youtube_video_id'] != "") {?>
 			<div id="youtube_trailer_div">
-				<a id="show_video" class="btn btn-lg btn-primary">Trailer</a>
+				<div id="show_video" style="background-image: url('https://i3.ytimg.com/vi/<?php echo $anime['youtube_video_id']?>/hqdefault.jpg');">
+					<span class="fa fa-youtube-play"></span>
+				</div>
 			</div>
 			<div id="youtube_modal" class="modal">	
 				<div id="center_video_div">		

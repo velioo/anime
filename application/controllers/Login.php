@@ -48,12 +48,19 @@ class Login extends CI_Controller {
 				$username = $this->input->post('username');
 				$result = $this->users_model->get_user_info_logged($username);
 				if ($result != false) {
+					
 					$data = array(
 							'id' => $result['id'],
 							'username' => $result['username'],
 							'email' => $result['email'],
 							'is_logged_in' => true
 					);
+					
+					$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
+					
+					if($is_admin) {
+						$data['admin'] = TRUE;
+					}
 					
 					$this->session->set_userdata($data);
 					redirect('home');
@@ -280,6 +287,12 @@ class Login extends CI_Controller {
 							'email' => $query['email'],
 							'fb_access_token' => (string) $accessToken
 					);
+					
+					$is_admin = $this->users_model->check_if_user_is_admin($query['id']);
+					
+					if($is_admin) {
+						$data['admin'] = TRUE;
+					}
 					
 					$this->session->set_userdata($data);			
 					redirect("home");
