@@ -19,8 +19,8 @@ function editUserInfo(file_chosen, filesize) {
 	    	  offset = parseInt(offset);
 	      }
 	      if(e.clientY < prevY) { 
-			  if(offset >= 630) {
-			    offset = 630;
+			  if(offset >= 580) {
+			    offset = 580;
 			  } else {
 			    offset+=margin;
 			  }	
@@ -32,7 +32,8 @@ function editUserInfo(file_chosen, filesize) {
 			     offset-=margin;
 			   }
 		   }
-		   document.getElementById("top_offset").setAttribute("value", offset);
+	      
+	       $("#top_offset").attr("value", offset);
 		   changeCoverPosition("user-bar");
 	      prevY = e.clientY;
 	    });
@@ -43,10 +44,10 @@ function editUserInfo(file_chosen, filesize) {
 }
 
 function updateDb(baseurl) {
-    var textValue = document.getElementById("user_description_area").value;
-	var ageValue = document.getElementById("age_edit").value;
-	var genderValue = document.getElementById("gender_edit").value;
-	var locationValue = document.getElementById("location_edit").value;
+    var textValue = $("#user_description_area").val();
+	var ageValue = $("#age_edit").val();
+	var genderValue = $("#gender_edit").val();
+	var locationValue = $("#location_edit").val();
     if(!(ageValue <= 0)){
 	    $.ajax({
 	          method: "POST",
@@ -57,7 +58,7 @@ function updateDb(baseurl) {
 	      });    
 	     showUpdateUserInfoContent();
 	} else {
-		document.getElementById("wtf_age").style.display = "inline";
+		$("#wtf_age").css('display', 'inline');
 		$("#wtf_age").text(" Baka...");
 	}
 };
@@ -77,6 +78,7 @@ $(document).ready(function() {
 	$("#user_description_area").keyup(function(){
 		  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
 	});
+	
 	$('#edit_cover_button').change(function(){
 		var file = this.files[0]
 		var size = file.size;
@@ -94,7 +96,7 @@ $(document).ready(function() {
 
 	$('#edit_avatar_button').change(function(){
 		if(document.getElementById("edit_avatar_button").value != "") {					
-			showAvatar(this, "user-bar");
+			showCover(this, "#user_image");
 		}	
 	});	
 });
@@ -110,39 +112,30 @@ function showCover(input, bar) {
         var reader = new FileReader();
         
         reader.onload = function (e) {
-        	$(bar).css('background-image', 'url(' + e.target.result + ')');
+        	if(bar != "#user_image") {
+        		$(bar).css('background-image', 'url(' + e.target.result + ')');
+        	} else {
+        		$('#user_image').attr('src', e.target.result);
+        	}       	
         }
-
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-function showAvatar(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-        	$('#user_image').attr('src', e.target.result);
-        }
-
         reader.readAsDataURL(input.files[0]);
     }
 }
 
 function showUserInfoEdit() {
-	document.getElementById("show_content_div").style.display = "none";
-	document.getElementById("edit_user_info").style.display = "none";
-	document.getElementById("save_user_info").style.display = "inline-block";
-	document.getElementById("edit_content_div").style.display = "block";
+	$('#show_content_div').css('display', 'none');
+	$('#edit_user_info').css('display', 'none');
+	$('#save_user_info').css('display', 'inline-block');
+	$('#edit_content_div').css('display', 'block');
 	$("#user_description_area_char_count").text("Left: " + (500 - $('#user_description_area').val().length));
 }
 
 function showUpdateUserInfoContent() {
-	document.getElementById("show_content_div").style.display = "block";
-	document.getElementById("edit_user_info").style.display = "block";
-	document.getElementById("save_user_info").style.display = "none";
-	document.getElementById("edit_content_div").style.display = "none";
-	document.getElementById("wtf_age").style.display = "none";
+	$('#show_content_div').css('display', 'block');
+	$('#edit_user_info').css('display', 'block');
+	$('#save_user_info').css('display', 'none');
+	$('#edit_content_div').css('display', 'none');
+	$('#wtf_age').css('display', 'none');
 	$("#user_description").text($("#user_description_area").val());
 	$("#age").text("Age: " + $("#age_edit").val());
 	

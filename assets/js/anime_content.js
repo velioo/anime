@@ -51,8 +51,8 @@ function editAnimeInfo(file_chosen, filesize) {
 	if(file_chosen == true) {
 		margin = filesize/120000;
 	}
-	document.getElementById("edit_cover_label").style.display = "block";
-	document.getElementById("submit_info").style.display = "block";		
+	document.getElementById("edit_cover_label").style.display = "inline-block";
+	document.getElementById("submit_info").style.display = "inline-block";		
 	document.getElementById("show_edits").style.display = "none";		
 	document.getElementById("anime-bar").style.cursor = "move";					
 	$('#anime-bar').mousedown(function(e){

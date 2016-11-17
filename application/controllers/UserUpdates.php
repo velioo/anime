@@ -90,7 +90,7 @@ class UserUpdates extends CI_Controller {
 				
 			if(($username != $this->session->userdata['username']) or ($email != $this->session->userdata['email']) or $password != "") {
 				if($password != "")
-					$password = md5($password);
+					$password = hash('sha256', $password);
 					$result = $this->users_model->update_user_acc_info($this->session->userdata['id'], $username, $email, $password);
 					
 				if ($result) {

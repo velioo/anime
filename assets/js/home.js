@@ -1,5 +1,5 @@
 var scale = 0;
-
+var counter = 0;
 var original_width;
 var window_width;
 var zoom_in;
@@ -18,42 +18,39 @@ function reScale() {
 	if(width == original_width) {
 		scale = 0;
 	} else if(zoom_in == true){
-		if(width > original_width) {
-			scale = scale - 50;
-		} else {
-			scale = scale - 50;
-		}
+		counter++;
+		scale-=60;
 	} else if(zoom_in == false) {
-		if(width > original_width) {
-			scale = scale + 50;
-		} else {
-			scale = scale + 50;
-		}
+		counter--;
+		scale+=60;
 	}
-
+	
 	if($('#user-bar').length > 0) {
 		var offset = document.getElementById("top_offset").getAttribute("value");
-		document.getElementById("user-bar").style.width = width + "px";
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		document.getElementById("user-bar").style.backgroundPosition = "0px" + " -" + (offset + scale) + "px";	
-		if($('#submit_cover_button').length > 0) {
-			document.getElementById("submit_cover_button").style.marginRight = width/6 + "px";	
-			document.getElementById("edit_cover_label").style.marginRight =  width/5 + "px";
+		if(((offset + scale) < 0) || (counter > 5)) {
+			$('#user-bar').css("background-position", "0px 0px");
+		} else {
+			$('#user-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
+		}
+		if($('#submit_info').length > 0) {
+			$('#submit_info').css("margin-left", "-" + width/6 + "px");
+			$('#edit_cover_label').css("margin-right", width/5 + "px");	
 		}
 	}
 	
 	if($('#anime-bar').length > 0) {
 		var offset = document.getElementById("top_offset").getAttribute("value");
-		document.getElementById("anime-bar").style.width = width + "px";
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		document.getElementById("anime-bar").style.backgroundPosition = "0px" + " -" + (offset + scale) + "px";	
-		if($('#submit_cover_button').length > 0) {
-			document.getElementById("submit_cover_button").style.marginRight = width/6 + "px";	
-			document.getElementById("edit_cover_label").style.marginRight =  width/5 + "px";
+		if(((offset + scale) < 0) || (counter > 5)) {
+			$('#anime-bar').css("background-position", "0px 0px");
+		} else {
+			$('#anime-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
 		}
 	}
+	console.log(scale + offset);
 
 	var e = document.getElementsByClassName("container-fluid");
 	for (i = 0; i < e.length; i++) {

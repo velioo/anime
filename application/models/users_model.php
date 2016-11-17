@@ -9,8 +9,8 @@ Class Users_model extends CI_Model {
 	
 	function validate() {
 		$username = $this->input->post('username');
-		$password = md5($this->input->post('password'));
-
+		$password = hash('sha256', $this->input->post('password'));
+		
 		$query = $this->db->query("SELECT username FROM users WHERE username='{$username}' and password='{$password}'");
 	
 		if($query->num_rows() == 1) {
@@ -58,7 +58,7 @@ Class Users_model extends CI_Model {
 		$new_user_data = array (
 			'username' => $this->input->post('username'),
 			'email' => $this->input->post('email'),
-			'password' => md5($this->input->post('password')),
+			'password' => hash('sha256', $this->input->post('password')),
 			'joined_on' => date("Y-m-d")
 		);
 		$query = $this->db->insert('users', $new_user_data);

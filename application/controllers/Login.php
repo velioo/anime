@@ -177,7 +177,7 @@ class Login extends CI_Controller {
 		  	  $data['header'] = 'Reset your password';
 		  	  $this->load->view('reset_password_page', $data);
 		  } else {
-		  	  $password = md5($this->input->post('password'));
+		  	  $password = hash('sha256', $this->input->post('password')); 
 		  	  $query = $this->users_model->update_user_password($user_id, $password);
 		  	  if($query) {
 		  	  	  $this->users_model->delete_temp_pass($user_id);

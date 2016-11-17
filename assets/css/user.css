@@ -9,7 +9,6 @@ body {
 #user_content {
 	border-radius: 2px;
 	margin-top: 20px;
-	/* background-color: rgba(211, 211, 211, 0.5); */
 	background: none;
 	border:none;
 }
@@ -23,10 +22,10 @@ body {
 
 #user-bar {
 	position:relative;
-	height:12cm;
+	height:450px;
 	width:100%;
 	margin-top: -60px;
-	background-repeat: repeat;
+	background-repeat: no-repeat;
 	-webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -83,6 +82,12 @@ body {
 }
 #user_navigation_div > a button:hover {
 	opacity:1;
+}
+
+#edit_div {
+	position: relative;
+	left:85%;
+	top:42%;
 }
 
 #show_edits {
@@ -156,12 +161,6 @@ body {
 h1 {
 	text-align: left;
 	color:#23272D;
-}
-
-#edit_div {
-	position: relative;
-	left:85%;
-	top:42%;
 }
 
 #follow_div {
