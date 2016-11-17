@@ -120,7 +120,7 @@ class Login extends CI_Controller {
 			$this->email->subject("Reset your Password");
 			
 			$message = "<p>This email has been sent as a request to reset our password</p>";
-			$message .= "<p><a href='".site_url("login/reset_password/$temp_pass")."'>Click here </a>if you want to reset your password,
+			$message .= "<p><a href='".site_url("userUpdates/reset_password/$temp_pass")."'>Click here </a>if you want to reset your password,
 			if not, then ignore</p>";
 			
 			$this->email->message($message);
@@ -135,7 +135,7 @@ class Login extends CI_Controller {
 					$this->users_model->temp_reset_password($user_id, $temp_pass);
 					$this->login_page(TRUE, "Email was sent to {$this->input->post('email')}. <br/>Follow the instructions in it to reset your password.");
 				} else {
-					$this->login_page(TRUE, "Failed to send email...");
+					$this->login_page(TRUE, "There was an internal error...");
 				}				
 			
 			} else {
@@ -143,47 +143,6 @@ class Login extends CI_Controller {
 			}
 				
 		}
-	}
-	
-	public function reset_password($temp_pass){
-	    $this->load->model('users_model');
-	    $query = $this->users_model->is_temp_pass_valid($temp_pass);
-	    if($query){
-			$data['user_id'] = $query['user_id'];
-	    	$data['title'] = 'V-Anime';
-	    	$data['css'] = 'login.css';
-	    	$data['javascript'] = 'home.js';
-	    	$data['header'] = 'Reset your password';
-	        $this->load->view('reset_password_page', $data);
-	
-	    } else{
-	        $this->login_page(TRUE, "Link is invalid or has expired");
-	    }
-	
-	}
-	
-	public function update_forgotten_password($user_id) {
-		  $this->load->library('form_validation');
-		  $this->load->model('users_model');
-		  
-		  $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
-		  $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
-		  
-		  if($this->form_validation->run() == FALSE) {
-		  	  $data['user_id'] = $user_id;
-		  	  $data['title'] = 'V-Anime';
-		  	  $data['css'] = 'login.css';
-		  	  $data['javascript'] = 'home.js';
-		  	  $data['header'] = 'Reset your password';
-		  	  $this->load->view('reset_password_page', $data);
-		  } else {
-		  	  $password = hash('sha256', $this->input->post('password')); 
-		  	  $query = $this->users_model->update_user_password($user_id, $password);
-		  	  if($query) {
-		  	  	  $this->users_model->delete_temp_pass($user_id);
-		  	      $this->login_page(TRUE, "You successfully changed your password !");
-		  	  }
-		  }
 	}
 	
 	public function check_if_email_exists_forgot($requested_email) {
@@ -232,10 +191,10 @@ class Login extends CI_Controller {
 		  $accessToken = $helper->getAccessToken();
 		  $response = $fb->get('/me?fields=id,name,email', $accessToken);
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
-		  echo 'Graph returned an error: ' . $e->getMessage();
-		  exit;
+		  	echo 'Graph returned an error: ' . $e->getMessage();
+			die();
 		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-		  redirect("login/login_page/TRUE/There was an error connecting with Facebook");
+		  	redirect("login/login_page/TRUE/There was an error connecting with Facebook");
 		}
 		
 		if (!isset($accessToken)) {
@@ -249,7 +208,7 @@ class Login extends CI_Controller {
 		    header('HTTP/1.0 400 Bad Request');
 		    echo 'Bad request';
 		  }
-		  exit;
+		  die();
 		}
 		
 		$oAuth2Client = $fb->getOAuth2Client();
@@ -264,7 +223,7 @@ class Login extends CI_Controller {
 		    $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
 		  } catch (Facebook\Exceptions\FacebookSDKException $e) {
 		    echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
-		    exit;
+		    die();
 		  }
 		  echo '<h3>Long-lived</h3>';
 		  //var_dump($accessToken->getValue());
@@ -301,15 +260,16 @@ class Login extends CI_Controller {
 				$email_available = $this->users_model->check_if_email_exists($email);		
 				
 				if(!$email_available) {
-					$data['header'] = 'Choose your Username and Email';
+					$data['message'] = "Choose your Username and Email";
 					$email = FALSE;
 				} else {
-					$data['header'] = 'Choose your Username';
+					$data['message'] = 'Choose your Username';
 				}
 	
 				$data['fb_access_token'] = (string) $accessToken;
 				$data['fb_user_id'] = $fb_user_id;
 				$data['fb_email'] = $email;
+				$data['header'] = 'Create new account';
 				$data['title'] = "Sign Up";
 				$data['css'] = 'login.css';
 				$data['javascript'] = 'home.js';
@@ -330,14 +290,14 @@ class Login extends CI_Controller {
 				} else {
 					$email_available = TRUE;
 				}
-				
-				$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
-				
+							
 				if($email_available)
 					$message = "";
 				else 
 					$message = "The email associated with your Facebook account was taken but you were still connected.";
 				
+				$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
+					
 				if($query) {
 					$data = array(
 							'id' => $this->session->userdata['id'],
@@ -354,31 +314,6 @@ class Login extends CI_Controller {
 				redirect("userUpdates/user_settings/{$message}");
 			}
 		}
-	}
-	
-	function facebook_connect() {
-		$this->load->model('users_model');
-		
-		$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);	
-		$facebook = "";
-		
-		if($query) {	
-			
-			$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);		
-			
-			if($query) {
-				redirect("userUpdates/user_settings");
-			} else {
-				$error = "Please add a password to your account before disconnecting Facebook";
-				redirect("userUpdates/user_settings/$error");
-			}
-			
-		} else {
-			$facebook = "connect";
-			$this->facebook_login($facebook);
-		}
-		
-		
 	}
 	
 	

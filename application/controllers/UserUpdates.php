@@ -1,7 +1,7 @@
 <?php
 class UserUpdates extends CI_Controller {
 	
-	function update_profile() {
+	function update_user_pictures() {
 		
 		$this->load->model('users_model');
 		$this->load->library('upload');
@@ -140,6 +140,67 @@ class UserUpdates extends CI_Controller {
 			echo "There was an internal error";
 		}
 
+	}
+	
+	public function reset_password($temp_pass){
+		$this->load->model('users_model');
+		$query = $this->users_model->is_temp_pass_valid($temp_pass);
+		if($query){
+			$data['user_id'] = $query['user_id'];
+			$data['title'] = 'V-Anime';
+			$data['css'] = 'login.css';
+			$data['javascript'] = 'home.js';
+			$data['header'] = 'Reset your password';
+			$this->load->view('reset_password_page', $data);
+	
+		} else{
+			redirect("login/login_page/TRUE/Link is invalid or has expired");
+		}
+	}
+	
+	public function update_forgotten_password($user_id) {
+		$this->load->library('form_validation');
+		$this->load->model('users_model');
+	
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
+		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
+	
+		if($this->form_validation->run() == FALSE) {
+			$data['user_id'] = $user_id;
+			$data['title'] = 'V-Anime';
+			$data['css'] = 'login.css';
+			$data['javascript'] = 'home.js';
+			$data['header'] = 'Reset your password';
+			$this->load->view('reset_password_page', $data);
+		} else {
+			$password = hash('sha256', $this->input->post('password'));
+			$query = $this->users_model->update_user_password($user_id, $password);
+			if($query) {
+				$this->users_model->delete_temp_pass($user_id);
+				redirect("login/login_page/TRUE/You successfully changed your password");
+			}
+		}
+	}
+	
+	function facebook_connect() {
+		$this->load->model('users_model');
+	
+		$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
+	
+		if($query) {
+				
+			$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);
+				
+			if($query) {
+				redirect("userUpdates/user_settings");
+			} else {
+				$error = "Please add a password to your account before disconnecting Facebook";
+				redirect("userUpdates/user_settings/$error");
+			}
+				
+		} else {
+			redirect("login/facebook_login/connect");
+		}
 	}
 	
 	public function check_if_username_exists($requested_username) {

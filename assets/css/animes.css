@@ -30,6 +30,70 @@ body {
 	padding-top: 50px;
 }
 
+#edit_div {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+#show_edits {
+	background-color: #23272D;
+	border:none;
+	outline:none;
+	padding-left:40px;
+	padding-right:40px;
+	font-size: 15px;
+	display: block;
+	margin-right:30px;
+	margin-bottom: 20px;
+}
+
+#show_edits:hover {
+	background-color: #2F343B;
+	opacity: 1;
+}
+
+#show_edits:active {
+	background:none;
+	outline:none;
+}
+
+#show_edits:focus {
+	background-color: #2F343B;
+}
+
+#edit_cover_button {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#submit_info, #edit_cover_label {
+	color:white;
+	background-color: #23272D;
+	outline:none;
+	border:none;
+	padding: 10px;
+	cursor: pointer;
+	display:none;
+	-webkit-touch-callout: none; 
+    -webkit-user-select: none;   /
+    -khtml-user-select: none;    
+    -moz-user-select: none;      
+    -ms-user-select: none;      
+    user-select: none;     
+    margin-right:30px;
+    margin-bottom:20px;     
+}
+
+#submit_info:hover, #edit_cover_label:hover {
+	background-color:#2F343B;
+	opacity: 1;
+}
+
 #anime_content {
 	border-radius: 2px;
 	margin-top: 50px;
@@ -293,70 +357,6 @@ body {
 	display: inline-block;
 	margin-left:20px;
 	vertical-align: top;
-}
-
-#edit_div {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-}
-
-#show_edits {
-	background-color: #23272D;
-	border:none;
-	outline:none;
-	padding-left:40px;
-	padding-right:40px;
-	font-size: 15px;
-	display: block;
-	margin-right:30px;
-	margin-bottom: 20px;
-}
-
-#show_edits:hover {
-	background-color: #2F343B;
-	opacity: 1;
-}
-
-#show_edits:active {
-	background:none;
-	outline:none;
-}
-
-#show_edits:focus {
-	background-color: #2F343B;
-}
-
-#edit_cover_button {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-
-#submit_info, #edit_cover_label {
-	color:white;
-	background-color: #23272D;
-	outline:none;
-	border:none;
-	padding: 10px;
-	cursor: pointer;
-	display:none;
-	-webkit-touch-callout: none; 
-    -webkit-user-select: none;   /
-    -khtml-user-select: none;    
-    -moz-user-select: none;      
-    -ms-user-select: none;      
-    user-select: none;     
-    margin-right:30px;
-    margin-bottom:20px;     
-}
-
-#submit_info:hover, #edit_cover_label:hover {
-	background-color:#2F343B;
-	opacity: 1;
 }
 
 .error {

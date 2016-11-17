@@ -11,8 +11,9 @@ if (isset($this->session->userdata['is_logged_in'])) {
 <div id="wrap">
 	<div class="container-fluid scrollable content signuplogin_container">
 		<h1><?php echo $header;?></h1>
-		<br/><br/><br/>
-		
+		<p style="font-size: 20px; text-align: center;"><?php if(isset($message)) echo $message?></p>
+		<br/>
+
 			<?php $username = set_value('username') == false ? '' : set_value('username');
 				  $email = set_value('email') == false ? '' : set_value('email');
 				  

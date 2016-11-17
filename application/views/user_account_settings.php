@@ -37,7 +37,7 @@ if (!isset($this->session->userdata['is_logged_in'])) {
 				echo form_submit('submit', 'Save', 'id=submit');
 				echo form_close();
 			?>
-			<form action="<?php echo site_url("login/facebook_connect");?>" method="post">
+			<form action="<?php echo site_url("userUpdates/facebook_connect");?>" method="post">
 			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook" style="width:250px;margin-left:120px;margin-top:50px;">
 			    <span class="fa fa-facebook"></span><?php echo $is_fb_connected;?>
 			 </button>

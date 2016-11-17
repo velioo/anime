@@ -17,6 +17,7 @@ function reScale() {
 	
 	if(width == original_width) {
 		scale = 0;
+		counter = 0;
 	} else if(zoom_in == true){
 		counter++;
 		scale-=60;
@@ -33,10 +34,6 @@ function reScale() {
 			$('#user-bar').css("background-position", "0px 0px");
 		} else {
 			$('#user-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
-		}
-		if($('#submit_info').length > 0) {
-			$('#submit_info').css("margin-left", "-" + width/6 + "px");
-			$('#edit_cover_label').css("margin-right", width/5 + "px");	
 		}
 	}
 	
@@ -88,8 +85,7 @@ $(document).ready(function() {
 				var text = $.trim($('#search_box').val());
 			} else {
 				var text = $.trim($('#small_search_box').val());
-			}
-			
+			}		
 		    if (text  === '') {
 		        return false;
 		    }		
@@ -111,7 +107,7 @@ $(document).ready(function() {
 				var line_text = "", i;
 				var whole_text = "";
 				for (i = 0; i < temp.length; i++) {
-				    if( (line_text.length + temp[i].length) >= 26) {
+				    if((line_text.length + temp[i].length) >= 26) {
 				    	line_text = line_text + "\n";
 				    	whole_text = whole_text + line_text;
 				    	line_text = temp[i];

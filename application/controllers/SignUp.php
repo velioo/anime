@@ -48,7 +48,7 @@ class SignUp extends CI_Controller {
 			 $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
 			 $email = $this->input->post('email');
 		} else {
-			$email = $fb_email;
+			 $email = $fb_email;
 		}
 		
 		if($this->form_validation->run() == FALSE) {
@@ -67,7 +67,7 @@ class SignUp extends CI_Controller {
 		} else {
 			$this->load->model('users_model');
 			
-			$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'),$email, $fb_access_token);
+			$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);
 			
 			if($query) {
 				$data = array(
