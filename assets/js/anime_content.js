@@ -51,10 +51,10 @@ function editAnimeInfo(file_chosen, filesize) {
 	if(file_chosen == true) {
 		margin = filesize/120000;
 	}
-	document.getElementById("edit_cover_label").style.display = "inline-block";
-	document.getElementById("submit_info").style.display = "inline-block";		
-	document.getElementById("show_edits").style.display = "none";		
-	document.getElementById("anime-bar").style.cursor = "move";					
+	$('#edit_cover_label').css("display", "inline-block");
+	$('#submit_info').css("display", "inline-block");
+	$('#show_edits').css("display", "none");
+	$('#anime-bar').css("cursor", "move");				
 	$('#anime-bar').mousedown(function(e){
 	    var prevY = e.clientY;
 	    $(this).mousemove(function(e){
@@ -78,7 +78,7 @@ function editAnimeInfo(file_chosen, filesize) {
 			     offset-=margin;
 			   }
 		   }
-		   document.getElementById("top_offset").setAttribute("value", offset);
+	       $('#top_offset').attr("value", offset);
 		   changeCoverPosition("anime-bar");
 	      prevY = e.clientY;
 	    });

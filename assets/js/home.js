@@ -12,10 +12,9 @@ function myFunction() {
 }
 
 function reScale() {	
-	var width = window.innerWidth;
 	var height = window.innerHeight;
-	
-	if(width == original_width) {
+	console.log("original: " + original_width + " window_width: " + window_width);
+	if((window_width == original_width) || ((original_width - window_width) == 1 )) {
 		scale = 0;
 		counter = 0;
 	} else if(zoom_in == true){
@@ -47,23 +46,24 @@ function reScale() {
 			$('#anime-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
 		}
 	}
-	console.log(scale + offset);
-
+	
 	var e = document.getElementsByClassName("container-fluid");
 	for (i = 0; i < e.length; i++) {
-		if(width <= 1150) {	
-		    e[i].style.width = width + "px";
+		if(window_width <= 1150) {	
+		    e[i].style.width = window_width + "px";
 		} else {
 			e[i].style.width = "1150px";
 		}
 	}
 	
-	if(width <= 1150) {	
+	if(window_width <= 1150) {	
 		if ($('#signup_button').length > 0) {
-			document.getElementById("signup_button").style.marginRight = "-21px";	
+			$('#signup_button').css("margin-right", "-21px");
+			//document.getElementById("signup_button").style.marginRight = "-21px";	
 		}
-	} else {
-		document.getElementById("signup_button").style.marginRight = "0px";
+	} else if($('#signup_button').length > 0) {
+		$('#signup_button').css("margin-right", "0px");
+		//document.getElementById("signup_button").style.marginRight = "0px";
 	}
 	
 }
@@ -76,7 +76,7 @@ function putCaret() {
 }
 
 $(document).ready(function() {
-	window_width = screen.width;
+	window_width = window.outerWidth;
 	prev_window_width = window_width;
 	original_width = window_width;
 	$('.search_form').each(function(){
@@ -132,16 +132,20 @@ $(document).ready(function() {
 $(window).resize(function(){
 	prev_window_width = window_width;
 	window_width = window.innerWidth;
-	if(window_width > prev_window_width) {
-		zoom_in = false;
-	} else {
-		zoom_in = true;
+	if(window_width - prev_window_width != 1) {
+		if(window_width > prev_window_width) {
+			zoom_in = false;
+		} else {
+			zoom_in = true;
+		}
 	}
+	
 	if ($('.profile_menu').length > 0) {
-		if(window.innerWidth < 800)
-			document.getElementById("submit_button").style.marginRight = "70px";
-		else
-			document.getElementById("submit_button").style.marginRight = "0px";
+		if(window.innerWidth < 800) {
+			$('#submit_button').css('margin-right', "70px");
+		} else {
+			$('#submit_button').css('margin-right', "0px");
+		}
 	} 	
 	reScale();
 	putCaret();

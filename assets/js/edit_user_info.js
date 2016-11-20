@@ -5,11 +5,11 @@ function editUserInfo(file_chosen, filesize) {
 		margin = filesize/120000;
 	}
 	
-	document.getElementById("edit_cover_label").style.display = "inline-block";
-	document.getElementById("edit_avatar_label").style.display = "inline-block";
-	document.getElementById("submit_info").style.display = "inline-block";		
-	document.getElementById("show_edits").style.display = "none";		
-	document.getElementById("user-bar").style.cursor = "move";					
+	$('#edit_cover_label').css("display", "inline-block");
+	$('#edit_avatar_label').css("display", "inline-block");
+	$('#submit_info').css("display", "inline-block");
+	$('#show_edits').css("display", "none");
+	$('#user-bar').css("cursor", "move");				
 	$('#user-bar').mousedown(function(e){
 	    var prevY = e.clientY;
 	    $(this).mousemove(function(e){
@@ -64,17 +64,6 @@ function updateDb(baseurl) {
 	}
 };
 
-/*function fix_error_messages() {
-	var e = document.getElementsByClassName("error");
-	for (i = 0; i < e.length; i++) {
-		e[i].style.marginTop = "155px";
-	}
-	 e = document.getElementsByClassName("error_a");
-	for (i = 0; i < e.length; i++) {
-		e[i].style.marginTop = "155px";
-	}
-}*/
-
 $(document).ready(function() {	
 	$("#user_description_area").keyup(function(){
 		  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
@@ -83,7 +72,7 @@ $(document).ready(function() {
 	$('#edit_cover_button').change(function(){
 		var file = this.files[0]
 		var size = file.size;
-		if(document.getElementById("edit_cover_button").value != "") {		
+		if($('#edit_cover_button').val() != "") {		
 			if($('#user-bar').length > 0) {
 				editUserInfo(true, size);	
 				showCover(this, "#user-bar");
@@ -103,9 +92,8 @@ $(document).ready(function() {
 });
 
 function changeCoverPosition(bar) {
-	var width = window.innerWidth;
-	var offset = document.getElementById("top_offset").getAttribute("value");
-	document.getElementById(bar).style.backgroundPosition = "0px" + " -" + (offset) + "px";	
+	var offset = $('#top_offset').val();
+	$('#' + bar).css("background-position", "0px" + " -" + (offset) + "px" )
 }
 
 function showCover(input, bar) {

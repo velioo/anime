@@ -9,7 +9,8 @@ Class Animes_model extends CI_Model {
 		$query = $this->db->query("SELECT * FROM animes WHERE id = {$id}");
 		
 		if($query->num_rows() == 1) {
-			return $query->row_array();
+			$row_array = $this->add_anime_genre($id, $query->row_array());
+			return $row_array;
 		} else {
 			return FALSE;
 		}
@@ -31,6 +32,17 @@ Class Animes_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
+	
+	function add_anime_genre($id, $row_array) {
+		$genres = $this->db->query("SELECT g.name as genre FROM genres g JOIN anime_genres ag ON g.id = ag.genre_id
+				JOIN animes a ON a.id = ag.anime_id WHERE a.id = {$id}");
+		
+		foreach($genres->result_array() as $genre) {
+			$row_array['genres'][] = $genre['genre'];
+		}
+		
+		return $row_array;
 	}
 
 }

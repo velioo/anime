@@ -13,8 +13,13 @@
 			<a href="#"><button class="btn btn-primary user_navigation" class="user_navigation" onClick="">Following</button></a>	
 		</div>
 		<?php if($is_you) {?>
-		<div id="edit_div">
-			<?php if($this->session->flashdata('error')) { 
+		<div class="wrap_buttons_div">
+			<button class="btn btn-primary" id="show_edits" onClick="showEditFields()">Edit</button>			
+				<form action="<?php echo site_url("UserUpdates/update_user_pictures")?>" method="post" enctype="multipart/form-data">
+				<input type="submit" name="submit_info" id="submit_info" value="Save">
+				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
+				<input type="file" name="edit_avatar" accept="image/*" id="edit_avatar_button"><label for="edit_avatar_button" id="edit_avatar_label"><span class="glyphicon glyphicon-pencil"></span> Edit Avatar</label>
+				<?php if($this->session->flashdata('error')) { 
 					  if(strpos($this->session->flashdata('error'), "You did not select a file to upload") == FALSE)
 					  	echo $this->session->flashdata('error');
 				  } 
@@ -22,20 +27,14 @@
 				  	if(strpos($this->session->flashdata('error_a'), "You did not select a file to upload") == FALSE)
 				  		echo $this->session->flashdata('error_a');
 				  }
-			?>
-			<button class="btn btn-primary" id="show_edits" onClick="showEditFields()">Edit</button>			
-			<form action="<?php echo site_url("UserUpdates/update_user_pictures")?>" method="post" enctype="multipart/form-data">
-				<input type="submit" name="submit_info" id="submit_info" value="Save">
-				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
-				<input type="file" name="edit_avatar" accept="image/*" id="edit_avatar_button"><label for="edit_avatar_button" id="edit_avatar_label"><span class="glyphicon glyphicon-pencil"></span> Edit Avatar</label>
+				?>
 		<?php } else { ?>
-		<div id="follow_div">
+		<div class="wrap_buttons_div">
 			<button class="btn btn-primary" id="follow_button" onClick="">Follow</button>	
 		</div>
 		<?php }?>	
-				<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $results['top_offset'];?>">
+				<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $results['top_offset'];?>">	
 		<?php if($is_you) {?>		
-				
 			</form>
 		</div>
 		<?php }?>

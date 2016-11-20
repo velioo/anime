@@ -21,8 +21,8 @@ class UserUpdates extends CI_Controller {
         $this->users_model->update_cover_offset($this->session->userdata['id'], $offset);
         
         if (!$this->upload->do_upload('edit_cover')) {
-        	$error = array('error' => $this->upload->display_errors('<p class="error">', '</p>'));
-        	$this->session->set_flashdata('error',$error['error']);
+        	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
+        	$this->session->set_flashdata('error', $error['error']);
         } else {
         	$query = $this->users_model->update_cover_image($this->session->userdata['id'],  $config['file_name']);
          }       
@@ -39,8 +39,8 @@ class UserUpdates extends CI_Controller {
          $this->upload->initialize($config);     
          
          if (!$this->upload->do_upload('edit_avatar')) {
-         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">', '</p>'));
-         	$this->session->set_flashdata('error_a',$error['error_a']);
+         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
+         	$this->session->set_flashdata('error_a', $error['error_a']);
          } else {
          	$query = $this->users_model->update_avatar_image($this->session->userdata['id'],  $config['file_name']);
          }         

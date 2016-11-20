@@ -115,7 +115,7 @@ class Login extends CI_Controller {
 			$temp_pass = md5(uniqid());
 			
 			$this->load->library('email', array('mailtype'=>'html'));
-			$this->email->from('velioocs@gmail.com', "V-Anime Reset Password");
+			$this->email->from('vanime.staff@gmail.com', "V-Anime Reset Password");
 			$this->email->to($this->input->post('email'));
 			$this->email->subject("Reset your Password");
 			

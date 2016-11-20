@@ -90,8 +90,19 @@ function showEditFields() {
 				  <img class="modal-content" id="modal_image">
 			  </div>
 			</div>
-			<div class="more" id="synopsis_div">
-				<?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?>		
+			<div id="wrap_synopsis_genres">
+				<div class="more" id="synopsis_div">
+					<?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?>		
+				</div>
+				<div id="anime_genres_div">
+					<?php if(isset($anime['genres'])) { 
+							 echo "<strong style='color: #23272D;'>Genres: </strong>";
+							 foreach($anime['genres'] as $genre) {
+							 	echo "<span style='text-decoration: underline;'>" . $genre ."</span> &nbsp";
+					 	     }
+						  }
+					 ?>
+				</div>
 			</div>
 			<?php if($anime['youtube_video_id'] != "") {?>
 			<div id="youtube_trailer_div">
@@ -112,3 +123,12 @@ function showEditFields() {
 </div>
 
 <?php include 'footer.php';?>
+
+
+
+
+
+
+
+
+

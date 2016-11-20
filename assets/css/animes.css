@@ -12,7 +12,7 @@ body {
 
 #anime-bar {
 	position:relative;
-	height:9cm;
+	height:350px;
 	width:100%;
 	background-repeat: no-repeat;
 	-webkit-background-size: cover;
@@ -34,18 +34,20 @@ body {
 	position: absolute;
 	bottom: 0;
 	right: 0;
+	width: 100%;
 }
 
 #show_edits {
+	display: inline-block;
 	background-color: #23272D;
 	border:none;
 	outline:none;
 	padding-left:40px;
 	padding-right:40px;
 	font-size: 15px;
-	display: block;
 	margin-right:30px;
 	margin-bottom: 20px;
+	float: right;
 }
 
 #show_edits:hover {
@@ -86,7 +88,8 @@ body {
     -ms-user-select: none;      
     user-select: none;     
     margin-right:30px;
-    margin-bottom:20px;     
+    margin-bottom:20px;   
+    float: right;  
 }
 
 #submit_info:hover, #edit_cover_label:hover {
@@ -325,13 +328,19 @@ body {
    display: block;
 }
 
+#wrap_synopsis_genres {
+	display: inline-block; 
+	width: 600px;
+	vertical-align: top;
+}
+
 #synopsis_div {
 	position: relative;
 	display: inline-block;
 	width:600px;
 	vertical-align: top;
 	margin-top:10px;
-	margin-bottom: 50px;
+	margin-bottom: 20px;
 	padding-left:10px;
 	color: #838A91;
 	font-size: 16px;
@@ -353,6 +362,16 @@ body {
 	color: #651a1a;
 }
 
+#anime_genres_div {
+	position: relative;
+	display: block;
+	width: 600px;
+	padding-left: 10px;
+	color: #838A91;
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
 #youtube_trailer_div {
 	display: inline-block;
 	margin-left:20px;
@@ -360,18 +379,10 @@ body {
 }
 
 .error {
-	position:absolute;
-	margin-left:-40%;
-	margin-top:25px;
-	color:red;
-	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
-             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
-}
-
-.error_a {
-	position:absolute;
-	margin-left:-95%;
-	margin-top:25px;
+	display: inline-block;
+	margin-top: 10px;
+	margin-right: 20px;
+	float: right;
 	color:red;
 	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
              #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;

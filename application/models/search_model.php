@@ -53,9 +53,10 @@ Class Search_model extends CI_Model {
 		}		
 		
 		$split_anime = explode(" ", $anime);
+		
 		$anime = "";
 		foreach ($split_anime as $a) {
-			$a = preg_replace("/[^\w]+/", " ", $a);
+			$a = preg_replace("/[^\w]+/u", " ", $a);
 			$a = trim($a);
 			$anime.=$a . " ";
 		}
@@ -99,61 +100,6 @@ Class Search_model extends CI_Model {
 			$result_array = $query->result_array();
 			
 			$result_array = $this->add_anime_genres_type($result_array);
-		
-			
-/* 			UNION
-			SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-			age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM animes
-			WHERE synopsis LIKE '%{$anime}%' */
-			
-/* 			$query1 = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-					FROM animes WHERE slug LIKE '{$anime}%' {$limit_offset}" );
-			
-			echo $query1->num_rows() ."<br/>";
-			
-			$query2 = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-					FROM animes WHERE titles LIKE '%{$anime}%' ORDER BY {$sort_by} $order, created_at DESC {$limit_offset}");
-			
-			echo $query2->num_rows() ."<br/>";
-			
-			$query3 = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-					FROM animes WHERE synopsis LIKE '%{$anime}%' ORDER BY {$sort_by} $order, created_at DESC {$limit_offset}");
-			
-			echo $query3->num_rows() ."<br/>";
-			
-			$query = $query1->result_array();
-			$query = $query + $query2->result_array();
-			$query = $query + $query3->result_array();
-			
-			$result_array = array();
-			
-			foreach($query as $k=>$v){
-				if(!in_array($v, $result_array)){
-					$result_array[]=$v;
-				}
-			}
-			
-			echo count($result_array) . "<br/>"; */
-			
-/* 			if($query->num_rows() < 0) { 
-			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-					FROM animes WHERE MATCH(slug) AGAINST('{$words}' IN BOOLEAN MODE)  {$limit_offset}");		
-			}
-			if($query->num_rows() < 0) {
-				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-						FROM animes WHERE MATCH(titles) AGAINST('{$words}' IN BOOLEAN MODE) {$limit_offset}");
-			}		
-			
-			if($query->num_rows() <= 0) {
-				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,average_rating,
-						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
-						FROM animes WHERE MATCH(synopsis) AGAINST('{$words}' IN BOOLEAN MODE) {$limit_offset}");
-			} */
 
 		} else {
 			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
@@ -215,7 +161,7 @@ Class Search_model extends CI_Model {
 		
 		$genres = $genres->result_array();		
 		
-		for($i = 0; $i < count($result_array); $i++) {
+		for($i = 0; $i < count($result_array); $i++) { // add genres to the according anime
 			
 			foreach($genres as $genre) {
 				if($genre['anime_id'] == $result_array[$i]['id']) {
