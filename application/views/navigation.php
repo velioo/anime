@@ -1,3 +1,41 @@
+<script>
+	function get_asset_url() {
+		var assetUrl = "<?php echo asset_url(); ?>";
+		return assetUrl;
+	}
+
+	function get_site_url() {
+		var siteUrl = "<?php echo site_url("searchC/getTest")?>"
+		return siteUrl;
+	}
+	$(document).ready(function() {
+		asset_url = get_asset_url();
+		
+		var options = {
+			url: asset_url + "json/results.json",
+
+			theme: "dark",
+			getValue: "name",
+			
+			list: {
+				match: {
+					enabled: true
+				}
+			},
+			
+			template: {
+				type: "custom",
+				method: function(value, item) {
+					return "<img class='auto_image' src='" + item.image + "' onerror=this.src='" +  asset_url  + "imgs/None.jpg" + "' />" + "<div class='auto_div'>" + item.name + "</div>";
+				}
+			}
+		};
+
+		$("#search_box").easyAutocomplete(options);
+		
+	});
+</script>
+
 <nav class="navbar navbar-inverse navbar-fixed-top navigation">
   <div class="container-fluid navigation_container">
     <div class="navbar-header">

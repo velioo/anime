@@ -4,6 +4,7 @@ var original_width;
 var window_width;
 var zoom_in;
 var prev_window_width;
+var asset_url;
 
 function myFunction() {
     var w = window.innerWidth;
@@ -13,7 +14,7 @@ function myFunction() {
 
 function reScale() {	
 	var height = window.innerHeight;
-	console.log("original: " + original_width + " window_width: " + window_width);
+	//console.log("original: " + original_width + " window_width: " + window_width);
 	if((window_width == original_width) || ((original_width - window_width) == 1 )) {
 		scale = 0;
 		counter = 0;
@@ -126,7 +127,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-
 });
 
 $(window).resize(function(){

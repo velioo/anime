@@ -22,6 +22,7 @@
 	
 	.navbar-inverse {
 		background-color: #2F343B;
+		height: 63px;
 	}
 	
 	.navigation_container {
@@ -124,6 +125,34 @@
 		width: 300px;	
 		height:28px;
 		font-size:16px;	
+	}
+	
+	.easy-autocomplete {
+		display: inline;
+	}
+	
+	.easy-autocomplete div ul li {
+		border-top: 1px solid #23272D;
+		border-bottom: 1px solid #23272D;
+	}
+
+	.eac-item {
+		margin-bottom:5px;
+		height: 75px;
+	}
+	
+	.easy-autocomplete div ul li .eac-item .auto_div {
+		width: 200px;
+		display: inline-block;
+		margin-left: 10px;
+		word-break: normal;
+	}
+	
+	.auto_image {
+		display: inline;
+		width: 50px;
+		min-height: 70px;
+		vertical-align: top;
 	}
 	
 	#submit_button {

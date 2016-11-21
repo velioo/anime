@@ -14,7 +14,7 @@
 	    <button onclick="myFunction()">Try it</button>
 		<p id="demo"></p>
 	
-		  <!--  <a href="<?php //echo site_url("Home/update_anidb")?>">Insert</a>-->
+		<!--  <a href="<?php //echo site_url("Home/write_json")?>">Json</a> -->
 	</div>
 </div>
 <?php include 'footer.php';?>

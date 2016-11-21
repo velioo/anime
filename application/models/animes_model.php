@@ -44,6 +44,11 @@ Class Animes_model extends CI_Model {
 		
 		return $row_array;
 	}
+	
+	function get_animes_names_images() {
+		$query = $this->db->query("SELECT titles, poster_image_file_name, canonical_title FROM animes");
+		return $query->result_array();
+	}
 
 }
 ?>
