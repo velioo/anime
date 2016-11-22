@@ -188,7 +188,6 @@ class SearchC extends CI_Controller {
 		
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 	}
 	
@@ -210,7 +209,6 @@ class SearchC extends CI_Controller {
 		
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 		
 	}
@@ -233,7 +231,6 @@ class SearchC extends CI_Controller {
 		
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 	}
 	

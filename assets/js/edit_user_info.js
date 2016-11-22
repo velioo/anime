@@ -6,7 +6,8 @@ function editUserInfo(file_chosen, filesize) {
 	}
 	
 	$('#edit_cover_label').css("display", "inline-block");
-	$('#edit_avatar_label').css("display", "inline-block");
+	$('#edit_avatar_span').css("display", "block");
+	$('#user_image').css("filter", "brightness(50%)");
 	$('#submit_info').css("display", "inline-block");
 	$('#show_edits').css("display", "none");
 	$('#user-bar').css("cursor", "move");				
@@ -39,8 +40,8 @@ function editUserInfo(file_chosen, filesize) {
 	      prevY = e.clientY;
 	    });
 	});     
-	$('#user-bar').mouseup(function(){
-	  $(this).unbind("mousemove");
+	$('body').mouseup(function(){
+	  $('#user-bar').unbind("mousemove");
 	});      
 }
 
@@ -83,9 +84,13 @@ $(document).ready(function() {
 			
 		}	
 	});
+	
+	$('#edit_avatar_span').click(function() {
+		$('#edit_avatar_button').click();
+	});
 
 	$('#edit_avatar_button').change(function(){
-		if(document.getElementById("edit_avatar_button").value != "") {					
+		if($('#edit_avatar_button').val() != "") {					
 			showCover(this, "#user_image");
 		}	
 	});	
@@ -101,10 +106,10 @@ function showCover(input, bar) {
         var reader = new FileReader();
         
         reader.onload = function (e) {
-        	if(bar != "#user_image") {
+        	if(bar != "#user_image" && bar != "#poster_image") {
         		$(bar).css('background-image', 'url(' + e.target.result + ')');
         	} else {
-        		$('#user_image').attr('src', e.target.result);
+        		$(bar).attr('src', e.target.result);
         	}       	
         }
         reader.readAsDataURL(input.files[0]);

@@ -25,8 +25,7 @@ class UserUpdates extends CI_Controller {
         	$this->session->set_flashdata('error', $error['error']);
         } else {
         	$query = $this->users_model->update_cover_image($this->session->userdata['id'],  $config['file_name']);
-         }       
-         
+         }             
          
          $config['upload_path']          = './assets/user_profile_images/';
          $config['allowed_types']        = 'gif|jpg|png';
@@ -133,7 +132,6 @@ class UserUpdates extends CI_Controller {
 			$data['fb_message'] = $fb_message;
 			$data['title'] = 'Settings';
 			$data['css'] = 'user_settings.css';
-			$data['javascript'] = 'home.js';
 			$data['header'] = "Settings";
 			$this->load->view('user_account_settings', $data);
 		} else {
@@ -149,7 +147,6 @@ class UserUpdates extends CI_Controller {
 			$data['user_id'] = $query['user_id'];
 			$data['title'] = 'V-Anime';
 			$data['css'] = 'login.css';
-			$data['javascript'] = 'home.js';
 			$data['header'] = 'Reset your password';
 			$this->load->view('reset_password_page', $data);
 	
@@ -169,7 +166,6 @@ class UserUpdates extends CI_Controller {
 			$data['user_id'] = $user_id;
 			$data['title'] = 'V-Anime';
 			$data['css'] = 'login.css';
-			$data['javascript'] = 'home.js';
 			$data['header'] = 'Reset your password';
 			$this->load->view('reset_password_page', $data);
 		} else {

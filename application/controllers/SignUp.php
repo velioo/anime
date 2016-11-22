@@ -9,7 +9,6 @@ class SignUp extends CI_Controller {
 	public function signup_page() {
 		$data['title'] = 'Sign Up';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$data['header'] = 'Join V-Anime !';
 		$this->load->view('signup_page', $data);
 	}
@@ -31,8 +30,7 @@ class SignUp extends CI_Controller {
 				$data['account_created'] = "Your account has been created.<br/><br/> You may now log in";
 				$data['title'] = 'Login';
 				$data['css'] = 'login.css';
-				$data['javascript'] = "";
-				$data['header'] = ' ';
+				$data['header'] = 'Please Login';
 				$this->load->view('login_page', $data);
 			} else {
 				$this->load->view('signup_page');
@@ -62,7 +60,6 @@ class SignUp extends CI_Controller {
 			$data['fb_email'] = $fb_email;
 			$data['title'] = "Sign Up";
 			$data['css'] = 'login.css';
-			$data['javascript'] = 'home.js';
 			$this->load->view('fb_user_signup', $data);
 		} else {
 			$this->load->model('users_model');

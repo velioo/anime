@@ -17,7 +17,6 @@ class Home extends CI_Controller {
 		
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'home.css';
-		$data['javascript'] = 'home.js';
 		$this->load->view('home_page', $data);
 	}
 	
@@ -26,29 +25,44 @@ class Home extends CI_Controller {
 		$this->insert_model->insert_anime($id, $values);
 	}
 	
-	public function write_json() {
+	public function write_json($anime_id = "") {
+		ini_set("memory_limit","512M");
 		$this->load->model('animes_model');
 	
-		$result_array = $this->animes_model->get_animes_names_images();
+		$result_array = $this->animes_model->get_anime_json_data();
 		
 		if($result_array) {
 			
 			$response = array();
-			$posts = array();
+			$all_names = "";
 			
 			foreach ($result_array as $anime) {		
 				$temp = $anime['titles'];
-				$titles = convert_titles_to_hash($temp);
-				$name = $titles[$anime['canonical_title']];
-				$image = asset_url() . "poster_images/" .$anime['poster_image_file_name'];
+				$titles = convert_titles_to_hash($temp); //$anime['canonical_title']
+				$all_names = "";
+				if($titles['en'] != "" && $titles['en'] != "NULL") {
+					$all_names.=$titles['en'] . " ";
+				} if($titles['en_jp'] != "" && $titles['en_jp'] != "NULL") {
+					$all_names.=$titles['en_jp'];
+				} 
 				
-				$result[] = array('name'=> $name, 'image'=> $image);
+				$name = $titles[$anime['canonical_title']];
+				$id = $anime['id'];
+				$image = $anime['poster_image_file_name'];
+				
+				$result[] = array('name'=> $name, 'all_names' => $all_names, 'id' => $id, 'image'=> $image);
 			}		
 			
-			$fp = fopen('assets/json/results.json', 'w');
+			$fp = fopen('assets/json/autocomplete.json', 'w');
 			fwrite($fp, json_encode($result));
 			fclose($fp);
 
+			if($anime_id != "") {
+				redirect("AnimeContent/show_anime_page/{$anime_id}");
+			} else {
+				$this->go_home();
+			}
+			
 		}
 
 	}

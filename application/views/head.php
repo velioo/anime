@@ -10,18 +10,17 @@
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/imgareaselect-default.css";?>"/>
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/" . $css;?>">
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/bootstrap-social.css";?>">	  
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.min.css"?>"/>
+	  <link rel="stylesheet" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.themes.min.css"?>"> 
 	  
-	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	  <script src="<?php echo asset_url() . "js/jquery-3.1.1.min.js"?>"></script>
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 	  <script type="text/javascript" src="<?php echo asset_url() . "EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"?>"></script>
-	 <!--  <script type="text/javascript" src="<?php //echo asset_url() . "js/jquery.min.js"?>"></script>
-  	  <script type="text/javascript" src="<?php //echo asset_url() . "js/jquery.imgareaselect.pack.js"?>"></script>-->
 	    
-	  <script src="<?php echo asset_url();?>js/home.js"></script>
+	  <script src="<?php echo asset_url() . "js/home.js";?>"></script>
+	  <script src="<?php echo asset_url() . "js/autocomplete.js";?>"></script>
 	  
 </head>
 <body>

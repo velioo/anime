@@ -125,6 +125,12 @@
 		width: 300px;	
 		height:28px;
 		font-size:16px;	
+		border: none;
+	}
+	
+	#search_box:focus {
+		outline: none;
+		box-shadow: 0 0 3pt 2pt #3D619C;
 	}
 	
 	.easy-autocomplete {
@@ -146,6 +152,8 @@
 		display: inline-block;
 		margin-left: 10px;
 		word-break: normal;
+		vertical-align: top;
+		color: white;
 	}
 	
 	.auto_image {
@@ -176,7 +184,6 @@
 		color:white;
 		font-size: 13px;
 		opacity: 1;
-		/* transition: .3s ease-in-out; */
 	}
 	
 	#signup_button:hover, #login_button:hover, #navigation_small_signup:hover, #navigation_small_login:hover {
@@ -400,9 +407,23 @@
 		.nav.navbar-nav li a, .nav.navbar-nav .dropdown-menu li a {
 			font-size: 13px;
 		}	
+		
 		#search_box {
 			width: 220px;	
 			font-size: 9px;
+		}
+		.easy-autocomplete div ul li .eac-item .auto_div {
+			width: 140px;
+			font-size: 9px;
+		}
+		
+		.eac-item {
+			height: 50px;
+		}
+		
+		.auto_image {
+			width: 35px;
+			min-height: 55px;
 		}
 	}
 
@@ -425,6 +446,20 @@
 		
 		.profile_menu {
 			margin-left: 10px;
+		}
+		
+		.easy-autocomplete div ul li .eac-item .auto_div {
+			width: 80px;
+			font-size: 6px;
+		}
+		
+		.eac-item {
+			height: 40px;
+		}
+		
+		.auto_image {
+			width: 25px;
+			min-height: 40px;
 		}
 	}
 	
@@ -458,6 +493,12 @@
 		#small_search_box {
 			width: 200px;	
 			font-size: 9px;
+			border: none;
+		}
+		
+		#small_search_box:focus {
+			outline: none;
+			box-shadow: 0 0 3pt 2pt #3D619C;
 		}
 		
 		.search_select {
@@ -471,6 +512,20 @@
 		.small_profile_menu {
 			margin-top:0px;
 			margin-left:-30px;
+		}
+		
+		.easy-autocomplete div ul li .eac-item .auto_div {
+			width: 130px;
+			font-size: 6px;
+		}
+		
+		.eac-item {
+			height: 30px;
+		}
+		
+		.auto_image {
+			width: 25px;
+			min-height: 35px;
 		}
 		
 	}
@@ -504,8 +559,21 @@
 		
 		.search_select {
 			font-size: 9px;
+		}		
+		
+		.easy-autocomplete div ul li .eac-item .auto_div {
+			width: 65px;
+			font-size: 4px;
 		}
 		
+		.eac-item {
+			height: 17px;
+		}
+		
+		.auto_image {
+			width: 15px;
+			min-height: 20px;
+		}
 	}
 	
 	@media (max-width: 427px) { 
@@ -538,6 +606,20 @@
 		.small_profile_menu {
 			margin-top:0px;
 			margin-left:0px;
+		}
+				
+		.easy-autocomplete div ul li .eac-item .auto_div {
+			width: 50px;
+			font-size: 3px;
+		}
+		
+		.eac-item {
+			height: 10px;
+		}
+		
+		.auto_image {
+			width: 10px;
+			min-height: 15px;
 		}
 	}
 	

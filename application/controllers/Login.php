@@ -11,7 +11,6 @@ class Login extends CI_Controller {
 	public function login_page($correct=TRUE, $header = "Please Login") {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$data['header'] = $header;		
 		if($correct == FALSE) 
 		 	$data['incorrect'] = 'Username or password is incorrect !';
@@ -22,7 +21,6 @@ class Login extends CI_Controller {
 	function write_data($username) {
 		$data['title'] = $username . '\'s profile';
 		$data['css'] = 'user.css';
-		$data['javascript'] = 'home.js';
 		$data['header'] = $username;
 		return $data;
 	}
@@ -99,7 +97,6 @@ class Login extends CI_Controller {
 	public function forgotten_password() {
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
-		$data['javascript'] = 'home.js';
 		$data['header'] = 'Forgot your password ?';
 		$this->load->view('forgot_password_page', $data);
 	}
@@ -272,7 +269,6 @@ class Login extends CI_Controller {
 				$data['header'] = 'Create new account';
 				$data['title'] = "Sign Up";
 				$data['css'] = 'login.css';
-				$data['javascript'] = 'home.js';
 				$this->load->view('fb_user_signup', $data);
 				
 			}

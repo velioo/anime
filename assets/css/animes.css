@@ -19,9 +19,9 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover; 
-    -webkit-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
-	-moz-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
-	box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
+	-moz-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
+	box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
 }
 
 .top-container {
@@ -64,13 +64,33 @@ body {
 	background-color: #2F343B;
 }
 
-#edit_cover_button {
+#edit_cover_button, #edit_poster_button {
 	width: 0.1px;
 	height: 0.1px;
 	opacity: 0;
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
+}
+
+#wrap_poster_span_div {
+	display:inline-block; 
+	position: relative; 
+	text-align: center;
+}
+
+#edit_poster_span {
+	display: none;
+	font-size: 50px; 
+	position: absolute; 
+	top: 0; 
+	padding-top: 110px;
+	margin-top: 5px;
+	color: white;
+    overflow:hidden;
+    width:100%;
+    height:100%;
+    cursor: pointer;
 }
 
 #submit_info, #edit_cover_label {
@@ -199,7 +219,7 @@ body {
 	border-radius: 3px;
 	display: inline-block;
 	margin-top:5px;
-	max-height:310px;
+	max-height:275px;
 	max-width:220px;
 	transition: 0.3s;
 	cursor: pointer;
@@ -383,6 +403,16 @@ body {
 	margin-top: 10px;
 	margin-right: 20px;
 	float: right;
+	color:red;
+	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
+             #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.error_a {
+	display: inline-block;
+	float: right;
+	margin-right: 20px;
+	margin-top: 10px;
 	color:red;
 	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
              #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;

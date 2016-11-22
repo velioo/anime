@@ -30,7 +30,7 @@ function reScale() {
 		var offset = document.getElementById("top_offset").getAttribute("value");
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		if(((offset + scale) < 0) || (counter > 5)) {
+		if(((offset + scale) < 0) || (counter > 5) || ((typeof zoom_in == 'undefined') && ((original_width != window_width)))) {
 			$('#user-bar').css("background-position", "0px 0px");
 		} else {
 			$('#user-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
@@ -41,7 +41,7 @@ function reScale() {
 		var offset = document.getElementById("top_offset").getAttribute("value");
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		if(((offset + scale) < 0) || (counter > 5)) {
+		if(((offset + scale) < 0) || (counter > 5) || ((typeof zoom_in == 'undefined') && ((original_width != window_width)))) {
 			$('#anime-bar').css("background-position", "0px 0px");
 		} else {
 			$('#anime-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
@@ -60,11 +60,15 @@ function reScale() {
 	if(window_width <= 1150) {	
 		if ($('#signup_button').length > 0) {
 			$('#signup_button').css("margin-right", "-21px");
-			//document.getElementById("signup_button").style.marginRight = "-21px";	
 		}
 	} else if($('#signup_button').length > 0) {
 		$('#signup_button').css("margin-right", "0px");
-		//document.getElementById("signup_button").style.marginRight = "0px";
+	}
+	
+	if($('#small_search_box').length > 0) {
+		if($('#small_search_box').is(":visible")) {
+			$('#small_search_box').val($('#search_box').val());
+		}
 	}
 	
 }
@@ -77,9 +81,9 @@ function putCaret() {
 }
 
 $(document).ready(function() {
-	window_width = window.outerWidth;
+	original_width = window.outerWidth;
+	window_width = window.innerWidth;
 	prev_window_width = window_width;
-	original_width = window_width;
 	$('.search_form').each(function(){
 		$(this).submit(function () {		
 			if($(this).attr('name') == "search_form_name") {

@@ -7,6 +7,7 @@
 			<form action="<?php echo site_url("animeUpdates/update_anime/" . $anime['id']);?>" method="post" enctype="multipart/form-data">
 				<input type="submit" name="submit_info" id="submit_info" value="Save">
 				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
+				<input type="file" name="edit_poster" accept="image/*" id="edit_poster_button">
 				<?php if($this->session->flashdata('error')) { 
 					  if(strpos($this->session->flashdata('error'), "You did not select a file to upload") == FALSE)
 					  	echo $this->session->flashdata('error');

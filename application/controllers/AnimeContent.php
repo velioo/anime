@@ -11,7 +11,6 @@ class AnimeContent extends CI_Controller {
 			$data['anime'] = $query;
 			$data['title'] = 'V-Anime';
 			$data['css'] = 'animes.css';
-			$data['javascript'] = 'home.js';
 			$data['header'] = "Anime";
 			$this->load->view('anime_page', $data);
 			

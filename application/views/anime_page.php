@@ -83,7 +83,10 @@ function showEditFields() {
 					<p id="ranked">Rank #</p>
 				</div>
 			</div>
-			<img src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name'] ."?rand={$random_num};"?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  alt="Image" id="poster_image">
+			<div id="wrap_poster_span_div">
+				<img src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name'] ."?rand={$random_num};"?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  alt="Image" id="poster_image">
+				<span id="edit_poster_span" class="fa fa-camera"></span>
+			</div>
 			<div id="anime_modal" class="modal">
 			  <div id="center_div">
 				  <span class="close" id="close_modal">×</span>

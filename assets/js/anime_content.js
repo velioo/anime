@@ -45,6 +45,16 @@ $('#show_video').click(function() {
 	 $("#anime_video").attr('src', video_url);
 });
 
+$('#edit_poster_span').click(function() {
+	$('#edit_poster_button').click();
+});
+
+$('#edit_poster_button').change(function(){
+	if($('#edit_poster_button').val() != "") {					
+		showCover(this, "#poster_image");
+	}	
+});	
+
 function editAnimeInfo(file_chosen, filesize) {
 	var height = window.innerHeight;
 	var margin = 1;
@@ -53,8 +63,10 @@ function editAnimeInfo(file_chosen, filesize) {
 	}
 	$('#edit_cover_label').css("display", "inline-block");
 	$('#submit_info').css("display", "inline-block");
+	$('#edit_poster_span').css("display", "block");
+	$('#poster_image').css("filter", "brightness(50%)");
 	$('#show_edits').css("display", "none");
-	$('#anime-bar').css("cursor", "move");				
+	$('#anime-bar').css("cursor", "move");	
 	$('#anime-bar').mousedown(function(e){
 	    var prevY = e.clientY;
 	    $(this).mousemove(function(e){

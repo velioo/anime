@@ -12,7 +12,7 @@ body {
 
 #user-bar {
 	position:relative;
-	height:430px;
+	height:400px;
 	width:100%;
 	background-repeat: no-repeat;
 	-webkit-background-size: cover;
@@ -40,6 +40,9 @@ body {
 #user_image_div {
 	width:110px;
 	height:110px;
+	display:inline-block; 
+	position: relative; 
+	text-align: center;
 }
 
 .thumbnail {
@@ -129,7 +132,7 @@ body {
 	z-index: -1;
 }
 
-#submit_info, #edit_avatar_label, #edit_cover_label {
+#submit_info, #edit_cover_label {
 	color:white;
 	background-color: #23272D;
 	outline:none;
@@ -145,15 +148,28 @@ body {
     user-select: none;           
 }
 
-#submit_info, #edit_cover_label, #edit_avatar_label {
+#submit_info, #edit_cover_label {
 	float: right;
 	margin-right: 30px;
 	margin-bottom: 20px;
 }
 
-#submit_info:hover, #edit_cover_label:hover, #edit_avatar_label:hover {
+#submit_info:hover, #edit_cover_label:hover {
 	background-color:#2F343B;
 	opacity: 1;
+}
+
+#edit_avatar_span {
+	display: none;
+	font-size: 40px; 
+	position: absolute; 
+	top: 0; 
+ 	padding-top: 40px;
+	color: white;
+    overflow:hidden;
+    width:100%;
+    height:100%;
+    cursor: pointer;
 }
 
 h1 {
@@ -289,7 +305,6 @@ h1 {
 
 .error {
 	float: right;
-	margin-top:0px;
 	margin-right: 20px;
 	margin-top: -10px;
 	color:red;

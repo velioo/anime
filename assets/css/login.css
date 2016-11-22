@@ -48,6 +48,7 @@ label {
 	width:250px;
 	margin-top:20px;
 	margin-left:10px;
+	padding-left: 5px;
 	border-radius: 3px;
 	display: inline-block;
 }
