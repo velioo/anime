@@ -1,5 +1,7 @@
 <?php include 'head.php';?>
 
+<link rel="stylesheet" href="<?php echo asset_url() . "css/user_navigation_bar.css";?>" type="text/css" />
+
 <?php
 	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $results['username'])) 
 		$is_you = TRUE;
@@ -10,7 +12,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
-		document.getElementById("timeline").style.opacity = "1";	
+		$('#timeline').css("opacity", "1");
 	});
 	<?php if($is_you) { ?>
 	function showEditFields() {
@@ -60,7 +62,7 @@
 					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($results['bio']);?></textarea>
 					<br><br>
 					<label for="age_edit" style="margin-right:10px;">Age </label><input name="age_edit" type="text" id="age_edit" placeholder="Write your age..." value="<?php echo $results['age']?>">
-					<p id="wtf_age">dsad</p>
+					<p id="wtf_age"></p>
 					<br><br>
 					<label for="gender_edit" style="margin-right:10px;">Gender </label>
 					<select name="gender_edit" id="gender_edit">

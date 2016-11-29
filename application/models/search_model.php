@@ -7,7 +7,7 @@ Class Search_model extends CI_Model {
 	}
 	
 	function get_latest_anime() {
-		$query = $this->db->query("SELECT id,titles,canonical_title,poster_image_file_name FROM animes WHERE start_date <= CURDATE() ORDER BY start_date DESC LIMIT 28");	
+		$query = $this->db->query("SELECT id,slug,titles,poster_image_file_name FROM animes WHERE start_date <= CURDATE() ORDER BY start_date DESC, created_at DESC LIMIT 28");	
 		return $query->result_array();
 	}
 	
@@ -75,22 +75,22 @@ Class Search_model extends CI_Model {
 			$query = array();
 			
  			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM
 			(
 				SELECT 1 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM animes
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE slug LIKE '{$anime}%' 
 				UNION
 				SELECT 2 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM animes
+				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE titles LIKE '%{$anime}%'	
 				UNION
 				SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at
 					FROM animes WHERE MATCH(slug) AGAINST('{$anime}' IN BOOLEAN MODE)
 				UNION
 				SELECT 4 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title,created_at FROM animes
+				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE synopsis LIKE '%{$anime}%'
 			
 			) tab
@@ -103,7 +103,7 @@ Class Search_model extends CI_Model {
 
 		} else {
 			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title FROM animes ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles FROM animes ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
 			$result_array = $query->result_array();
 					
 			if($all != TRUE) {
@@ -122,7 +122,7 @@ Class Search_model extends CI_Model {
 			$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 			
 			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
+					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
 					FROM animes WHERE {$like_statement} {$limit_offset}");
 			
 			if($query->num_rows() > 0) {
@@ -136,7 +136,7 @@ Class Search_model extends CI_Model {
 				$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 					
 				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,canonical_title
+						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
 						FROM animes WHERE {$like_statement} {$limit_offset}");
 				if($query->num_rows() > 0) {
 					return $query->result_array();

@@ -1,4 +1,4 @@
-public function insert_animes() {
+wpublic function insert_animes() {
 $myfile = fopen("./assets/txt/Animes.txt", "r") or die("Unable to open file!");
 	$counter = 1;
 	$image_counter = 301;

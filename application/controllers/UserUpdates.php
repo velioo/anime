@@ -25,6 +25,7 @@ class UserUpdates extends CI_Controller {
         	$this->session->set_flashdata('error', $error['error']);
         } else {
         	$query = $this->users_model->update_cover_image($this->session->userdata['id'],  $config['file_name']);
+        	$this->session->set_flashdata('new_cover', TRUE);
          }             
          
          $config['upload_path']          = './assets/user_profile_images/';
@@ -42,9 +43,10 @@ class UserUpdates extends CI_Controller {
          	$this->session->set_flashdata('error_a', $error['error_a']);
          } else {
          	$query = $this->users_model->update_avatar_image($this->session->userdata['id'],  $config['file_name']);
+         	$this->session->set_flashdata('new_avatar', TRUE);
          }         
          
-         redirect("login/profile/{$this->session->userdata['username']}");
+         redirect("users/profile/{$this->session->userdata['username']}");
 	}
 	
 	public function update_user_info() {
@@ -111,7 +113,7 @@ class UserUpdates extends CI_Controller {
 			} 
 
 			$this->nocache();
-			redirect("login/profile/{$this->session->userdata['username']}");
+			redirect("users/profile/{$this->session->userdata['username']}");
 		}
 		
 		
@@ -155,26 +157,31 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function update_forgotten_password($user_id) {
+	public function update_forgotten_password($user_id=null) {
 		$this->load->library('form_validation');
 		$this->load->model('users_model');
 	
-		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
-	
-		if($this->form_validation->run() == FALSE) {
-			$data['user_id'] = $user_id;
-			$data['title'] = 'V-Anime';
-			$data['css'] = 'login.css';
-			$data['header'] = 'Reset your password';
-			$this->load->view('reset_password_page', $data);
-		} else {
-			$password = hash('sha256', $this->input->post('password'));
-			$query = $this->users_model->update_user_password($user_id, $password);
-			if($query) {
-				$this->users_model->delete_temp_pass($user_id);
-				redirect("login/login_page/TRUE/You successfully changed your password");
+		if($user_id != null and is_numeric($user_id)) {
+			
+			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
+			$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
+		
+			if($this->form_validation->run() == FALSE) {
+				$data['user_id'] = $user_id;
+				$data['title'] = 'V-Anime';
+				$data['css'] = 'login.css';
+				$data['header'] = 'Reset your password';
+				$this->load->view('reset_password_page', $data);
+			} else {
+				$password = hash('sha256', $this->input->post('password'));
+				$query = $this->users_model->update_user_password($user_id, $password);
+				if($query) {
+					$this->users_model->delete_temp_pass($user_id);
+					redirect("login/login_page/TRUE/You successfully changed your password");
+				}
 			}
+		} else {
+			$this->page_not_found();
 		}
 	}
 	
@@ -230,6 +237,13 @@ class UserUpdates extends CI_Controller {
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
 		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	}
+	
+	function page_not_found() {
+		header('HTTP/1.0 404 Not Found');
+		echo "<h1>Error 404 Not Found</h1>";
+		echo "The page that you have requested could not be found.";
+		exit();
 	}
 	
 }

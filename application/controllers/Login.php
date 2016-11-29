@@ -18,13 +18,6 @@ class Login extends CI_Controller {
 		$this->load->view('login_page', $data);
 	}
 	
-	function write_data($username) {
-		$data['title'] = $username . '\'s profile';
-		$data['css'] = 'user.css';
-		$data['header'] = $username;
-		return $data;
-	}
-	
 	public function log_in() {
 		
 		$this->load->library('form_validation');
@@ -34,7 +27,7 @@ class Login extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE) {
 			if(isset($this->session->userdata['is_logged_in'])) {
-				$this->profile($this->session->userdata['username']);
+				redirect("Users/profile/{$this->session->userdata['username']}");
 			} else{
 				$this->login_page(FALSE);
 			}
@@ -80,66 +73,11 @@ class Login extends CI_Controller {
 		redirect('home');
 	}
 	
-	public function profile($username) {
-		$this->load->model('users_model');
-		$data = $this->write_data($username);
-		if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
-			$query = $this->users_model->get_user_info_logged($username);
-			$this->nocache();
-			$data['results'] = $query;
-		} else {
-			$query = $this->users_model->get_user_info($username);
-			$data['results'] = $query;
-		}
-		$this->load->view('user_page', $data);
-	}
-	
 	public function forgotten_password() {
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
 		$data['header'] = 'Forgot your password ?';
 		$this->load->view('forgot_password_page', $data);
-	}
-	
-	public function send_password_reset_link() {
-		$this->load->library('form_validation');
-
-		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists_forgot');
-		
-		if ($this->form_validation->run() == FALSE) {
-			$this->forgotten_password();
-		} else {
-			$temp_pass = md5(uniqid());
-			
-			$this->load->library('email', array('mailtype'=>'html'));
-			$this->email->from('vanime.staff@gmail.com', "V-Anime Reset Password");
-			$this->email->to($this->input->post('email'));
-			$this->email->subject("Reset your Password");
-			
-			$message = "<p>This email has been sent as a request to reset our password</p>";
-			$message .= "<p><a href='".site_url("userUpdates/reset_password/$temp_pass")."'>Click here </a>if you want to reset your password,
-			if not, then ignore</p>";
-			
-			$this->email->message($message);
-			
-			if($this->email->send()){
-				$this->load->model('users_model');
-				
-				$query = $this->users_model->get_id_by_email($this->input->post('email'));
-			
-				if($query) {
-					$user_id = $query['id'];
-					$this->users_model->temp_reset_password($user_id, $temp_pass);
-					$this->login_page(TRUE, "Email was sent to {$this->input->post('email')}. <br/>Follow the instructions in it to reset your password.");
-				} else {
-					$this->login_page(TRUE, "There was an internal error...");
-				}				
-			
-			} else {
-				$this->login_page(TRUE, "Failed to send email...");
-			}
-				
-		}
 	}
 	
 	public function check_if_email_exists_forgot($requested_email) {

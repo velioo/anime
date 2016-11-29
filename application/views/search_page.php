@@ -33,7 +33,7 @@
 		 				 $temp = $anime['titles'];	 				 
 		 				 $titles = convert_titles_to_hash($temp);	
 		 				 echo '<div class="col-sm-4">';
-		 				 echo "<p class='title_paragraph'><a href = '" . site_url("AnimeContent/show_anime_page/" . $anime['id']) . "' class = 'anime_title'>"  . $titles[$anime['canonical_title']] . "</a></p>";
+		 				 echo "<p class='title_paragraph'><a href = '" . site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug'])) . "' class = 'anime_title'>"  . $titles['main'] . "</a></p>";
 		 				 if($anime['episode_count'] > 0) {
 		 				 	$episode_count = $anime['episode_count'];
 		 				 } else {
@@ -45,7 +45,7 @@
 		 				  else 
 		 				 	$ep = "eps";
 		 				 
-		 				 $show_type = get_type($anime['show_type']);
+		 				 $show_type = get_show_type($anime['show_type']);
 		 				 	
 		 				 echo "<p class='second_paragraph'>" . $show_type . " | " . $episode_count . " " . $ep . "</p>";
 		 				 echo "<p class='third_paragraph'>";
@@ -58,7 +58,7 @@
 	 				 ?>				 
 	 				 <?php $random_num = time();?>
 	 				 <div class="anime_body">
-	 				 	<a href="<?php echo site_url("AnimeContent/show_anime_page/" . $anime['id']);?>"><img class="anime_poster" src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']. "?rand={$random_num}";?> " onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"></a> 			
+	 				 	<a href="<?php echo site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug']));?>"><img class="anime_poster" src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']. "?rand={$random_num}";?> " onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"></a> 			
 	 				 	<div class="anime_synopsis_block">
 	 				 		<p class="anime_synopsis"><?php echo preg_replace('#(\\\r|\\\r\\\n|\\\n)#', '<br/>', $anime['synopsis']);?></p>
 	 				 	</div>
@@ -87,7 +87,7 @@
 			    <tbody>
 			      <?php foreach ($users_matched as $user) { ?>
 			      <tr>
-			        <td><a id="table_first_column" href="<?php echo site_url("login/profile/{$user['username']}");?>"><?php echo $user['username'];?></a></td>
+			        <td><a id="table_first_column" href="<?php echo site_url("users/profile/{$user['username']}");?>"><?php echo $user['username'];?></a></td>
 			        <td><?php echo $user['joined_on'];?></td>
 			      </tr>
 			      <?php }?>

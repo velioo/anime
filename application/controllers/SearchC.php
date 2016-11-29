@@ -3,7 +3,7 @@
 class SearchC extends CI_Controller {
 	
 	public function index() {
-		$this->search_page();
+		redirect("home");
 	}
 	
 	public function search() {
@@ -11,7 +11,7 @@ class SearchC extends CI_Controller {
 		$this->load->model('search_model');
 		
 		switch ($this->input->get('search_select')) {
-			case 'anime':
+			case 'animes':
 				$this->search_anime();
 				break;
 			case 'characters':
@@ -33,38 +33,24 @@ class SearchC extends CI_Controller {
 		$this->load->model('search_model');
 		$this->load->library('pagination');
 
-		$config['base_url'] = site_url("SearchC/search_anime");
-		$config['per_page'] = 30;
-		$config['num_links'] = 4;
-		$config['use_page_numbers'] = TRUE;
-		$config['page_query_string'] = TRUE;
-		$config['reuse_query_string'] = TRUE;
-		$config['query_string_segment'] = 'page';
+		$config = $this->configure_pagination();	
 		
-		$config['full_tag_open'] = "<ul class='pagination'>";
-		$config['full_tag_close'] ="</ul>";
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
-		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
-		$config['next_tag_open'] = "<li>";
-		$config['next_tagl_close'] = "</li>";
-		$config['prev_tag_open'] = "<li>";
-		$config['prev_tagl_close'] = "</li>";
-		$config['first_tag_open'] = "<li>";
-		$config['first_tagl_close'] = "</li>";
-		$config['last_tag_open'] = "<li>";
-		$config['last_tagl_close'] = "</li>";
-		
+		$sortable_columns = $this->get_sortable_columns();
 		
 		if($this->input->get('search') !== NULL) { //get user search
 			$anime = $this->input->get('search');					
+		} else if($this->input->get('last_search') !== NULL) {
+			$anime = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
 		} else {
-			$anime = $this->input->get('last_search');//get last search if user sorts results, goes to next page
+			$anime = "";
 		}
 		
-		if($this->input->get('sort_selected') !== NULL) {// check which sort option is selected
-			$sort_by = $this->input->get('sort_selected');
+		if($this->input->get('sort_selected') !== NULL) { // check which sort option is selected
+			if(!in_array($this->input->get('sort_selected'), $sortable_columns)) {
+				$sort_by = 'slug';
+			} else {
+				$sort_by = $this->input->get('sort_selected');
+			}
 		} else {
 			if($anime == "") {
 				$sort_by = 'start_date';
@@ -81,8 +67,12 @@ class SearchC extends CI_Controller {
 		 		$order = "DESC";
 		 	else if($sort_by == 'average_rating')
 		 		$order = "DESC";
-			else	
+			else {	
 				$order = $this->input->get('sort_order');
+				if($order != "ASC" && $order != "DESC") {
+					$order = "ASC";
+				}
+			}
 		} else {
 			$user_sorted_results = FALSE;
 			if($anime == "") {	
@@ -92,7 +82,7 @@ class SearchC extends CI_Controller {
 			}	
 		}
 		
-		if($this->input->get('page') != NULL) { //calculate the offset for next page
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
 			$start =$this->input->get('page') * $config['per_page'] - $config['per_page'];
 		} else {
 			$start = 0;
@@ -121,7 +111,6 @@ class SearchC extends CI_Controller {
 			$this->pagination->initialize($config);
 			$data['pagination'] = $this->pagination->create_links();		
 			$data['animes_matched'] = $query;			
-			//$data['animes_matched'] = $this->array_sort($data['animes_matched'], $sort_by, $order);
 		}
 		
 		$data['last_search'] = $anime;	
@@ -169,9 +158,44 @@ class SearchC extends CI_Controller {
 		return $new_array;
 	}
 
+	function configure_pagination() {
+		$config['base_url'] = site_url("SearchC/search_anime");
+		$config['per_page'] = 30;
+		$config['num_links'] = 4;
+		$config['use_page_numbers'] = TRUE;
+		$config['page_query_string'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['query_string_segment'] = 'page';
+		$config['full_tag_open'] = "<ul class='pagination'>";
+		$config['full_tag_close'] ="</ul>";
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+		$config['next_tag_open'] = "<li>";
+		$config['next_tagl_close'] = "</li>";
+		$config['prev_tag_open'] = "<li>";
+		$config['prev_tagl_close'] = "</li>";
+		$config['first_tag_open'] = "<li>";
+		$config['first_tagl_close'] = "</li>";
+		$config['last_tag_open'] = "<li>";
+		$config['last_tagl_close'] = "</li>";
+		
+		return $config;
+	}
+	
+	function get_sortable_columns() {
+		$this->load->model('animes_model');	
+		
+		$columns = "id,slug,episode_count,episode_length,synopsis,average_rating, age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at";	
+		$columns = explode(",", $columns);
+		
+		return $columns;
+	}
 	
 	
 	public function search_characters() {
+		redirect("home");
 		$character = $this->input->get('search');
 		
 		$query = $this->search_model->search_characters($character);
@@ -214,7 +238,7 @@ class SearchC extends CI_Controller {
 	}
 	
 	public function search_lists() {
-		
+		redirect("home");
 		$list = $this->input->get('search');
 		
 		$query = $this->search_model->search_lists($list);

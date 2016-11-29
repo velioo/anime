@@ -28,7 +28,9 @@ body {
 	height:500px;
 	width: 100%;
 	padding-top: 50px;
+	z-index: 0;
 }
+
 
 #edit_div {
 	position: absolute;
@@ -39,29 +41,12 @@ body {
 
 #show_edits {
 	display: inline-block;
-	background-color: #23272D;
-	border:none;
-	outline:none;
 	padding-left:40px;
 	padding-right:40px;
 	font-size: 15px;
 	margin-right:30px;
 	margin-bottom: 20px;
 	float: right;
-}
-
-#show_edits:hover {
-	background-color: #2F343B;
-	opacity: 1;
-}
-
-#show_edits:active {
-	background:none;
-	outline:none;
-}
-
-#show_edits:focus {
-	background-color: #2F343B;
 }
 
 #edit_cover_button, #edit_poster_button {
@@ -94,10 +79,7 @@ body {
 }
 
 #submit_info, #edit_cover_label {
-	color:white;
-	background-color: #23272D;
-	outline:none;
-	border:none;
+	opacity: 1;
 	padding: 10px;
 	cursor: pointer;
 	display:none;
@@ -112,44 +94,51 @@ body {
     float: right;  
 }
 
-#submit_info:hover, #edit_cover_label:hover {
-	background-color:#2F343B;
-	opacity: 1;
-}
-
 #anime_content {
+	position: relative;
 	border-radius: 2px;
-	margin-top: 50px;
 	background: none;
 	border:none;
+	z-index: 5;
 }
 
-#anime_info {
-	background-color: white;
-	height:auto;
-	min-height:500px;
+#menu_home_div {
+	border-bottom: 3px solid #2F4CA1;
+}
+
+#home_menu_title {
+	color: #2F4CA1
 }
 
 #anime_title_div {
 	text-align: center;
-	width: 100%;
-	vertical-align: top;
-	margin-top:20px;
-	border-bottom: 1px solid #DEDEDE;
 }
 
-#anime_title {
-	display: inline-block;
-	font-size: 22px;
-	font-weight: bolder;
-	color:black;
-	font-family: Arial, Helvetica, sans-serif;
+#anime_info.col-sm-12 {
+	background-color: white;
+	height:auto;
+	min-height:500px;
+	padding-bottom: 50px;
+	margin-bottom: 50px;
+}
+
+#wrap_anime_info_bar {
+	padding-top: 10px;
+}
+
+.col-sm-9 {
+	position: relative;
+	background-color: white;
+	height:auto;
+	min-height:500px;
+	padding-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 #type_episodes_div {
 	display:inline-block;
 	text-align: center;
-	width:221px;
+	width:200px;
 }
 
 #type_episodes {
@@ -220,7 +209,8 @@ body {
 	display: inline-block;
 	margin-top:5px;
 	max-height:275px;
-	max-width:220px;
+	max-width: 200px;
+	-webkit-transition: 0.3s;
 	transition: 0.3s;
 	cursor: pointer;
 }
@@ -286,6 +276,7 @@ body {
     font-size: 40px;
     font-weight: bold;
     opacity: 1;
+    -webkit-transition: 0.3s;
     transition: 0.3s;
 }
 
@@ -356,7 +347,7 @@ body {
 
 #synopsis_div {
 	position: relative;
-	display: inline-block;
+	display: none;
 	width:600px;
 	vertical-align: top;
 	margin-top:10px;
@@ -373,7 +364,7 @@ body {
 
 .morelink {
     display: inline;
-    color: red;
+    color: #cb3434;
     font-size: 13px;
     cursor: pointer;
 }
@@ -384,7 +375,7 @@ body {
 
 #anime_genres_div {
 	position: relative;
-	display: block;
+	display: none;
 	width: 600px;
 	padding-left: 10px;
 	color: #838A91;
@@ -396,6 +387,118 @@ body {
 	display: inline-block;
 	margin-left:20px;
 	vertical-align: top;
+}
+
+#reviews {
+	min-height: 200px;
+}
+
+.add_edit_review {
+	float: right;
+	margin-top:-30px; 
+	margin-right: -10px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	font-weight: bolder;
+	cursor: pointer;
+}
+
+.anime_content_title {
+	font-size: 25px;
+}
+
+#write_review {
+	display: none;
+}
+
+.wrap_review {
+	margin-top: 20px;
+}
+
+.review_header_div {
+	height: 70px; 
+	width: 100%; 
+	position: relative; 
+	border-bottom: 1px solid #E9E9E9;
+}
+
+.user_review_image_div {
+	width:60px;
+	height:60px; 
+	display:inline-block;
+} 
+
+.user_review_image {
+	height: 100%; 
+	width: 100%; 
+	object-fit: cover;
+}
+
+.user_name {
+	display:inline; 
+	vertical-align: top;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #2F4CA1;
+	font-weight: bolder;
+}
+
+.review_header_right_part {
+	display: inline-block;
+	float:right; 
+	position: relative;
+}
+
+.review_right_p {
+	display:block; 
+	text-align: right;
+}
+
+.review_text {
+	color: #6D5E5E;
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.read_more {
+	color: #cb3434;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bolder;
+}
+
+.read_more:hover {
+	text-decoration: none;
+	color: #651a1a;
+}
+
+.read_more:focus, .read_more:active {
+	text-decoration: none;
+	color: #cb3434;
+}
+
+#wrap_write_first_review {
+	width: 100%;
+	text-align: center;
+}
+
+#write_first_review_button {
+	font-size: 15px;
+	padding: 12px;
+	border-radius: 0px;
+	font-weight: normal;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#wrap_see_all_reviews {
+	width: 100%;
+	text-align: center;
+}
+
+#see_all_reviews_button {
+	padding: 14px 25px 12px 25px;
+	font-size: 15px;
+	border-radius: 0px;
+	font-weight: normal;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
 .error {

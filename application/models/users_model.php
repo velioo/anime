@@ -76,7 +76,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function get_user_info($username) {
-		$query = $this->db->query("SELECT username,joined_on,country,profile_image,cover_image,top_offset,gender,bio,life_anime,last_online,total_episodes,age,show_age FROM users WHERE username='{$username}'");
+		$query = $this->db->query("SELECT id,username,joined_on,country,profile_image,cover_image,top_offset,gender,bio,life_anime,last_online,total_episodes,age,show_age FROM users WHERE username='{$username}'");
 		
 		if ($query->num_rows() == 1) {
 			return $query->row_array();

@@ -6,7 +6,6 @@
 if (!isset($this->session->userdata['is_logged_in'])) {
 	header("location: " . site_url("Login/login_page"));
 }
-
 ?>
 
 <div id="wrap">
@@ -34,7 +33,7 @@ if (!isset($this->session->userdata['is_logged_in'])) {
 				echo form_label('Confirm Password(Optional)', 'password_confirm');
 				echo form_password('password_confirm', '');
 				echo form_error('password_confirm', '<p class="error">*', '</p>');echo "<br/><br/>";
-				echo form_submit('submit', 'Save', 'id=submit');
+				echo form_submit('submit', 'Save', 'id="submit" class="button-black"');
 				echo form_close();
 			?>
 			<form action="<?php echo site_url("userUpdates/facebook_connect");?>" method="post">

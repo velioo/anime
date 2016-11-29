@@ -1,5 +1,7 @@
 @CHARSET "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300);
+@import url("buttons_links.css");
+
 	html {
 		position: relative;
     	height: 100%;
@@ -126,6 +128,7 @@
 		height:28px;
 		font-size:16px;	
 		border: none;
+		font-family: "Open Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
 	}
 	
 	#search_box:focus {
@@ -166,7 +169,8 @@
 	#submit_button {
 		background-color:#2F343B; 
 		border:none;		
-		opacity: 1;
+		opacity: 1;				
+		-webkit-transition: .3s ease-in-out;
 		transition: .3s ease-in-out;
 	}
 	
@@ -403,15 +407,35 @@
 		font-size: 12px;
 	}
 	
+	@media (max-width: 1150px) {
+		.container-fluid.scrollable {
+			width: 100%;
+		} 
+		
+		.container-fluid.navigation_container {
+			width: 100%;
+		}
+	}
+	
 	@media (max-width: 1024px) {
 		.nav.navbar-nav li a, .nav.navbar-nav .dropdown-menu li a {
 			font-size: 13px;
 		}	
 		
+		.navbar-header {
+			width: 100px;
+		}
+		
+		#logo {
+			width: 100px;
+			height: 40px;
+		}
+		
 		#search_box {
 			width: 220px;	
 			font-size: 9px;
 		}
+		
 		.easy-autocomplete div ul li .eac-item .auto_div {
 			width: 140px;
 			font-size: 9px;
@@ -428,10 +452,16 @@
 	}
 
 	@media (max-width: 854px) {	
-		#logo {
-			width: 90px;
-			height: 35px;
+	
+		.navbar-header {
+			width: 80px;
 		}
+	
+		#logo {
+			width: 80px;
+			height: 30px;
+		}
+		
 		.nav.navbar-nav li a, .nav.navbar-nav .dropdown-menu li a {
 			font-size: 10px;
 		}	
@@ -463,11 +493,16 @@
 		}
 	}
 	
-	@media (max-width: 737px) {
-		.navbar-nav {
-			display: none; 
-		}	
-			
+	@media (max-width: 737px) {		
+		.nav.navbar-nav {
+			display: none;
+		}
+	
+		.navigation {
+			width: 100%;
+			height: 90px;
+		}
+		
 		.navbar-fixed-top {
 			position: relative;
 			margin-top: -101px;
@@ -476,12 +511,7 @@
 		.navigation_container .navbar-header {
 			margin-left: 210px;
 		}
-		
-		.navigation {
-			wdith: 100%;
-			height: 90px;
-		}
-		
+			
 		#navigation_small_button, #navigation_small_search, #navigation_small_logsign {
 			display: block;
 		}
@@ -494,6 +524,7 @@
 			width: 200px;	
 			font-size: 9px;
 			border: none;
+			font-family: "Open Sans", "Helvetica Neue",Helvetica,Arial,sans-serif;
 		}
 		
 		#small_search_box:focus {
@@ -600,7 +631,7 @@
 		}
 		
 		#navigation_small_login {
-			margin-left: 0px;
+			margin-left: -5px;
 		}
 		
 		.small_profile_menu {

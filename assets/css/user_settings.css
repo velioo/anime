@@ -45,12 +45,12 @@
 }
 
 #submit {
-	color:white;
-	background-color: #2F343B;
+	opacity: 1;
 	font-size: 14px;
 	width:100px;
 	height:35px;
     margin-left:200px;
+    font-weight: normal;
 }
 
 .error {

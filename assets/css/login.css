@@ -23,18 +23,9 @@ label {
 	text-align:right;
 }
 
-#forgot_password, #accept_paragraph {
+#forgot_password, .center_paragraph {
 	margin-left:37%;
 	margin-right:25%;
-}
-
-.signuplogin_container .accept, #forgot_password{
-	color:#af151b;
-	text-decoration: none;
-}
-
-.signuplogin_container .accept:hover, #forgot_password:hover {
-	color:#4d0000;
 }
 
 .signuplogin_container {
@@ -73,11 +64,11 @@ label {
 }
 
 #submit {
-	color:white;
-	background-color: #2F343B;
 	font-size: 14px;
 	width:100px;
 	margin-left:180px;
+	font-weight: normal;
+	opacity: 1;
 }
 
 #update {
@@ -264,12 +255,6 @@ label {
 
 #anchor {
 	margin-left:21.1%;
-	text-decoration: none;
-	color:#af151b;
-}
-
-#anchor:hover {
-	color:#4d0000;
 }
 
 .error {

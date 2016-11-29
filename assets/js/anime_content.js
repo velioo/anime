@@ -1,6 +1,3 @@
-if($('#poster_image').css("width") > 0)
-	$('#type_episodes_div').css("width", image_width);
-
 show_hide_text();
 
 $("#poster_image").click(function(){
@@ -114,12 +111,15 @@ function show_hide_text() {
 	        var c = content.substr(0, showChar);
 	        var h = content.substr(showChar, content.length - showChar);
 	
-	        var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<p class="morelink">' + moretext + '</p></span>';
+	        var html = c + '<span class="moreellipses">' + ellipsestext + '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<p class="morelink red-text">' + moretext + '</p></span>';
 	
 	        $(this).html(html);
 	    }
 	
 	});
+	
+	$('#synopsis_div').show();
+	$('#anime_genres_div').show();
 	
 	$(".morelink").click(function(){
 	    if($(this).hasClass("less")) {
@@ -134,4 +134,5 @@ function show_hide_text() {
 	    return false;
 	});
 }
+
 

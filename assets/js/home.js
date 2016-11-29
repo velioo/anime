@@ -1,5 +1,6 @@
 var scale = 0;
 var counter = 0;
+var window_difference;
 var original_width;
 var window_width;
 var zoom_in;
@@ -14,23 +15,43 @@ function myFunction() {
 
 function reScale() {	
 	var height = window.innerHeight;
-	//console.log("original: " + original_width + " window_width: " + window_width);
-	if((window_width == original_width) || ((original_width - window_width) == 1 )) {
-		scale = 0;
-		counter = 0;
-	} else if(zoom_in == true){
-		counter++;
-		scale-=60;
-	} else if(zoom_in == false) {
-		counter--;
-		scale+=60;
+
+	if(typeof zoom_in == "undefined") {
+		if(window_difference == 0 || window_difference == 1) {} else 
+		if(window_difference > -230 && window_difference < 0) {scale+=60; counter = -1;} else 
+		if(window_difference > -500 && window_difference < 0) {scale+=120; counter = -2;} else 
+		if(window_difference > -650 && window_difference < 0) {scale+=180; counter = -3;} else 
+		if(window_difference > -970 && window_difference < 0) {scale+=240; counter = -4;} else 
+		if(window_difference > -1930 && window_difference < 0) {scale+=300; counter = -5;} else 
+		if(window_difference > -3900 && window_difference < 0) {scale+=360; counter = -6;} else 
+		if(window_difference > -5800 && window_difference < 0) {scale+=420; counter = -7;} else
+		if(window_difference < 200 ) {scale-=60; counter = 1;} else 
+		if(window_difference < 400 ) {scale-=120; counter = 2;} else 
+		if(window_difference < 800 ) {scale-=180; counter = 3;} else 
+		if(window_difference < 900 ) {scale-=240; counter = 4;} else 
+		if(window_difference < 1000 ) {scale-=300; counter = 5;} else 
+		if(window_difference < 1200 ) {scale-=360; counter = 6;} else 
+		if(window_difference < 1400 ) {scale-=420; counter = 7;} else		
+		if(window_difference < 1500 ) {scale-=480; counter = 8;} else	
+		if(window_difference < 1600 ) {scale-=540; counter = 9;} 
+	} else {
+		if((window_width == original_width) || ((original_width - window_width) == 1 )) {
+			scale = 0;
+			counter = 0;
+		} else if(zoom_in == true){
+			counter++;
+			scale-=60;
+		} else if(zoom_in == false) {
+			counter--;
+			scale+=60;
+		}
 	}
-	
+	//((typeof zoom_in == 'undefined') && ((original_width != window_width) && ((original_width - window_width) != 1)))
 	if($('#user-bar').length > 0) {
 		var offset = document.getElementById("top_offset").getAttribute("value");
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		if(((offset + scale) < 0) || (counter > 5) || ((typeof zoom_in == 'undefined') && ((original_width != window_width)))) {
+		if(((offset + scale) < 0) || (counter > 5)) {
 			$('#user-bar').css("background-position", "0px 0px");
 		} else {
 			$('#user-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
@@ -41,28 +62,11 @@ function reScale() {
 		var offset = document.getElementById("top_offset").getAttribute("value");
 		offset = parseInt(offset);
 		scale = parseInt(scale);
-		if(((offset + scale) < 0) || (counter > 5) || ((typeof zoom_in == 'undefined') && ((original_width != window_width)))) {
+		if(((offset + scale) < 0) || (counter > 5)) {
 			$('#anime-bar').css("background-position", "0px 0px");
 		} else {
 			$('#anime-bar').css("background-position", "0px" + " -" + (offset + scale) + "px");
 		}
-	}
-	
-	var e = document.getElementsByClassName("container-fluid");
-	for (i = 0; i < e.length; i++) {
-		if(window_width <= 1150) {	
-		    e[i].style.width = window_width + "px";
-		} else {
-			e[i].style.width = "1150px";
-		}
-	}
-	
-	if(window_width <= 1150) {	
-		if ($('#signup_button').length > 0) {
-			$('#signup_button').css("margin-right", "-21px");
-		}
-	} else if($('#signup_button').length > 0) {
-		$('#signup_button').css("margin-right", "0px");
 	}
 	
 	if($('#small_search_box').length > 0) {
@@ -81,10 +85,7 @@ function putCaret() {
 }
 
 $(document).ready(function() {
-	original_width = window.outerWidth;
-	window_width = window.innerWidth;
-	prev_window_width = window_width;
-	$('.search_form').each(function(){
+/*	$('.search_form').each(function(){
 		$(this).submit(function () {		
 			if($(this).attr('name') == "search_form_name") {
 				var text = $.trim($('#search_box').val());
@@ -96,7 +97,7 @@ $(document).ready(function() {
 		    }		
 
 		});
-	});
+	});*/
 	
 	if($('.text-over-img').length > 0) {
 		$('.text-over-img').each(function() {
@@ -143,14 +144,6 @@ $(window).resize(function(){
 			zoom_in = true;
 		}
 	}
-	
-	if ($('.profile_menu').length > 0) {
-		if(window.innerWidth < 800) {
-			$('#submit_button').css('margin-right', "70px");
-		} else {
-			$('#submit_button').css('margin-right', "0px");
-		}
-	} 	
 	reScale();
 	putCaret();
 });
@@ -161,11 +154,12 @@ window.addEventListener("orientationchange", function() {
 }, false);
 
 document.addEventListener("DOMContentLoaded", function() {
-	if ($('.profile_menu').length > 0) {
-		if(window.innerWidth < 800) 
-			document.getElementById("submit_button").style.marginRight = "70px";
-		document.getElementById("search").style.marginRight = "0px";
-	}
+	original_width = window.outerWidth;
+	window_width = window.innerWidth;
+	prev_window_width = window_width;
+
+	window_difference = original_width - window_width;
+	
 	reScale();
 	putCaret();
 });

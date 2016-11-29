@@ -1,0 +1,180 @@
+@CHARSET "UTF-8";
+
+.btn.btn-primary.button-black {
+	color: white;
+	background-color: #2F343B;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;	
+}
+
+.btn.btn-primary.button-black:hover {
+	background-color: #23272D;
+	opacity: 1;
+}
+
+.btn.btn-primary.button-black:active {
+	background:none;
+	outline:none;
+	background-color: #23272D;
+}
+
+.btn.btn-primary.button-black:focus {
+	background-color: #2F343B;
+}
+
+.button-black {
+	color: white;
+	background-color: #2F343B;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.button-black:hover {
+	background-color: #23272D;
+	opacity: 1;
+}
+
+.button-black:active {
+	background:none;
+	outline:none;
+	background-color: #23272D;
+}
+
+.button-black:focus {
+	background-color: #2F343B;
+}
+
+.btn.btn-primary.button-blue {
+	color: white;
+	background-color: #2F4CA1;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.btn.btn-primary.button-blue:hover {
+	background-color: #223777;
+	opacity: 1;
+}
+
+.btn.btn-primary.button-blue:active {
+	background:none;
+	outline:none;
+	background-color: #223777;
+}
+
+.btn.btn-primary.button-blue:focus {
+}
+
+.button-blue {
+	color: white;
+	background-color: #2F4CA1;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.button-blue:hover {
+	background-color: #223777;
+	opacity: 1;
+}
+
+.button-blue:active {
+	background:none;
+	outline:none;
+	background-color: #223777;
+}
+
+.button-blue:focus {
+}
+
+.btn.btn-primary.button-red {
+	color: white;
+	background-color: #cb3434;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.btn.btn-primary.button-red:hover {
+	background-color: #651a1a;
+	opacity: 1;
+}
+
+.btn.btn-primary.button-red:active {
+	background:none;
+	outline:none;
+	background-color: #651a1a;
+}
+
+.btn.btn-primary.button-red:focus {
+	background-color: #cb3434;
+}
+
+.button-red {
+	color: white;
+	background-color: #cb3434;
+	outline:none;
+	border: none;
+	font-weight: 700;
+	opacity: .8;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.button-red:hover {
+	background-color: #651a1a;
+	opacity: 1;
+}
+
+.button-red:active {
+	background:none;
+	outline:none;
+	background-color: #651a1a;
+}
+
+.button-red:focus {
+	background-color: #cb3434;
+}
+
+
+.disable-link-decoration:hover, .disable-link-decoration:active, .disable-link-decoration:focus {
+	text-decoration: none;
+}
+
+.blue-text {
+	color: #2F4CA1;
+	-webkit-transition: .3s ease-in-out;		
+	transition: .3s ease-in-out;
+}
+
+.blue-text:hover {
+	color: #223777;
+}
+
+.red-text {
+	color: #cb3434;
+	-webkit-transition: .3s ease-in-out;		
+	transition: .3s ease-in-out;
+}
+
+.red-text:hover {
+	color: #651a1a;
+}
