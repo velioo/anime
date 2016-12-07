@@ -31,6 +31,17 @@ body {
 	z-index: 0;
 }
 
+.admin_item {
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	-webkit-font-smoothing: antialiased;
+	background: linear-gradient(to bottom,rgba(0,0,0,0) , rgba(0,0,0,1));
+	-webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+	mask: url('http://localhost/anime/assets/css/mask.svg#mask');
+	padding: 5px 30px 5px 30px;
+	cursor: pointer;
+	font-weight: 700;
+}
 
 #edit_div {
 	position: absolute;
@@ -40,12 +51,12 @@ body {
 }
 
 #show_edits {
+	opacity: 1;
 	display: inline-block;
-	padding-left:40px;
-	padding-right:40px;
+	padding: 10px 40px 10px 40px;
 	font-size: 15px;
 	margin-right:30px;
-	margin-bottom: 20px;
+	margin-bottom: 5px;
 	float: right;
 }
 
@@ -89,8 +100,8 @@ body {
     -moz-user-select: none;      
     -ms-user-select: none;      
     user-select: none;     
-    margin-right:30px;
-    margin-bottom:20px;   
+    margin-right: 30px;
+    margin-bottom: 5px;   
     float: right;  
 }
 
@@ -138,7 +149,7 @@ body {
 #type_episodes_div {
 	display:inline-block;
 	text-align: center;
-	width:200px;
+	width:220px;
 }
 
 #type_episodes {
@@ -178,21 +189,19 @@ body {
 }
 
 .star-ratings-sprite {
-  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
   font-size: 0;
-  height: 21px;
+  height: 23px;
   line-height: 0;
   overflow: hidden;
   text-indent: -999em;
-  width: 112px;
+  width: 115px;
   margin: 0 auto;
 }
 
 .star-ratings-sprite-rating {
-    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
     background-position: 0 100%;
     float: left;
-    height: 21px;
+    height: 23px;
     display:inline;
 }
 
@@ -383,6 +392,67 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+#anime_user_watchlist_div {
+	display: none;
+	height: 70px;
+	width: 430px;
+	margin: 10px;
+	border: 2px solid #E9E9E9;
+	padding: 5px;
+}
+
+#wrap_watchlist {
+	vertical-align: top;
+}
+
+#watchlist_button {
+	height: 45px;
+	min-width: 170px;
+	text-align: center;
+	padding: 10px;
+	margin-top: 5px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#watchlist_button:focus {
+	opacity: 1;
+	background-color: #651a1a;
+}
+
+#watchlist_dropdown {
+	min-width: 170px;
+}
+
+.watchlist_item {
+	cursor: pointer;
+}
+
+#watchlist_caret {
+	color: white;
+	font-size: 20px;
+	margin-left: 10px;
+}
+
+#anime_user_score_div {
+	display: inline-block;
+	font-size: 30px;
+}
+
+#loader_image_div {
+	position: absolute;
+	display: none;
+	height: 40px;
+	width: 40px;
+	text-align: center;
+	margin-top: -10px;
+	margin-left: -30px;
+}
+
+.loader_image {
+	width: 60px;
+	height: 80px;
+}
+
 #youtube_trailer_div {
 	display: inline-block;
 	margin-left:20px;
@@ -519,4 +589,145 @@ body {
 	color:red;
 	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
              #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.star-rating {
+    margin: 0 auto;
+    display: none;
+    padding-top: 7px;
+    padding-left: 10px;
+}
+
+.rb0:checked ~ .rating,
+label.rb0l:hover ~ .rating
+{
+    width: 0px; 
+} 
+
+.rb1:checked ~ .rating,
+label.rb1l:hover ~ .rating
+{
+    width: 16px;
+} 
+
+.rb2:checked ~ .rating,
+label.rb2l:hover ~ .rating
+{
+    width: 32px; 
+} 
+
+.rb3:checked ~ .rating,
+label.rb3l:hover ~ .rating
+{
+    width: 48px; 
+}
+
+.rb4:checked ~ .rating,
+label.rb4l:hover ~ .rating
+{
+    width: 64px;
+}
+.rb5:checked ~ .rating,
+label.rb5l:hover ~ .rating
+{
+    width: 80px;
+}
+.rb6:checked ~ .rating,
+label.rb6l:hover ~ .rating
+{
+    width: 96px;
+}
+.rb7:checked ~ .rating,
+label.rb7l:hover ~ .rating
+{
+    width: 112px;
+}
+.rb8:checked ~ .rating,
+label.rb8l:hover ~ .rating
+{
+    width: 128px;
+}
+.rb9:checked ~ .rating,
+label.rb9l:hover ~ .rating
+{
+    width: 144px;
+}
+.rb10:checked ~ .rating,
+label.rb10l:hover ~ .rating
+{
+    width: 160px; 
+}
+
+.star-rating label.star {
+    width: 16px; 
+    left: -16px; 
+    padding: 0;
+    height: 40px; 
+    position: relative;
+    z-index: 3;
+    float: left;
+    cursor: pointer;
+}
+
+.star-rating label.star.last {
+    width: 32px;
+    cursor: pointer;
+}
+
+.star-rating input[type=radio],
+.star-rating label.rb
+{
+    display: none;
+}
+
+.rating {
+    position: relative;
+    z-index: 2;
+    top: 4px; 
+    height: 32px;
+    width:0px;
+}
+
+.rating-bg {
+    position: relative;
+    z-index: 1;
+    top: -28px; 
+    height: 32px; 
+    width: 160px;
+}
+
+.ie8 .star-rating input,
+.ie8 .star-rating label.rb
+ {
+    display: inline-block;
+}
+
+.ie8 .rating,
+.ie8 .rating-bg,
+.ie8 .star-rating label.star {
+    display: none;
+}
+
+@media (min-width: 2130px) {	
+	.rating-bg {
+		width: 155px;
+	}
+}
+
+@media (min-width: 2560px) {
+	.rating-bg {
+		width: 160px;
+	}
+}
+
+@media (min-width: 2560px) {
+	.rating-bg {
+		width: 158px;
+	}
+}
+
+@media (min-width: 5750px) {
+	.rating-bg {
+		width: 150px;
+	}
 }

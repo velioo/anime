@@ -1,8 +1,11 @@
+var _URL = window.URL || window.webkitURL;
+var twoMB = 2097152;
+
 function editUserInfo(file_chosen, filesize) {
-	var height = window.innerHeight;
-	var margin = 1;
+	var max_offset = 1000;
+	var margin = 3;
 	if(file_chosen == true) {
-		margin = filesize/120000;
+		margin = filesize/100000;
 	}
 	
 	$('#edit_cover_label').css("display", "inline-block");
@@ -14,15 +17,15 @@ function editUserInfo(file_chosen, filesize) {
 	$('#user-bar').mousedown(function(e){
 	    var prevY = e.clientY;
 	    $(this).mousemove(function(e){
-	      var offset = document.getElementById("top_offset").getAttribute("value");
+	      var offset = $('#top_offset').val();
 	      if(isNaN(offset)) {
 	    	  offset = 1;
 	      } else {
 	    	  offset = parseInt(offset);
 	      }
 	      if(e.clientY < prevY) { 
-			  if(offset >= 580) {
-			    offset = 580;
+			  if(offset >= max_offset) {
+			    offset = max_offset;
 			  } else {
 			    offset+=margin;
 			  }	
@@ -50,7 +53,7 @@ function updateDb(baseurl) {
 	var ageValue = $("#age_edit").val();
 	var genderValue = $("#gender_edit").val();
 	var locationValue = $("#location_edit").val();
-    if(!(ageValue <= 0)){
+    if(!(ageValue < 0)){
 	    $.ajax({
 	          method: "POST",
 	          url: baseurl + '/userupdates/update_user_info',
@@ -73,16 +76,27 @@ $(document).ready(function() {
 	$('#edit_cover_button').change(function(){
 		var file = this.files[0]
 		var size = file.size;
-		if($('#edit_cover_button').val() != "") {		
-			if($('#user-bar').length > 0) {
-				editUserInfo(true, size);	
-				showCover(this, "#user-bar");
-			} else {
-				editAnimeInfo(true, size);	
-				showCover(this, "#anime-bar");
+		var cover_button = $(this);	
+		
+		if(size > twoMB) {
+			if($('.error').length <= 0) {
+				$("<p class='error'>Yout file is too large. Max size 2MB</p>").insertAfter('#edit_avatar_button');
 			}
-			
-		}	
+	        cover_button.replaceWith(cover_button = cover_button.clone(true));
+		} else {
+			if($('.error').length > 0) {
+				$('.error').remove();
+			}
+			if($('#edit_cover_button').val() != "") {		
+				if($('#user-bar').length > 0) {
+					showCover(this, "#user-bar");
+					editUserInfo(true, size);
+				} else {
+					showCover(this, "#anime-bar");
+					editAnimeInfo(true, size);					
+				}	
+			}	
+		}
 	});
 	
 	$('#edit_avatar_span').click(function() {

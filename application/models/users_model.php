@@ -21,11 +21,21 @@ Class Users_model extends CI_Model {
 	}
 	
 	function update_cover_image($id, $image) {
-		$this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$id}");
+		$query = $this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$id}");
+		if($query) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 	
 	function update_avatar_image($id, $image) {
-		$this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$id}");
+		$query = $this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$id}");
+		if($query) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 	
 	function update_cover_offset($id, $offset) {
@@ -106,7 +116,7 @@ Class Users_model extends CI_Model {
 		$this->db->query("UPDATE users SET bio = '{$bio}', age = {$age}, gender = '{$gender}', country = '{$country}' WHERE id = $id");
 	}
 	
-	function update_user_acc_info($id, $username, $email, $password) {
+	function update_user_acc_info($id, $username="", $email="", $password="") {
 		
 		$fields = "";
 		
@@ -127,6 +137,16 @@ Class Users_model extends CI_Model {
 		$query = $this->db->query("UPDATE users SET {$fields} WHERE id = {$id}");
 		
 		if($query) {
+			
+			if($password != "") {
+				$query = $this->db->query("SELECT facebook_accounts.changed_pass FROM facebook_accounts JOIN users ON users.id=facebook_accounts.user_id WHERE facebook_accounts.user_id = {$id}");			
+				if($query->num_rows() == 1) {
+					if($query->row_array()['changed_pass'] == 0) {
+						$this->db->query("UPDATE facebook_accounts JOIN users ON users.id=facebook_accounts.user_id SET changed_pass = 1 ");
+					}
+				}
+			}
+			
 			$query = $this->db->query("SELECT username FROM users WHERE id = {$id}");
 			$user_data = $this->get_user_info_logged($query->result_array()[0]['username']);
 			return $user_data;
@@ -179,20 +199,19 @@ Class Users_model extends CI_Model {
 	}
 	
 	function disconnect_facebook($user_id) {
-		$query = $this->db->query("SELECT password FROM users WHERE id = {$user_id}");
-		
-		if($query->num_rows() > 0) {
-			if($query->result_array()[0]['password'] == NULL) {
-				return FALSE;
-			} else {
+		$query = $this->db->query("SELECT facebook_accounts.changed_pass FROM facebook_accounts JOIN users ON users.id=facebook_accounts.user_id WHERE facebook_accounts.user_id = {$user_id}");			
+		if($query->num_rows() == 1) {
+			if($query->row_array()['changed_pass'] == 1) {
 				$query = $this->db->query("DELETE FROM facebook_accounts WHERE user_id = {$user_id}");
 				return $query;
+			} else {
+				return FALSE;
 			}
 		} else {
 			return FALSE;
-		}
-	}
-	
+		}	
+	}	
+		
 	function connect_facebook($user_id, $email, $fb_user_id, $access_token) {
 		$query = $this->db->query("INSERT INTO facebook_accounts(user_id, fb_user_id, email, access_token) VALUES ({$user_id}, '{$fb_user_id}', '{$email}', '{$access_token}')");
 		
@@ -219,10 +238,11 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
-	function create_new_user_by_facebook_login($fb_user_id,$username,$email,$access_token) {		
+	function create_new_user_by_facebook_login($fb_user_id, $username, $email, $access_token) {		
 		$new_user_data = array (
 				'username' => $username,
 				'email' => $email,
+				'password' => hash('sha256', uniqid("", TRUE)),
 				'joined_on' => date("Y-m-d")
 		);
 		$query = $this->db->insert('users', $new_user_data);

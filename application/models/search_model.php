@@ -33,7 +33,7 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function search_animes($anime, $limit, $offset, $sort_by, $order, $user_sorted_results) {
+	function search_animes($anime, $limit, $offset, $sort_by, $order, $user_sorted_results=FALSE) {
 		$result_array = $this->query_search($anime, $limit, $offset, $sort_by, $order, FALSE, $user_sorted_results);
 		if($result_array != FALSE) {
 			return $result_array;
@@ -75,22 +75,22 @@ Class Search_model extends CI_Model {
 			$query = array();
 			
  			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM
 			(
 				SELECT 1 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE slug LIKE '{$anime}%' 
 				UNION
 				SELECT 2 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE titles LIKE '%{$anime}%'	
 				UNION
 				SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at
 					FROM animes WHERE MATCH(slug) AGAINST('{$anime}' IN BOOLEAN MODE)
 				UNION
 				SELECT 4 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-				age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
 				WHERE synopsis LIKE '%{$anime}%'
 			
 			) tab
@@ -103,7 +103,7 @@ Class Search_model extends CI_Model {
 
 		} else {
 			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles FROM animes ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles FROM animes ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
 			$result_array = $query->result_array();
 					
 			if($all != TRUE) {
@@ -122,7 +122,7 @@ Class Search_model extends CI_Model {
 			$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 			
 			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-					age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
+						total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
 					FROM animes WHERE {$like_statement} {$limit_offset}");
 			
 			if($query->num_rows() > 0) {
@@ -136,7 +136,7 @@ Class Search_model extends CI_Model {
 				$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 					
 				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-						age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
 						FROM animes WHERE {$like_statement} {$limit_offset}");
 				if($query->num_rows() > 0) {
 					return $query->result_array();
@@ -161,8 +161,7 @@ Class Search_model extends CI_Model {
 		
 		$genres = $genres->result_array();		
 		
-		for($i = 0; $i < count($result_array); $i++) { // add genres to the according anime
-			
+		for($i = 0; $i < count($result_array); $i++) { // add genres to the according anime		
 			foreach($genres as $genre) {
 				if($genre['anime_id'] == $result_array[$i]['id']) {
 					$result_array[$i]['genres'][] = $genre['genre'];

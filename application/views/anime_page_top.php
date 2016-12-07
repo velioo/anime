@@ -3,10 +3,10 @@
 	<div class="container-fluid top-container">		
 		<?php if($is_admin) {?>
 		<div id="edit_div">
-			<button class="btn btn-primary button-black" id="show_edits" onClick="showEditFields()">Edit</button>			
+			<label class="button-black admin_item" id="show_edits" onClick="showEditFields()">Edit</label>			
 			<form action="<?php echo site_url("animeUpdates/update_anime/" . $anime['id']);?>" method="post" enctype="multipart/form-data">
-				<input type="submit" class="button-black" name="submit_info" id="submit_info" value="Save">
-				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" class="button-black" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
+				<input type="submit" class="button-black admin_item" name="submit_info" id="submit_info" value="Save">
+				<input type="file" name="edit_cover" accept="image/*" id="edit_cover_button"><label for="edit_cover_button" class="button-black admin_item" id="edit_cover_label"><span class="glyphicon glyphicon-pencil"></span> Edit Cover</label>
 				<input type="file" name="edit_poster" accept="image/*" id="edit_poster_button">
 				<?php if($this->session->flashdata('error')) { 
 					  if(strpos($this->session->flashdata('error'), "You did not select a file to upload") == FALSE)

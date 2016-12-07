@@ -3,10 +3,16 @@
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>">
 
 <?php
-	if(isset($this->session->userdata['is_logged_in'])) 
+	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $review['username'])) {
+		$is_you = TRUE;
 		$logged = TRUE;
-	else 
-		$logged = FALSE;
+	} else {
+		$is_you = FALSE;
+		if(isset($this->session->userdata['is_logged_in']))
+			$logged = TRUE;
+		else
+			$logged = FALSE;
+	}
 ?>
 
 <?php 
@@ -38,9 +44,9 @@
 				</a>
 				<span id="review_date"><?php echo "On " . convert_date(date('Y-m-d', strtotime($review['created_at']))); ?></span>
 			</div>
-			<?php if($review['created_at'] != $review['updated_at']) {?>
-				<p id="last_updated">Last updated on <?php echo convert_date(date('Y-m-d', strtotime($review['updated_at'])));?></p>
-			<?php }?>
+			<?php if($is_you) {?>
+				<p id="last_updated"><a href="<?php echo site_url("reviews/add_edit_review/{$anime['slug']}");?>" class="disable-link-decoration"><span class="blue-text">Edit your Review</span></a></p>
+			<?php }?>		
 		</div>
 		<div id="review_content">
 			<?php $temp = $anime['titles'];	$titles = convert_titles_to_hash($temp);?>	

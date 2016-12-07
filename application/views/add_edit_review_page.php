@@ -25,10 +25,6 @@ $(document).ready(function() {
 if (!isset($this->session->userdata['is_logged_in'])) {
 	header("location: " . site_url("Login/login_page"));
 }
-
-if(isset($review)) {
-	$this->session->set_flashdata('update', 'update');
-}
 ?>
 
 <div id="wrap">

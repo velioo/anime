@@ -52,8 +52,7 @@ Class Animes_model extends CI_Model {
 		
 		$query = $this->db->query("SELECT poster_image_file_name FROM animes WHERE id = {$anime_object->id}");
 		if($query->num_rows() == 1) {
-			$poster_image_check_name = "manual_" . $anime_object->id . ".jpg";
-			if($query->row_array()['poster_image_file_name'] != $poster_image_check_name) {
+			if((strpos($query->row_array()['poster_image_file_name'], 'manual_') === false)) {
 				$update_anime_data['poster_image_file_name'] = $anime_object->cover_image;
 			}
 		}
@@ -99,6 +98,16 @@ Class Animes_model extends CI_Model {
 			return FALSE;
 		}
 		
+	}
+	
+	function get_anime_slug($id) {
+		$query = $this->db->query("SELECT slug FROM animes WHERE id = '{$id}' ");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
+		} else {
+			return FALSE;
+		}
+	
 	}
 	
 	function update_cover_offset($id, $offset) {

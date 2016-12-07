@@ -6,20 +6,20 @@ class AnimeUpdates extends CI_Controller {
 		$this->load->model('animes_model');
 		$this->load->library('upload');
 		
+		$unique_id = uniqid();
+		
 		$offset = $this->input->post('top_offset');		
 		$this->animes_model->update_cover_offset($anime_id, $offset);
 		
-		$anime = $this->animes_model->get_anime($anime_id);
-		$slug = str_replace(" ", "-", $anime['slug']);
+		$result = $this->animes_model->get_anime_slug($anime_id);
+		$slug = str_replace(" ", "-", $result['slug']);
 		
 		if (!empty($_FILES['edit_cover']['name'])) {
 			
 			$config['upload_path']          = './assets/anime_cover_images/';
 			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 4096;
-			$config['max_width']            = 4000;
-			$config['max_height']           = 2250;
-			$config['file_name'] = $anime_id . ".jpg";
+			$config['max_size']             = 8192;
+			$config['file_name'] = "manual_" . $anime_id . "_" . $unique_id . ".jpg";
 			$config['overwrite'] = TRUE;
 		
 			$this->upload->initialize($config);
@@ -31,10 +31,8 @@ class AnimeUpdates extends CI_Controller {
 			} else {
 				$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
 				if(!$query) {
-					$error = array('error' => $this->upload->display_errors('<p class="error">', '</p>'));
-				} else {
-					$this->session->set_flashdata('new_cover', TRUE);
-				}
+					$this->server_error();
+				} 
 			}
 		}
 	
@@ -42,10 +40,8 @@ class AnimeUpdates extends CI_Controller {
 		
 			$config['upload_path']          = './assets/poster_images/';
 			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 4096;
-			$config['max_width']            = 2000;
-			$config['max_height']           = 2000;
-			$config['file_name'] = "manual_". $anime_id . ".jpg";
+			$config['max_size']             = 8192;
+			$config['file_name'] = "manual_". $anime_id . "_" . $unique_id . ".jpg";
 			$config['overwrite'] = TRUE;
 			
 			$this->upload->initialize($config);
@@ -57,10 +53,7 @@ class AnimeUpdates extends CI_Controller {
 			} else {
 				$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
 				if(!$query) {
-					$error = array('error_a' => $this->upload->display_errors('<p class="error_a">', '</p>'));
-					redirect("animeContent/anime/{$slug}");
-				} else {
-					$this->session->set_flashdata('new_poster', TRUE);
+					$this->server_error();
 				}
 			}
 		}
@@ -87,7 +80,7 @@ class AnimeUpdates extends CI_Controller {
 		while($failed_request < 50) {
 				
 			$anime_id_counter++;
-			
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -182,17 +175,20 @@ class AnimeUpdates extends CI_Controller {
 				if($titles['main'] != "" && $titles['main'] != "NULL") {
 					$all_names.=$titles['main'] . " ";
 				} if($titles['alt'] != "" && $titles['alt'] != "NULL") {
-					$all_names.=$titles['alt'];
-				}
+					$all_names.=$titles['alt'] . " ";
+				}		
+				
+				$all_names.=$anime['slug'];
 	
 				$name = $titles['main'];
 				$id = $anime['id'];
 				$image = $anime['poster_image_file_name'];
 				$anime_slug = str_replace(" ", "-", $anime['slug']);
+				
 	
 				$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $anime_slug, 'id' => $id, 'image'=> $image);
 			}
-				
+
 			$fp = fopen('assets/json/autocomplete.json', 'w');
 			fwrite($fp, json_encode($result));
 			fclose($fp);
@@ -201,33 +197,17 @@ class AnimeUpdates extends CI_Controller {
 				redirect("animeContent/anime/{$slug}");
 			} else {
 				redirect("Home");
-			}
-				
+			}			
 		}
 	
 	}
 	
-/* 	function parseHeaders($headers) {
-		$head = array();
-		foreach( $headers as $k=>$v )
-		{
-			$t = explode( ':', $v, 2 );
-			if( isset( $t[1] ) )
-				$head[ trim($t[0]) ] = trim( $t[1] );
-				else
-				{
-					$head[] = $v;
-					if( preg_match( "#HTTP/[0-9\.]+\s+([0-9]+)#",$v, $out ) )
-						$head['reponse_code'] = intval($out[1]);
-				}
-		}
-		return $head;
-	} */
-	
-	/* 	$json_anime = file_get_contents('https://hummingbird.me/api/v1/anime/' . $anime_id_counter);
-	 $header = $this->parseHeaders($http_response_header);
-	
-	 if($header['reponse_code'] == 200)  */
+	function server_error() {
+		header('HTTP/1.1 500 Internal Server Error');
+		echo "<h1>Error 500 Internal Server Error</h1>";
+		echo "There was a problem with the server";
+		exit();
+	}
 
 }
 

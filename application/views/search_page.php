@@ -1,8 +1,9 @@
 <?php include 'head.php';?>
 
+<script src="<?php echo asset_url() . "js/browse_animes.js";?>"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('head').append('<script src="<?php echo asset_url() . "js/browse_animes.js";?>">');
 		addListeners();
 	});
 </script>
@@ -48,13 +49,13 @@
 		 				 $show_type = get_show_type($anime['show_type']);
 		 				 	
 		 				 echo "<p class='second_paragraph'>" . $show_type . " | " . $episode_count . " " . $ep . "</p>";
-		 				 echo "<p class='third_paragraph'>";
+		 				 echo "<div class='third_paragraph'>" . "<p class='measure_paragraph'>";
 		 				 		if(isset($anime['genres'])) {
 	 								foreach($anime['genres'] as $genre) {
 										echo " <span title='{$genre}'>" . $genre . "</span> ";
 	 								}
 		 				 		}
-						echo "</p>";
+						echo "</p></div>";
 	 				 ?>				 
 	 				 <?php $random_num = time();?>
 	 				 <div class="anime_body">
@@ -66,7 +67,7 @@
 	 				 <div class="anime_footer">
 	 				 	<?php $final_date = convert_date($anime['start_date']);?> 				 
 	 				 	<p class="anime_date_paragraph"><i title="Air date" class="fa fa-calendar" aria-hidden="true"></i> <?php echo $final_date;?></p>
-	 				 	<p class="anime_rating_paragraph"><i title="Rating" class="fa fa-star-o" aria-hidden="true"></i> <?php echo $anime['average_rating']?></p>
+	 				 	<p class="anime_rating_paragraph"><i title="<?php echo number_format($anime['average_rating']/2, 2) . " out of " . "5 from " . $anime['total_votes'] . " votes";?>" class="fa fa-star-o" aria-hidden="true"></i> <?php echo number_format($anime['average_rating']/2, 2);?></p>
 	 				 </div>
 	 				 </div>		
 	 				 <?php $counter++;?>

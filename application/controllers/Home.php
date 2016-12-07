@@ -36,6 +36,7 @@ class Home extends CI_Controller {
 		
 		var_dump($anime_object);
 	}
+
 	
 }
 ?>

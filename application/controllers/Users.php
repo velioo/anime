@@ -22,7 +22,7 @@ class Users extends CI_Controller {
 				}
 			}
 			
-			$data['results'] = $query;
+			$data['user'] = $query;
 			$this->load->view('user_page', $data);
 		} else {
 			$this->page_not_found();

@@ -4,9 +4,9 @@
 
 <?php 
 if (isset($this->session->userdata['is_logged_in'])) {
-
 	header("location: " . site_url("Login/log_in"));
-}?>
+}
+?>
 
 <div id="wrap">
 

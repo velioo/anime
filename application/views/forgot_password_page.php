@@ -20,7 +20,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_label('Email', 'email');
 			echo form_input('email', set_value('email', $email) );
 			echo form_error('email', '<p class="error">*', '</p>');echo "<br/>";
-			echo form_submit('submit', 'Send', 'id=submit');echo "<br/>";echo "<br/>";
+			echo form_submit('submit', 'Send', 'id="submit" class="button-black"');echo "<br/>";echo "<br/>";
 			echo form_close();
 		?>
 	</div>

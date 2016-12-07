@@ -415,6 +415,14 @@
 		.container-fluid.navigation_container {
 			width: 100%;
 		}
+		
+		#right_navigation {
+			margin-right: -20px;
+		}
+		
+		.profile_menu {
+			margin-left: 10px;
+		}
 	}
 	
 	@media (max-width: 1024px) {
@@ -451,10 +459,22 @@
 		}
 	}
 
-	@media (max-width: 854px) {	
+	@media (max-width: 854px) {		
+		.navbar-fixed-top {
+			margin-bottom: -20px;
+		}
 	
 		.navbar-header {
 			width: 80px;
+			display: inline-block;
+		}
+		
+		.nav.navbar-nav {
+			display: inline-block;
+		}
+		
+		.nav > li {
+			display: inline-block;
 		}
 	
 		#logo {
@@ -505,11 +525,15 @@
 		
 		.navbar-fixed-top {
 			position: relative;
-			margin-top: -101px;
+			margin-top: -95px;
 		}
 		
 		.navigation_container .navbar-header {
 			margin-left: 210px;
+		}
+		
+		#small_menu_dropdown_div {
+			margin-top: 15px;
 		}
 			
 		#navigation_small_button, #navigation_small_search, #navigation_small_logsign {

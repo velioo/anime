@@ -245,6 +245,31 @@ function strip_review_tags($review_text) {
 	return $text;
 }
 
+function get_watchlist_status_name($status) {
+	switch($status) {
+		case 1:
+			$status_name = "Watched";
+			break;
+		case 2:
+			$status_name = "Watching";
+			break;
+		case 3:
+			$status_name = "Want to Watch";
+			break;
+		case 4:
+			$status_name = "Stalled";
+			break;
+		case 5:
+			$status_name = "Dropped";
+			break;
+		default:
+			$status_name = "";
+			break;
+	}
+	
+	return $status_name;
+}
+
 function convert_cyrillic_to_latin($name) {
 	$cyr = [
 		'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п',

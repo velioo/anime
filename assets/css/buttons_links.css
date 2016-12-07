@@ -5,7 +5,6 @@
 	background-color: #2F343B;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;	
@@ -31,7 +30,6 @@
 	background-color: #2F343B;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
@@ -40,12 +38,6 @@
 .button-black:hover {
 	background-color: #23272D;
 	opacity: 1;
-}
-
-.button-black:active {
-	background:none;
-	outline:none;
-	background-color: #23272D;
 }
 
 .button-black:focus {
@@ -57,7 +49,6 @@
 	background-color: #2F4CA1;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
@@ -82,7 +73,6 @@
 	background-color: #2F4CA1;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
@@ -107,7 +97,6 @@
 	background-color: #cb3434;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
@@ -133,7 +122,6 @@
 	background-color: #cb3434;
 	outline:none;
 	border: none;
-	font-weight: 700;
 	opacity: .8;
 	-webkit-transition: .3s ease-in-out;
 	transition: .3s ease-in-out;
@@ -153,7 +141,6 @@
 .button-red:focus {
 	background-color: #cb3434;
 }
-
 
 .disable-link-decoration:hover, .disable-link-decoration:active, .disable-link-decoration:focus {
 	text-decoration: none;

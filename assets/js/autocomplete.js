@@ -1,8 +1,10 @@
 $(document).ready(function() {
 	
 	var asset_url = get_asset_url();
-	var site_url = get_site_url();
+	var anime_url = get_anime_url();
+	var data_url = get_data_url();
 	var search_value = "";
+	var url = "";
 	
 	var anime_options = {
 		url: asset_url + "json/autocomplete.json?nocache=" + (new Date()).getTime(),
@@ -16,11 +18,11 @@ $(document).ready(function() {
 			},
 			
 			onKeyEnterEvent: function() {
-				$("#search_box").val(search_value);
+				$('#search_box').val(search_value);
 				window.location = $('#eac-container-search_box').find("li.selected").find("div.eac-item").find("a").attr("href");
 			},	
 			
-			onSelectItemEvent: function() {
+			onChooseEvent: function() {
 				$("#search_box").val(search_value);
 			}
 		},
@@ -34,7 +36,7 @@ $(document).ready(function() {
 				if(item.name.length > 70) {
 					item.name = item.name.substr(0, 70) + "...";
 				}
-				return "<a title='" + title + "' href=" + site_url + item.slug + "> " +
+				return "<a title='" + title + "' href=" + anime_url + item.slug + "> " +
 						"<img class='auto_image' src='" + asset_url + "poster_images/" + item.image + "' onerror=\"this.src='" + asset_url + "imgs/None.jpg'\" />" + "<div class='auto_div'>" + item.name + "</div>";
 			}
 		}

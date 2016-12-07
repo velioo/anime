@@ -30,6 +30,14 @@ class AnimeContent extends CI_Controller {
 					}
 				
 					if($this->session->userdata('is_logged_in') === TRUE) {
+						$this->load->model('watchlist_model');
+						
+						$watchlist = $this->watchlist_model->get_watchlist_status_score($anime_id);
+						if($watchlist) {
+							$data['watchlist_status_name'] = get_watchlist_status_name($watchlist['status']);
+							$data['score'] = $watchlist['score'];
+						}					
+						
 						$has_written_review = $this->reviews_model->get_user_review($anime_id);
 						if($has_written_review) {
 							$data['has_written_review'] = TRUE;
@@ -79,7 +87,7 @@ class AnimeContent extends CI_Controller {
 					$total_reviews = $this->reviews_model->get_total_reviews_count($anime_id);
 					
 					if($total_reviews) {
-						$reviews_per_page = 4;
+						$reviews_per_page = 10;
 						$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
 					} else {
 						$this->server_error();

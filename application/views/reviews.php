@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>">
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/bubbles.css";?>">
+<script src="<?php echo asset_url() . "js/reviews.js";?>"></script>
 
 <?php
 	if(isset($this->session->userdata['is_logged_in'])) 
@@ -22,14 +23,11 @@
 
 <script type="text/javascript">
 $(document).ready(function() {	
-	$('head').append('<script src="<?php echo asset_url() . "js/reviews.js";?>">');	
-
 	var total_groups = <?php echo $total_groups;?>;
-	var base_url = "<?php echo base_url();?>";
+	var site_url = "<?php echo site_url("reviews/load_reviews/");?>";
 	var anime_id = <?php echo $anime['id'];?>;
-	
-	initScroll(total_groups, base_url, anime_id);
-		
+
+	initScroll(total_groups, site_url, anime_id);
 });
 
 <?php if($is_admin) { ?>
@@ -37,6 +35,7 @@ $(document).ready(function() {
 </script>
 
 <?php include 'navigation.php'; ?>
+<?php $slug = str_replace(" ", "-", $anime['slug']);?>
 
 <div id="wrap">
 	<?php $random_num = time();?>
@@ -46,7 +45,7 @@ $(document).ready(function() {
 	<div class="container-fluid scrollable" id="reviews_content">	
 		<?php $temp = $anime['titles'];	$titles = convert_titles_to_hash($temp);?>	
 		<div id="anime_title_div">	
-			<p id="anime_title"><?php echo $titles['main'];?>&nbsp;<span class="fa fa-chevron-right"></span>&nbsp;Reviews</p>
+			<p id="anime_title"><?php echo "<a href='" . site_url("animeContent/anime/{$slug}") ."' class='disable-link-decoration'" . "<span class='blue-text'>" . $titles['main'] . "</span></a>";?>&nbsp;<span class="fa fa-chevron-right" style="font-size: 20px; color:#4F5155; font-weight: 900;"></span>&nbsp;<span style="color:#4F5155;">Reviews</span></p>
 		</div>
 	
 		<div class="col-sm-12" id="anime_navigation_bar">

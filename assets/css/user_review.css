@@ -102,6 +102,11 @@ body {
 	border-radius: 5px;
 }
 
+#review_content img {
+	max-width: 1150px;
+    height: auto;
+}
+
 #review_title {
 	text-align: center;
 	margin-bottom: 30px;

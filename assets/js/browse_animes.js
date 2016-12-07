@@ -1,11 +1,9 @@
 function addListeners() {	
-	$('.third_paragraph').each(function() {
+	$('.measure_paragraph').each(function() {
 		var height = $(this).height();
 		if(height >= 50) {
 			$(this).after("<span class='fa fa-angle-down' onClick='angleDown(this)'></span>");
 		} 
-		
-		$(this).height(55);
 	});
 	
 }

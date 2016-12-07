@@ -62,23 +62,39 @@ class SignUp extends CI_Controller {
 			$data['css'] = 'login.css';
 			$this->load->view('fb_user_signup', $data);
 		} else {
-			$this->load->model('users_model');
+			$this->load->model('users_model');			
 			
-			$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_URL, 'https://graph.facebook.com/me?access_token=' . $fb_access_token);
+			$result = curl_exec($ch);
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
 			
-			if($query) {
-				$data = array(
-						'id' => $query['id'],
-						'username' => $query['username'],
-						'is_logged_in' => true,
-						'email' => $query['email'],
-						'fb_access_token' => $fb_access_token
-				);			
-				$this->session->set_userdata($data);
-				redirect("home");
+			$result = json_decode($result);
+			
+			if(isset($result->id)) {				
+				$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);					
+				if($query) {
+					$data = array(
+							'id' => $query['id'],
+							'username' => $query['username'],
+							'is_logged_in' => true,
+							'email' => $query['email'],
+							'fb_access_token' => $fb_access_token
+					);
+					$this->session->set_userdata($data);
+					redirect("users/profile/{$query['username']}");
+				} else {
+					$this->signup_page();
+				}				
 			} else {
-				$this->signup_page();
+				$this->unauthorized_error();
 			}
+
+			
+
 		} 
 	}
 	
@@ -105,8 +121,14 @@ class SignUp extends CI_Controller {
 		} else {
 			return FALSE;
 		}
-	
 	}	
+	
+	public function unauthorized_error() {
+		header("HTTP/1.1 401 Unauthorized");
+		echo "<h1>Error 401 Unauthorized</h1>";
+		echo "Your access token is invalid";
+		exit;
+	}
 }
 	
 

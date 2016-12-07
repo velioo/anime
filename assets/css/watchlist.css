@@ -1,0 +1,380 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+.main_title {
+	background-color: white;
+}
+
+#watchlist {
+	background-color: #23272D;
+	opacity: 1;
+}
+
+#watchlist_content {
+	background-color: white;
+	height: auto;
+	padding: 0px;
+}
+
+#watchlist_filter {
+	position: relative;
+	height: 70px;
+	width: 100%;
+}
+
+#filter_group {
+	float: right;
+	margin-top: 16px;
+	margin-right: 15px;
+}
+
+.btn.btn-primary.filter {
+	padding: 8px 13px 8px 13px;
+	background-color: white;
+	color: black;
+	border: 1px solid #bfbfbf;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.btn.btn-primary:hover {
+	opacity: 1 !important;
+	background-color: #DEDEDE !important;
+}
+
+.btn.btn-primary:active {
+	opacity: 1;
+	background-color: #DEDEDE;
+	color: black;
+	border: 1px solid #bfbfbf;
+	outline:none;
+}
+
+.btn.btn-primary:focus {
+	background-color: white;
+	border: 1px solid #bfbfbf;
+	outline:none;
+}
+
+.btn.btn-primary:focus:hover {
+	background-color: #DEDEDE;
+}
+
+#watchlist_search_div {
+	width: 100%;
+	height: 40px;
+}
+
+#watchlist_search {
+	color: black;
+	font-size: 16px;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+	border-top: 1px solid #DEDEDE;
+	border-bottom: 1px solid #DEDEDE;
+	border-left: none;
+	border-right: none;
+	width: 100%;
+	height: 100%;
+	padding: 25px 20px 25px 20px;
+}
+
+#sort_options_div {
+	position: relative;
+	margin-top: 10px;
+	height: 50px;
+	padding: 10px 10px 5px 10px;
+	border-bottom: 1px solid #DEDEDE;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.table-responsive {
+	border: none;
+	font-size: 18px;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.table {
+	margin-bottom: 0px;
+	border: none;
+}
+
+.table > thead > tr > th {
+	border: none;
+	padding-top: 6px;
+}
+
+.table > tbody > tr  > td {
+	padding: 15px;
+	padding-bottom: 10px;
+}
+
+.title {
+	width: 40%;
+}
+
+.type {
+	min-width: 90px;
+	max-width: 90px;
+}
+
+.year {
+}
+
+.anime_progress {
+	max-width: 170px;
+	min-width: 170px;
+	white-space: nowrap;
+}
+
+.progress_input {
+	width: 50px;
+	border-radius: 5px;
+	border: 1px solid #DEDEDE;
+	text-align: center;
+}
+
+.count_up {
+	margin-left: 5px;
+	border-radius: 5px;
+	padding: 2px 5px 2px 5px;
+	-webkit-font-smoothing: antialiased;
+	-webkit-mask-image: -webkit-gradient(linear, left 0%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,1)));
+	mask: url('http://localhost/anime/assets/css/mask.svg#mask');
+}
+
+.avg {
+}
+
+.anime_rating {
+	white-space: nowrap;
+}
+
+.status {
+	width: 130px;
+}
+
+.title_caret.fa.fa-caret-up {
+	position: absolute;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.title_caret.fa.fa-caret-down {
+	position: absolute;
+	margin-top: 8px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.watchlist_content {
+	display: none;
+}
+
+#watching_content {
+	display: block;
+}
+
+.title_row {
+	width: 100%;
+	height: 45px;
+	border-bottom: 1px solid #DDDDDD;
+	background-color: #F5F5F5;
+	padding-top: 8px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.star-rating {
+    margin: 0 auto;
+    height: 28px;
+    width: 110%;
+    display:inline-block;
+    margin-top: -2px;
+}
+
+.rb0:checked ~ .rating,
+label.rb0l:hover ~ .rating
+{
+    width: 0px; 
+} 
+
+.rb1:checked ~ .rating,
+label.rb1l:hover ~ .rating
+{
+    width: 11.5px;
+} 
+
+.rb2:checked ~ .rating,
+label.rb2l:hover ~ .rating
+{
+    width: 23px; 
+} 
+
+.rb3:checked ~ .rating,
+label.rb3l:hover ~ .rating
+{
+    width: 34.5px; 
+}
+
+.rb4:checked ~ .rating,
+label.rb4l:hover ~ .rating
+{
+    width: 46px;
+}
+.rb5:checked ~ .rating,
+label.rb5l:hover ~ .rating
+{
+    width: 57.5px;
+}
+.rb6:checked ~ .rating,
+label.rb6l:hover ~ .rating
+{
+    width: 69px;
+}
+.rb7:checked ~ .rating,
+label.rb7l:hover ~ .rating
+{
+    width: 80.5px;
+}
+.rb8:checked ~ .rating,
+label.rb8l:hover ~ .rating
+{
+    width: 92px;
+}
+.rb9:checked ~ .rating,
+label.rb9l:hover ~ .rating
+{
+    width: 103.5px;
+}
+.rb10:checked ~ .rating,
+label.rb10l:hover ~ .rating
+{
+    width: 115px; 
+}
+
+.star-rating label.star {
+    width: 11.5px; 
+    left: -11.5px; 
+    padding: 0;
+    height: 28px; 
+    position: relative;
+    z-index: 3;
+    float: left;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.star-rating label.star.last {
+    width: 11.5px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.star-rating input[type=radio],
+.star-rating label.rb
+{
+    display: none;
+}
+
+.rating {
+    position: relative;
+    z-index: 2;
+    top: 4px; 
+    height: 32px;
+    width:0px;
+}
+
+.rating-bg {
+    position: relative;
+    z-index: 1;
+    top: -28px; 
+    height: 32px; 
+    width: 115px;
+}
+
+.ie8 .star-rating input,
+.ie8 .star-rating label.rb
+ {
+    display: inline-block;
+}
+
+.ie8 .rating,
+.ie8 .rating-bg,
+.ie8 .star-rating label.star {
+    display: none;
+}
+
+.star-ratings-sprite {
+  font-size: 0;
+  height: 23px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 115px;
+  margin: 0 auto;
+}
+
+.star-ratings-sprite-rating {
+    background-position: 0 100%;
+    float: left;
+    height: 23px;
+    display:inline;
+}
+
+.watchlist_button {
+	width: 130px;
+	text-align: center;
+	font-size: 13px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 0px;
+	padding-right: 0px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.watchlist_button:focus {
+	opacity: 1;
+	background-color: #651a1a;
+}
+
+.watchlist_dropdown {
+	font-size: 13px;
+	max-width: 130px;
+	min-width: 130px;
+	z-index: 3;
+	cursor: pointer;
+}
+
+.watchlist_caret {
+	display: inline;
+	color: white;
+	font-size: 13px;
+	margin-left: 10px;
+}
+
+.loader_image_div {
+	position: absolute;
+	display: none;
+	height: 30px;
+	width: 43px;
+	text-align: center;
+	margin-top: -55px;
+	margin-left: 140px;
+}
+
+.loader_image {
+	width: 60px;
+	height: 80px;
+}
+
+@media (max-width: 480px) { 
+	#sort_options_div {
+		margin-top: 30px;
+	}
+}
+
+@media (max-width: 387px) { 
+	.fa.fa-caret-up, .fa.fa-caret-down {
+		position: relative;	
+	}
+}

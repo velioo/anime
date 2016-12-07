@@ -5,16 +5,16 @@ require_once $path;
 class Login extends CI_Controller {
 	
 	public function index() {
-		$this->login_page(TRUE);
+		$this->login_page();
 	}
 	
-	public function login_page($correct=TRUE, $header = "Please Login") {
+	public function login_page($data = null) {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
-		$data['header'] = $header;		
-		if($correct == FALSE) 
-		 	$data['incorrect'] = 'Username or password is incorrect !';
-		
+		if(!isset($data['header'])) {
+			$data['header'] = "Please Login";	
+		}
+
 		$this->load->view('login_page', $data);
 	}
 	
@@ -27,9 +27,10 @@ class Login extends CI_Controller {
 		
 		if ($this->form_validation->run() == FALSE) {
 			if(isset($this->session->userdata['is_logged_in'])) {
-				redirect("Users/profile/{$this->session->userdata['username']}");
+				redirect("users/profile/{$this->session->userdata['username']}");
 			} else{
-				$this->login_page(FALSE);
+				$data['incorrect'] = "Username or password is incorrect !";
+				$this->login_page($data);
 			}
 		} else {
 		
@@ -54,10 +55,11 @@ class Login extends CI_Controller {
 					}
 					
 					$this->session->set_userdata($data);
-					redirect('home');
+					redirect("users/profile/{$username}");
 				}
 			} else {
-				$this->login_page(FALSE);
+				$data['incorrect'] = "Username or password is incorrect !";
+				$this->login_page($data);
 			}
 		}
 	}
@@ -78,18 +80,6 @@ class Login extends CI_Controller {
 		$data['css'] = 'login.css';
 		$data['header'] = 'Forgot your password ?';
 		$this->load->view('forgot_password_page', $data);
-	}
-	
-	public function check_if_email_exists_forgot($requested_email) {
-		$this->load->model('users_model');
-	
-		$email_not_exist = $this->users_model->check_if_email_exists($requested_email);
-	
-		if(!$email_not_exist) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
 	}
 	
 	function nocache() {
@@ -129,7 +119,8 @@ class Login extends CI_Controller {
 		  	echo 'Graph returned an error: ' . $e->getMessage();
 			die();
 		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-		  	redirect("login/login_page/TRUE/There was an error connecting with Facebook");
+			$data['header'] = "There was an error connecting with Facebook !";
+			$this->login_page($data);
 		}
 		
 		if (!isset($accessToken)) {
@@ -170,26 +161,26 @@ class Login extends CI_Controller {
 		
 		$this->load->model('users_model');
 		
-		$query = $this->users_model->check_if_fb_acc_exist_and_return_user($fb_user_id);
+		$user = $this->users_model->check_if_fb_acc_exist_and_return_user($fb_user_id);
 		
 		if($connect_existing_account != "connect") {
-			if($query) {			
+			if($user) {			
 					$data = array(
-							'id' => $query['id'],
-							'username' => $query['username'],
+							'id' => $user['id'],
+							'username' => $user['username'],
 							'is_logged_in' => true,
-							'email' => $query['email'],
+							'email' => $user['email'],
 							'fb_access_token' => (string) $accessToken
 					);
 					
-					$is_admin = $this->users_model->check_if_user_is_admin($query['id']);
+					$is_admin = $this->users_model->check_if_user_is_admin($user['id']);
 					
 					if($is_admin) {
 						$data['admin'] = TRUE;
 					}
 					
 					$this->session->set_userdata($data);			
-					redirect("home");
+					redirect("users/profile/{$user['username']}");
 			} else {
 				
 				$email_available = $this->users_model->check_if_email_exists($email);		
@@ -211,7 +202,7 @@ class Login extends CI_Controller {
 				
 			}
 		} else {
-			if($query) {
+			if($user) {
 				$message = "This Facebook account is already connected with another account.";
 				redirect("userUpdates/user_settings/{$message}");
 			} else {

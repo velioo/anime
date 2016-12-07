@@ -4,9 +4,14 @@
 		return assetUrl;
 	}
 
-	function get_site_url() {
-		var siteUrl = "<?php echo site_url("animeContent/anime/")?>"
-		return siteUrl;
+	function get_anime_url() {
+		var animeUrl = "<?php echo site_url("animeContent/anime/")?>"
+		return animeUrl;
+	}
+
+	function get_data_url() {
+		var dataUrl = "<?php echo base_url() . "searchC/get_search_results/";?>";
+		return dataUrl;
 	}
 </script>
 
@@ -23,6 +28,7 @@
   	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive; font-size:10px;">Menu
 		  <span class="caret"></span></button>
 		  <ul class="dropdown-menu multi-level" role="menu" id="dropdown_list" style="border-radius: 0px;">
+		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="<?php echo site_url("home");?>" style="font-weight: normal;">Home</a>
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
 		  		<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_anime?search=""')?>">Browse Anime</a></li>

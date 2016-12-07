@@ -67,28 +67,21 @@ class Reviews extends CI_Controller {
 				} 
 			}
 			
-			if($this->session->flashdata('update')) { 
+			$review_exists = $this->reviews_model->check_if_review_exists($anime_id, $this->session->userdata('id'));
+			
+			if($review_exists) { 
 				$query = $this->reviews_model->update_review($anime_id, $user_review, $user_scores);
 			} else {
 				$query = $this->reviews_model->add_review($anime_id, $user_review, $user_scores);
 			}
 		
-			if($query) {		
-				if($query === "exists") {
-					$message = "You've already added a review for this show";
-				} else if($query === "updated"){
-					$message = "You've successfully updated your review";
-				} else {
-					$message = "You've successfully added a review";
-				}
+			if($query) {						
+				$result = $this->animes_model->get_anime_slug($anime_id);
 				
-				$this->session->set_flashdata('message', $message);
+				$slug = str_replace(" ", "-", $result['slug']);
 				
-				$anime = $this->animes_model->get_anime($anime_id);
 				
-				$slug = str_replace(" ", "-", $anime['slug']);
-				
-				redirect("animeContent/anime/{$slug}");
+				redirect("reviews/review/{$slug}/{$this->session->userdata('username')}");
 			} else {
 				$this->server_error();
 			}		
@@ -97,14 +90,14 @@ class Reviews extends CI_Controller {
 		}
 	}
 	
-	function load_reviews($anime_id=null) {	
+	function load_reviews($anime_id = null) {	
 		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
  		
   		if($anime_id != null and is_numeric($anime_id)) {
 		
 			$group_number = $this->input->post('group_number');
-			$reviews_per_page = 4;
+			$reviews_per_page = 10;
 			$offset = ceil($group_number * $reviews_per_page);
 			
 			$result = $this->reviews_model->get_anime_reviews($anime_id, $reviews_per_page, $offset);
@@ -144,7 +137,7 @@ class Reviews extends CI_Controller {
 		 						 									asset_url() . "user_profile_images/{$review['profile_image']}" . '"></div>' . '<div class="user_review_image_username_div">' . $review['username'] . '</div>' . '</a>
 		 						 								 			
 		 						 		</div>
-		 						 		<a href="'. site_url("reviews/user_review/" . str_replace(" ", "-", $review['slug']) . "/{$review['username']}") . '" class="read_more">
+		 						 		<a href="'. site_url("reviews/review/" . str_replace(" ", "-", $review['slug']) . "/{$review['username']}") . '" class="read_more">
 		 						 				<span class="blue-text">Full review...</span></a>
 		 						 	</div>' . $end_with;
 	 						 									
@@ -164,7 +157,7 @@ class Reviews extends CI_Controller {
 		
 	}
 	
-	public function user_review($slug = null, $username = null) {
+	public function review($slug = null, $username = null) {
 		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
 		$this->load->model('users_model');
@@ -228,17 +221,118 @@ class Reviews extends CI_Controller {
 			}
 		}
 				
-		$data['results'] = $query;
+		$data['user'] = $query;
 		
-		$user_reviews = $this->reviews_model->get_user_review(0, $query['id']);
-		
-		if($user_reviews) {
-			$data['reviews'] = $user_reviews;
-		} 
-		
+		$total_reviews = $this->reviews_model->get_total_reviews_count_user($query['id']);
+			
+		if($total_reviews) {
+			$reviews_per_page = 10;
+			$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
+		} else {
+			$this->server_error();
+		}
+
 		$data['title'] = $username . '\'s profile';
-		$data['css'] = 'user.css';
+		$data['css'] = 'user_reviews.css';
 		$this->load->view('user_reviews', $data);
+	}
+	
+	public function load_reviews_user($user_id = null) {			
+		if($user_id != null and is_numeric($user_id)) {
+			
+			$this->load->model('reviews_model');
+			$this->load->model('animes_model');
+		
+			$group_number = $this->input->post('group_number');
+			$reviews_per_page = 10;
+			$offset = ceil($group_number * $reviews_per_page);
+			
+			$result = $this->reviews_model->get_user_review(0, $user_id, $reviews_per_page, $offset);
+			
+ 			if($result) {
+				if(!$this->contains_array($result)) {
+					$result = array($result);
+				}
+
+				$element_array = array();
+				$review_div;
+				
+				if((isset($this->session->userdata['is_logged_in'])) && ($this->session->userdata('id') === $user_id))  {
+					$modify = TRUE;
+				} else {
+					$modify = FALSE;
+				}
+				
+				foreach($result as $review) {
+				
+					$slug = str_replace(" ", "-", $review['slug']);
+					$full_title = convert_titles_to_hash($review['titles'])['main'];
+					
+					$review_text = strip_review_tags($review['review_text']);
+				
+					if(mb_strlen($review_text) > 190) {
+						$review_text =  '"' . substr($review_text, 0, 190) . "...\"";
+					} else {
+						$review_text =  '"' . $review_text .  '"';
+					}
+					
+					if(mb_strlen($full_title) > 35) {
+						$title = substr($full_title, 0, 35) . "...";
+					} else {
+						$title = $full_title;
+					}
+					
+					$element = '<div class="review_div">
+								<div class="anime_title"><a title="' . $full_title .'" href="' . site_url("animeContent/anime/{$slug}") . '" class="disable-link-decoration title">' . $title . '</a></div>';
+								if($modify === TRUE) {
+									$element.='<div class="edit_delete">
+											<a href="' . site_url("reviews/add_edit_review/{$slug}") . '" class="disable-link-decoration edit_review"><span class="fa fa-pencil"></span> Edit</a>
+												<p class="delete_review" data-id="' . $review['anime_id'] .'"><span class="fa fa-times"></span> Delete</p>
+											</div>';
+								}						
+					$element.= '<div class="review_date"><span class="fa fa-clock-o"> ' . convert_date(date('Y-m-d', strtotime($review['created_at']))) . '</span></div>
+								<a href="' . site_url("reviews/review/{$slug}/{$review['username']}") .'" class="disable-link-decoration"><p class="review_text blue-text">' . $review_text . '</p></a>
+							</div>';
+				
+					$element_array[] = $element;
+				}
+				
+				foreach($element_array as $e) {
+					echo $e;
+				}				
+	
+			} else {
+				if(($this->session->userdata('is_logged_in') === TRUE) && ($this->session->userdata('id') == $user_id)) {
+					echo "<h1 style='text-align: center;margin-top:20px;'>You have no reviews yet</h1>";
+				} else {
+					echo "<h1 style='text-align: center;margin-top:20px;'>This user has no reviews yet</h1>";
+				}			
+			} 
+			
+		}
+	}
+	
+	public function delete_review() {
+		$this->load->model('reviews_model');
+		
+		$anime_id = $this->input->post('anime_id');
+		$user_id = $this->input->post('user_id');		
+		$query = $this->reviews_model->delete_review($anime_id, $user_id);
+
+		if($query) {
+			echo "Success";
+		} else {
+			echo "Fail";
+		}
+	}
+	
+	function contains_array($array){
+		foreach($array as $value){
+			if(is_array($value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	

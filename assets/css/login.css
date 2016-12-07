@@ -126,6 +126,7 @@ label {
 
 .third_paragraph {
 	display: inline-block;
+	height: 60px;
 	background-color: rgba(211, 211, 211, 1);
 	margin-bottom:0px;
 	text-align: center;
@@ -148,8 +149,8 @@ label {
 .fa.fa-angle-down, .fa.fa-angle-up {
 	display: inline-block;
 	position:absolute;
-	margin-top:-52px;
-	margin-left:352px;
+	margin-top:-57px;
+	margin-left:180px;
 	padding-left:2px;
 	padding-right:2px;
 	border-radius: 5px;

@@ -24,7 +24,40 @@ $('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/ani
 $(document).ready(function() {
 	$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
 	$('head').append('<script src="<?php echo asset_url() . "js/anime_content.js";?>">');		
+
+	var star_empty_url = "<?php echo asset_url() . "imgs/star_empty_icon.png" ?>";
+	var star_fill_url = "<?php echo asset_url() . "imgs/star_fill_icon.png" ?>";
+	var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
+	var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
+
+	$('.star-ratings-sprite').css('background', 'url(' + star_empty_url_small + ') repeat-x');
+	$('.star-ratings-sprite-rating').css('background', 'url(' + star_fill_url_small + ') repeat-x');	
+	$('.rating-bg').css('background', 'url(' + star_empty_url + ') repeat-x top left');
+	$('.rating').css('background', 'url(' + star_fill_url + ') repeat-x top left');
+
+	var anime_in_watchlist = <?php if(isset($watchlist_status_name)) echo 1; else echo 0;?>;
+
+	if(anime_in_watchlist) {
+		$('.star-rating').css("display", "inline-block");
+		var score = <?php if(isset($score)) echo $score; else echo 0;?>;
+		$('input[name=userScore][value=' + score + ']').prop('checked',true);
+	}
 });
+
+	function getStatusUrl() {
+		var url = "<?php echo site_url("watchlists/update_status");?>";
+		return url;
+	}
+
+	function getScoreUrl() {
+		var url = "<?php echo site_url("watchlists/update_score");?>";
+		return url;
+	}
+
+	function getAnimeId() {
+		var id = <?php echo $anime['id'];?>;
+		return id;
+	}	
 
 <?php if($is_admin) { ?>
 function showEditFields() {
@@ -40,17 +73,7 @@ function showEditFields() {
 	<?php include 'anime_page_top.php';?>
 	<div class="container-fluid scrollable" id="anime_content">	
 	
-	<?php 
-		if($this->session->flashdata('message')) { 
-			$message = $this->session->flashdata('message');
-			
-			if(strpos($message, 'successfully') !== FALSE) {
-				echo '<p style="color: #23527C; margin-top: 10px; font-size: 22px; text-align: center;">' . $message . '</p>';
-			} else {
-				echo '<p style="color: #cb3434; margin-top: 10px; font-size: 22px; text-align: center;">' . $message . '</p>';
-			}
-		}
-		
+	<?php 		
 		$anime['slug'] = str_replace(" ", "-", $anime['slug']);
 	?>
 	
@@ -114,10 +137,10 @@ function showEditFields() {
 							echo  '<p class="date"><i title="Air date" class="fa fa-calendar" aria-hidden="true"></i> ' . $start_date . '</p>';
 						}
 						
-						$percentage = $anime['average_rating']/5 * 100 . "%";
+						$percentage = $anime['average_rating']/5 * 50 . "%";
 					?> 				 
 				</div>
-				<div title="<?php echo $anime['average_rating'] . " out of " . "5"?>" class="star-ratings-sprite" id="rating_div">
+				<div title="<?php echo number_format($anime['average_rating']/2, 3) . " out of " . "5 from " . $anime['total_votes'] . " votes";?>" class="star-ratings-sprite" id="rating_div">
 					<span style="width:<?php echo $percentage?>" class="star-ratings-sprite-rating"></span>
 				</div>
 				<div id="ranked_div">
@@ -147,6 +170,67 @@ function showEditFields() {
 						  }
 					 ?>
 				</div>
+				<?php if($logged) {?>
+				<div id="anime_user_watchlist_div">
+					<div id="wrap_watchlist" class="w3-dropdown-click">
+				    <button id="watchlist_button" class="button-red"><?php if(isset($watchlist_status_name)) echo $watchlist_status_name; else echo "Add to Watchlist";?><span id="watchlist_caret" class="fa fa-caret-down"></span></button>
+					    <div id="watchlist_dropdown" class="w3-dropdown-content w3-border">
+					      <a class="watchlist_item" data-id="1">Watched</a>
+					      <a class="watchlist_item" data-id="2">Watching</a>
+					      <a class="watchlist_item" data-id="3">Want to Watch</a>
+					      <a class="watchlist_item" data-id="4">Stalled</a>
+					      <a class="watchlist_item" data-id="5">Dropped</a>
+					      <?php if(isset($watchlist_status_name)){ ?>
+					      <a class="watchlist_item" data-id="6">Remove from List</a>
+					      <?php }?>
+					    </div>
+				    </div>
+			    	<div class="star-rating">
+
+					    <input class="rb0" id="Ans_1" name="userScore" type="radio" value="0" checked="checked"/>                       
+					    <input class="rb1" id="Ans_2" name="userScore" type="radio" value="1" />
+					    <input class="rb2" id="Ans_3" name="userScore" type="radio" value="2" />
+					    <input class="rb3" id="Ans_4" name="userScore" type="radio" value="3" />    
+					    <input class="rb4" id="Ans_5" name="userScore" type="radio" value="4" />    
+					    <input class="rb5" id="Ans_6" name="userScore" type="radio" value="5" />    
+					    <input class="rb6" id="Ans_7" name="userScore" type="radio" value="6" />
+					    <input class="rb7" id="Ans_8" name="userScore" type="radio" value="7" />    
+					    <input class="rb8" id="Ans_9" name="userScore" type="radio" value="8" />
+					    <input class="rb9" id="Ans_10" name="userScore" type="radio" value="9" />
+					    <input class="rb10" id="Ans_11" name="userScore" type="radio" value="10" />
+					    
+					    <label for="Ans_1" class="star rb0l" onclick=""></label>
+					    <label for="Ans_2" class="star rb1l" onclick=""></label>
+					    <label for="Ans_3" class="star rb2l" onclick=""></label>
+					    <label for="Ans_4" class="star rb3l" onclick=""></label>
+					    <label for="Ans_5" class="star rb4l" onclick=""></label>
+					    <label for="Ans_6" class="star rb5l" onclick=""></label>
+					    <label for="Ans_7" class="star rb6l" onclick=""></label>
+					    <label for="Ans_8" class="star rb7l" onclick=""></label>
+					    <label for="Ans_9" class="star rb8l" onclick=""></label>
+					    <label for="Ans_10" class="star rb9l" onclick=""></label>
+					    <label for="Ans_11" class="star rb10l last" onclick=""></label>
+					    
+					    <label for="Ans_1" class="rb" onclick="">0</label>
+					    <label for="Ans_2" class="rb" onclick="">1</label>
+					    <label for="Ans_3" class="rb" onclick="">2</label>
+					    <label for="Ans_4" class="rb" onclick="">3</label>
+					    <label for="Ans_5" class="rb" onclick="">4</label>
+					    <label for="Ans_6" class="rb" onclick="">5</label>
+					    <label for="Ans_7" class="rb" onclick="">6</label>
+					    <label for="Ans_8" class="rb" onclick="">7</label>
+					    <label for="Ans_9" class="rb" onclick="">8</label>
+					    <label for="Ans_10" class="rb" onclick="">9</label>
+					    <label for="Ans_11" class="rb" onclick="">10</label>
+					    
+					    <div class="rating"></div>
+					    <div class="rating-bg"></div> 
+					</div> 
+					<div id="loader_image_div">
+						<img src="<?php echo asset_url() . "imgs/loading_icon_2.gif";?>" class="loader_image">
+					</div>
+				</div>
+				<?php }?>
 			</div>
 			<?php if($anime['youtube_video_id'] != "") {?>
 			<div id="youtube_trailer_div">
@@ -182,9 +266,9 @@ function showEditFields() {
 			    <div class="review_body">
 			     	<?php $text = strip_review_tags($review['review_text']);						
 					 	if(mb_strlen($text) > 500) {
-							echo substr($text, 0, 500) . "..." . "<a href='" . site_url("reviews/user_review/" . $anime['slug'] . "/" . $review['username']) . "' class='read_more'> Read more</a>";
+							echo substr($text, 0, 500) . "..." . "<a href='" . site_url("reviews/review/" . $anime['slug'] . "/" . $review['username']) . "' class='read_more'> Show whole review</a>";
 						} else {
-							echo $text . "<a href='" . site_url("reviews/user_review/" . $anime['slug'] . "/" . $review['username']) . "' class='disable-link-decoration'> <span class = 'red-text'>Read more</span></a>";
+							echo $text . "<a href='" . site_url("reviews/review/" . $anime['slug'] . "/" . $review['username']) . "' class='disable-link-decoration'> <span class = 'red-text'> Show whole review</span></a>";
 						}
 			     	?>		     
 			    </div>

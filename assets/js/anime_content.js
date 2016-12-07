@@ -25,8 +25,8 @@ $("#anime_video").attr('src', '');
 $('#close_youtube_video_button').click(function() {
 	$("#center_video_div").css("-webkit-animation-name", "zoom_out");
 	$("#center_video_div").css("animation-name", "zoom_out");
-	$("#center_video_div").css("-webkit-animation-duration", "0.3s");
-	$("#center_video_div").css("animation-duration", "0.3s");
+	$("#center_video_div").css("-webkit-animation-duration", "0.2s");
+	$("#center_video_div").css("animation-duration", "0.2s");
 	setTimeout(function(){
     	 $('#youtube_modal').css("display", "none");
     	 $('#anime_video').replaceWith("<iframe id='anime_video' width='1200' height='700' src='' frameborder='0' allowfullscreen></iframe>");	    	 
@@ -34,7 +34,7 @@ $('#close_youtube_video_button').click(function() {
 		 $("#center_video_div").css("animation-name", "zoom");
 		 $("#center_video_div").css("-webkit-animation-duration", "0.6s");
 		 $("#center_video_div").css("animation-duration", "0.6s");
-	}, 250);
+	}, 150);
 });
 
 $('#show_video').click(function() {
@@ -54,7 +54,7 @@ $('#edit_poster_button').change(function(){
 
 function editAnimeInfo(file_chosen, filesize) {
 	var height = window.innerHeight;
-	var margin = 1;
+	var margin = 3;
 	if(file_chosen == true) {
 		margin = filesize/120000;
 	}
@@ -67,7 +67,7 @@ function editAnimeInfo(file_chosen, filesize) {
 	$('#anime-bar').mousedown(function(e){
 	    var prevY = e.clientY;
 	    $(this).mousemove(function(e){
-	      var offset = document.getElementById("top_offset").getAttribute("value");
+	      var offset = $('#top_offset').val();
 	      if(isNaN(offset)) {
 	    	  offset = 1;
 	      } else {
@@ -120,6 +120,7 @@ function show_hide_text() {
 	
 	$('#synopsis_div').show();
 	$('#anime_genres_div').show();
+	$('#anime_user_watchlist_div').show();
 	
 	$(".morelink").click(function(){
 	    if($(this).hasClass("less")) {
@@ -134,5 +135,87 @@ function show_hide_text() {
 	    return false;
 	});
 }
+
+$(window).click(function() {
+	$('#watchlist_dropdown').removeClass('w3-show');
+});
+
+$("#watchlist_button").click(function(e){
+	e.stopPropagation();
+	var watchlist = $('#watchlist_dropdown');
+    if (watchlist.hasClass('w3-show')) {
+    	watchlist.removeClass('w3-show');
+    } else { 
+    	watchlist.addClass('w3-show');
+    }
+});
+
+$('.watchlist_item').click(function() {
+	var status = $(this).data('id');
+	var url = getStatusUrl();
+	var anime_id = getAnimeId();
+	var self = $(this);
+	
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: { anime_id: anime_id, status: status }
+      })
+    .done(function(msg) {
+    	if(msg == "Success") {
+	    	switch(status) {
+	    	case 1:
+	        	$('#watchlist_button').html('Watched<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		break;
+	    	case 2:
+	    		$('#watchlist_button').html('Watching<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		break;
+	    	case 3:
+	    		$('#watchlist_button').html('Want to Watch<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		break;
+	    	case 4:
+	    		$('#watchlist_button').html('Stalled<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		break;
+	    	case 5:
+	    		$('#watchlist_button').html('Dropped<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		break;
+	    	case 6:
+	    		$('#watchlist_button').html('Add to Watchlist<span id="watchlist_caret" class="fa fa-caret-down"></span>');
+	    		self.hide();
+	    	default:
+	    		break;
+	    	}
+    	} else {
+    		window.alert("Failed to update watchlist");
+    	}
+    }); 
+    
+    if(status >= 1 && status <=5) {
+    	$('.star-rating').css("display", "inline-block");
+    	self.parent().children().show();
+    } else {
+    	$('.star-rating').hide();
+    }
+	
+});
+
+$('input[type=radio][name=userScore]').change(function() {
+	var value = this.value;
+	var url = getScoreUrl();
+	var anime_id = getAnimeId();
+	$('#loader_image_div').css("display", "inline-block");
+	  $.ajax({
+	        method: "POST",
+	        url: url,
+	        data: { anime_id: anime_id, value: value }
+	      })
+	    .done(function(msg) {
+	    	if(msg != "Success") {
+	    		window.alert("Failed to update watchlist");
+	    	}
+	    	setTimeout(function(){ $('#loader_image_div').hide(); }, 200);	    	
+	    }); 
+	
+});
 
 

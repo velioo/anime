@@ -38,6 +38,7 @@ function reScale() {
 		if((window_width == original_width) || ((original_width - window_width) == 1 )) {
 			scale = 0;
 			counter = 0;
+		} else if((window_width == prev_window_width) || (Math.abs(window_width - prev_window_width) == 1)) {	
 		} else if(zoom_in == true){
 			counter++;
 			scale-=60;
@@ -46,7 +47,7 @@ function reScale() {
 			scale+=60;
 		}
 	}
-	//((typeof zoom_in == 'undefined') && ((original_width != window_width) && ((original_width - window_width) != 1)))
+
 	if($('#user-bar').length > 0) {
 		var offset = document.getElementById("top_offset").getAttribute("value");
 		offset = parseInt(offset);

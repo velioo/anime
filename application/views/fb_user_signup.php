@@ -27,7 +27,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 					echo form_error('email', '<p class="error">*', '</p>');echo "<br/>";
 					echo "<p class='error'> The email associated with you Facebook account was taken</p><br>";
 				}
-				echo form_submit('submit', 'Sign Up !', 'id=submit');
+				echo form_submit('submit', 'Sign Up !', 'id="submit" class="button-black"');
 				echo form_close();	
 			?>
 	</div>

@@ -6,12 +6,12 @@ class UserUpdates extends CI_Controller {
 		$this->load->model('users_model');
 		$this->load->library('upload');
 		
+		$unique_id = uniqid();
+		
 	    $config['upload_path']          = './assets/user_cover_images/';
         $config['allowed_types']        = 'gif|jpg|png';
         $config['max_size']             = 2048;
-        $config['max_width']            = 4000;
-        $config['max_height']           = 2250;
-        $config['file_name'] = $this->session->userdata['id'] . ".jpg";
+        $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
         $config['overwrite'] = TRUE;
         
         $this->upload->initialize($config);
@@ -25,15 +25,15 @@ class UserUpdates extends CI_Controller {
         	$this->session->set_flashdata('error', $error['error']);
         } else {
         	$query = $this->users_model->update_cover_image($this->session->userdata['id'],  $config['file_name']);
-        	$this->session->set_flashdata('new_cover', TRUE);
+        	if(!$query) {
+        		$this->server_error();
+        	}
          }             
          
          $config['upload_path']          = './assets/user_profile_images/';
          $config['allowed_types']        = 'gif|jpg|png';
          $config['max_size']             = 2048;
-         $config['max_width']            = 2000;
-         $config['max_height']           = 2000;
-         $config['file_name'] = $this->session->userdata['id'] . ".jpg";
+         $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
          $config['overwrite'] = TRUE;
          
          $this->upload->initialize($config);     
@@ -43,7 +43,9 @@ class UserUpdates extends CI_Controller {
          	$this->session->set_flashdata('error_a', $error['error_a']);
          } else {
          	$query = $this->users_model->update_avatar_image($this->session->userdata['id'],  $config['file_name']);
-         	$this->session->set_flashdata('new_avatar', TRUE);
+         	if(!$query) {
+         		$this->server_error();
+         	}
          }         
          
          redirect("users/profile/{$this->session->userdata['username']}");
@@ -153,7 +155,8 @@ class UserUpdates extends CI_Controller {
 			$this->load->view('reset_password_page', $data);
 	
 		} else{
-			redirect("login/login_page/TRUE/Link is invalid or has expired");
+			$data['header'] = "Link is invalid or has expired";
+			$this->login_page($data);
 		}
 	}
 	
@@ -177,7 +180,8 @@ class UserUpdates extends CI_Controller {
 				$query = $this->users_model->update_user_password($user_id, $password);
 				if($query) {
 					$this->users_model->delete_temp_pass($user_id);
-					redirect("login/login_page/TRUE/You successfully changed your password");
+					$data['header'] = "You successfully changed your password";
+					$this->login_page($data);
 				}
 			}
 		} else {
@@ -232,6 +236,12 @@ class UserUpdates extends CI_Controller {
 	
 	}
 	
+	public function login_page($data) {
+		$data['title'] = 'Login';
+		$data['css'] = 'login.css';
+		$this->load->view('login_page', $data);
+	}
+	
 	function nocache() {
 		$this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -243,6 +253,13 @@ class UserUpdates extends CI_Controller {
 		header('HTTP/1.0 404 Not Found');
 		echo "<h1>Error 404 Not Found</h1>";
 		echo "The page that you have requested could not be found.";
+		exit();
+	}
+	
+	function server_error() {
+		header('HTTP/1.1 500 Internal Server Error');
+		echo "<h1>Error 500 Internal Server Error</h1>";
+		echo "There was a problem with the server";
 		exit();
 	}
 	

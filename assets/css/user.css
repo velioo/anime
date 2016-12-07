@@ -1,6 +1,11 @@
 @CHARSET "UTF-8";
 @import url("home.css");
 
+#timeline {
+	background-color: #23272D;
+	opacity: 1;
+}
+
 #personal_info_div {
 	width:450px;
 	margin-top: 20px;
@@ -49,31 +54,12 @@
 	display:none;
 }
 
-.save_button {
+#save_user_info {
+	font-weight: normal;
 	float:right;
-	outline:none;
-	border:none;
-	background-color:#23272D;
 	display:none;
 	font-size: 11px;
 	margin-right: 10px;
-	opacity: 0.8;
-	-webkit-transition: .3s ease-in-out;
-	transition: .3s ease-in-out;
-}
-
-.save_button:hover {
-	opacity: 1;
-	background-color:#23272D;
-}
-
-.save_button:focus {
-	outline:none;
-	background-color:#23272D;
-}
-
-.btn.btn-primary.save_button:active {
-	background-color:#23272D;
 }
 
 #user_description_area {

@@ -15,9 +15,9 @@
 		<p id="demo"></p>
 	
 		   <?php echo '<a href="' . site_url("home/test_v2") . '">JsonV2</a>'; ?>
-		   <?php //echo '<a href="' . site_url("animeUpdates/write_json_autocomplete") . '">Write Json</a>'; ?>
+		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get_update</a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get json data with FGC</a></br>'; ?>
-		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes_curl") . '">Get json data with cUrl</a>'; ?>
+		   <?php //echo '<a href="' . site_url("watchlists/update_status/8270/3") . '">Update watchlist</a>'; ?>
 	</div>
 </div>
 <?php include 'footer.php';?>

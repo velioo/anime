@@ -34,16 +34,44 @@ class Emails extends CI_Controller {
 				if($query) {
 					$user_id = $query['id'];
 					$this->users_model->temp_reset_password($user_id, $temp_pass);
-					$this->login_page(TRUE, "Email was sent to {$this->input->post('email')}. <br/>Follow the instructions in it to reset your password.");
+					$data = array('header' => "Email was sent to {$this->input->post('email')}. <br/>Follow the instructions in it to reset your password.");
+					$this->login_page($data);
 				} else {
-					$this->login_page(TRUE, "There was an internal error...");
+					$data = array('header' => "There was an internal error...");
+					$this->login_page($data);
 				}
 					
 			} else {
-				$this->login_page(TRUE, "Failed to send email...");
+				$data = array('header' => "Failed to send email...");
+				$this->login_page($data);
 			}
 	
 		}
+	}
+	
+	public function check_if_email_exists_forgot($requested_email) {
+		$this->load->model('users_model');
+	
+		$email_not_exist = $this->users_model->check_if_email_exists($requested_email);
+	
+		if(!$email_not_exist) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	public function login_page($data) {
+		$data['title'] = 'Login';
+		$data['css'] = 'login.css';
+		$this->load->view('login_page', $data);
+	}
+	
+	public function forgotten_password() {
+		$data['title'] = 'V-Anime';
+		$data['css'] = 'login.css';
+		$data['header'] = 'Forgot your password ?';
+		$this->load->view('forgot_password_page', $data);
 	}
 	
 }
