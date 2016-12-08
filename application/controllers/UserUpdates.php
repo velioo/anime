@@ -19,14 +19,16 @@ class UserUpdates extends CI_Controller {
         $offset = $this->input->post('top_offset');
         
         if($offset != null) {
-       		$this->users_model->update_cover_offset($this->session->userdata['id'], $offset);
+       		$this->users_model->update_cover_offset($offset);
         }
         
         if (!$this->upload->do_upload('edit_cover')) {
         	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
         	$this->session->set_flashdata('error', $error['error']);
         } else {
-        	$query = $this->users_model->update_cover_image($this->session->userdata['id'],  $config['file_name']);
+        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
+        	unlink("./assets/user_cover_images/{$cover_image}");
+        	$query = $this->users_model->update_cover_image($config['file_name']);
         	if(!$query) {
         		$this->server_error();
         	}
@@ -44,7 +46,9 @@ class UserUpdates extends CI_Controller {
          	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
          	$this->session->set_flashdata('error_a', $error['error_a']);
          } else {
-         	$query = $this->users_model->update_avatar_image($this->session->userdata['id'],  $config['file_name']);
+         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
+         	unlink("./assets/user_profile_images/{$avatar_image}");
+         	$query = $this->users_model->update_avatar_image($config['file_name']);
          	if(!$query) {
          		$this->server_error();
          	}

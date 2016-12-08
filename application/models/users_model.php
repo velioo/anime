@@ -81,26 +81,41 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
-	function update_cover_image($id, $image) {
-		$query = $this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$id}");
-		if($query) {
-			return TRUE;
+	function update_cover_image($image) {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			$query = $this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$user_id}");
+			if($query) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
 		} else {
 			return FALSE;
 		}
 	}
 	
-	function update_avatar_image($id, $image) {
-		$query = $this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$id}");
-		if($query) {
-			return TRUE;
+	function update_avatar_image($image) {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			$query = $this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$user_id}");
+			if($query) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
 		} else {
 			return FALSE;
 		}
 	}
 	
-	function update_cover_offset($id, $offset) {
-		$this->db->query("UPDATE users SET top_offset = '{$offset}' WHERE id = {$id}");
+	function update_cover_offset($offset) {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			$this->db->query("UPDATE users SET top_offset = '{$offset}' WHERE id = {$user_id}");
+		} else {
+			return FALSE;
+		}
 	}
 	
 	function update_user_info($id, $bio, $birthdate, $gender, $country) {
@@ -235,6 +250,34 @@ Class Users_model extends CI_Model {
 		$query = $this->db->query("SELECT id FROM users WHERE email = '{$email}'");
 		if($query->num_rows() == 1) {
 			return $query->row_array();
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_user_cover_image() {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			$query = $this->db->query("SELECT cover_image FROM users WHERE id = {$user_id}");
+			if($query->num_rows() == 1) {
+				return $query->row_array();
+			} else {
+				return FALSE;
+			}
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_user_avatar_image() {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			$query = $this->db->query("SELECT profile_image FROM users WHERE id = {$user_id}");
+			if($query->num_rows() == 1) {
+				return $query->row_array();
+			} else {
+				return FALSE;
+			}
 		} else {
 			return FALSE;
 		}
