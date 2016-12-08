@@ -34,10 +34,6 @@
 	display: inline-block;
 }
 
-#text_area_options {
-	
-}
-
 .btn-group {
 	display: inline-block;
 }
@@ -87,7 +83,7 @@
 #review_text_div {
 	poisition: relative;
 	margin-top: 100px;
-	max-width: 800px;
+	width: 812px;
 }
 
 #review_text_editor {
@@ -135,7 +131,7 @@
 #wrap_review_scores {
 	display: inline-block;
 	vertical-align: top;
-	width: 310px;;
+	width: 300px;;
 }
 
 .score_title {
@@ -209,3 +205,17 @@ hr {
     border-top: 1px solid #DEDEDE;
 }
 
+@media (max-width: 1100px) {
+	
+	#review_text_div {
+		width: auto;
+	}
+	
+	#review_div {
+		text-align: center;	
+	}
+	
+	#submit_review_button_div {
+		text-align: center;
+	}
+}

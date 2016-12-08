@@ -29,6 +29,11 @@
 		return watchlist_url;
 	}
 
+	function getDefaultPage() {
+		var default_watchlist_page = <?php if($is_you) echo $user['default_watchlist_page']; else echo 0;?>;
+		return default_watchlist_page;
+	}
+
 	function getStarEmptyUrl() {
 		return star_empty_url_small;
 	}
@@ -71,12 +76,12 @@
 		<div id="watchlist_content" class="col-sm-12">
 			<div id="watchlist_filter">
 				<div id="filter_group" class="btn-group">
-				  <button type="button" class="btn btn-primary filter" data-id="0">All</button>
-				  <button type="button" class="btn btn-primary filter" data-id="1">Watched</button>
-				  <button type="button" class="btn btn-primary filter" data-id="2" style="background-color: rgb(222, 222, 222);">Watching</button>
-				  <button type="button" class="btn btn-primary filter" data-id="3">Want to Watch</button>
-				  <button type="button" class="btn btn-primary filter" data-id="4">Stalled</button>
-				  <button type="button" class="btn btn-primary filter" data-id="5">Dropped</button>
+				  <button type="button" class="btn btn-primary filter" id="all_tab" data-id="0">All</button>
+				  <button type="button" class="btn btn-primary filter" id="watched_tab" data-id="1">Watched</button>
+				  <button type="button" class="btn btn-primary filter" id="watching_tab" data-id="2">Watching</button>
+				  <button type="button" class="btn btn-primary filter" id="want_watch_tab" data-id="3">Want to Watch</button>
+				  <button type="button" class="btn btn-primary filter" id="stalled_tab" data-id="4">Stalled</button>
+				  <button type="button" class="btn btn-primary filter" id="dropped_tab" data-id="5">Dropped</button>
 				</div>
 			</div>
 			<div id="watchlist_search_div">

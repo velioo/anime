@@ -145,6 +145,10 @@ function showUpdateUserInfoContent() {
 	$('#edit_content_div').css('display', 'none');
 	$("#user_description").text($("#user_description_area").val());
 	
+	var age = new Date().getFullYear() - $('#year_edit').val();
+	
+	$('#age').text("Age: " + age);
+	
 	var gender_icon;
 	var gender = $("#gender_edit").val();
 

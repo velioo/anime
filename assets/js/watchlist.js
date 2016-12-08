@@ -3,7 +3,38 @@ $(document).ready(function() {
 	var user_id = getUserId();	
 	var star_empty_url_small = getStarEmptyUrl();
 	var star_fill_url_small = getStarFillUrl();
+	var default_watchlist_page = getDefaultPage();
 	var counter = 0;
+	
+	switch(default_watchlist_page) {
+		case 0: 
+			$('.watchlist_content').show();		
+			$('#all_tab').css("background-color", "#DEDEDE");
+			break;
+		case 1: 
+			$('#watched_content').show();
+			$('#watched_tab').css("background-color", "#DEDEDE");
+			break;
+		case 2: 			
+			$('#watching_content').show();
+			$('#watching_tab').css("background-color", "#DEDEDE");
+			break;
+		case 3: 			
+			$('#want_watch_content').show();
+			$('#want_watch_tab').css("background-color", "#DEDEDE");
+			break;
+		case 4: 
+			$('#stalled').show();
+			$('#stalled_tab').css("background-color", "#DEDEDE");
+		case 5: 			
+			$('#dropped').show();
+			$('#dropped_tab').css("background-color", "#DEDEDE");
+			break;
+		default: 
+			$('.watchlist_content').show();
+			$('#all_tab').css("background-color", "#DEDEDE");
+			break;
+	}
 	
     $.post(url, {'user_id': user_id},
     function(data){ 
@@ -11,7 +42,6 @@ $(document).ready(function() {
           $(data).each(function(index, element) {
        	  
         	  counter++;
-        	  console.log(element);
         	  var status = $(element).data("id");
         	  var score_value = $(element).find('.star-rating').data("id");
         	 
@@ -41,6 +71,7 @@ $(document).ready(function() {
         	  
       	  });
           
+                  
       	$('input:radio').change(function() {
     		var value = $(this).val();
     		var url = getScoreUrl();

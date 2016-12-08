@@ -11,7 +11,9 @@ if (!isset($this->session->userdata['is_logged_in'])) {
 <script>
 $(document).ready(function() {
 	var age_visibility = <?php echo $user['show_age'];?>;
+	var default_watchlist_page = <?php echo $user['default_watchlist_page'];?>;
 	$('#age_visibility').val(age_visibility);
+	$('#default_watchlist_page').val(default_watchlist_page);
 });
 </script>
 
@@ -22,6 +24,7 @@ $(document).ready(function() {
 		<ul class="nav nav-tabs">
 		  <li class="active"><a data-toggle="tab" href="#change_acc_info_div">Account settings</a></li>
 		  <li><a data-toggle="tab" href="#privacy_notifications_div">Privacy &amp; Notifications</a></li>
+		  <li><a data-toggle="tab" href="#preferences_div">Preferences</a></li>
 		</ul>
 		
 		<div class="tab-content">
@@ -54,16 +57,33 @@ $(document).ready(function() {
 			 	</form>
 			 	<br/>
 			</div>
-		  <div id="privacy_notifications_div" class="tab-pane fade">
-		  		<form action="update_user_privacy_notifications" method="post">
-			  		<label for="age_visibility">Visibility: &nbsp;</label>
-			   		<select name="age_visibility" id="age_visibility">
+		  <div id="privacy_notifications_div" class="preferences_div tab-pane fade">
+		  		<form action="<?php echo site_url("userUpdates/update_user_privacy_notifications");?>" method="post">
+			  		<label for="age_visibility">Visibility:</label>
+			   		<select name="age_visibility" id="age_visibility" class="preferences_dropdown">
 			   			<option value="1">Show Age</option>
 			   			<option value="0">Hide Age</option>
 			   		</select>
 			   		<input type="submit" class="submit_privacy button-black" value="Update preferences">
 		   		</form>
 		  </div>
+		  
+		    <div id="preferences_div" class="preferences_div tab-pane fade">
+		  		<form action="<?php echo site_url("userUpdates/update_user_preferences");?>" method="post">
+			  		<label for="default_watchlist_page">Default watchlist page</label>
+			   		<select name="default_watchlist_page" id="default_watchlist_page" class="preferences_dropdown">
+			   			<option value="0">All</option>
+			   			<option value="1">Watched</option>
+			   			<option value="2">Watching</option>
+			   			<option value="3">Want to Watch</option>
+			   			<option value="4">Stalled</option>
+			   			<option value="5">Dropped</option>
+			   		</select>
+			   		<input type="submit" class="submit_privacy button-black" value="Update preferences">
+		   		</form>
+		  </div>
+		  
+		 
 		</div>
 	</div>
 

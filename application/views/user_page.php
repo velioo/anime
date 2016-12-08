@@ -12,10 +12,11 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('head').append('<script src="<?php echo asset_url() . "js/edit_user_info.js";?>">');	
-		<?php if($user['birthdate'] != "0000-00-00") {$dateValues = explode("-", $user['birthdate']); } else {$dataValues[0] = "00";  $dataValues[1] = "00"; $dataValues[2] = "00";}?>
+		<?php if($user['birthdate'] != "0000-00-00") {$dateValues = explode("-", $user['birthdate']); } else {$dateValues[0] = "0000";  $dateValues[1] = "00"; $dateValues[2] = "00";}?>
 		var dayValue = "<?php echo $dateValues[2]?>";
 		var monthValue = "<?php echo $dateValues[1]?>";
 		var yearValue = "<?php echo $dateValues[0]?>";
+
 		var currentYear = new Date().getFullYear();
 		var lastYear = currentYear - 100;
 		var year;
@@ -60,7 +61,7 @@
 				<p id="user_description"><?php echo htmlspecialchars($user['bio']);?></p>
 				<p class="personal_info">Joined on: <?php echo convert_date($user['joined_on']);?></p>
 				<?php if($user['show_age'] == 1) {?>
-					<p class="personal_info" id="age">Age:<?php if($user['birthdate'] != "0000-00-00"){ echo date_diff(date_create($user['birthdate']), date_create('today'))->y;} else echo "?";?></p>
+					<p class="personal_info" id="age">Age: <?php if($user['birthdate'] != "0000-00-00"){ echo date_diff(date_create($user['birthdate']), date_create('today'))->y;} else echo "?";?></p>
 				<?php }?>	
 				<?php if($user['gender'] != "") {?>
 				<?php if($user['gender'] == "male") {?>

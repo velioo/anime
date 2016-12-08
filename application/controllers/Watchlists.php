@@ -173,11 +173,12 @@ class Watchlists extends CI_Controller {
 								</td>';
 						
 					} else {
-						$element.='<td title="' . $row['score']/2 . ' out of 5'  .'" class="anime_rating" style="padding-left: 0px;">
+						$element.='<td title="' . $row['score']/2 . ' out of 5'  .'" class="anime_rating">
 									<div class="star-ratings-sprite" style="display: inline-block;">
 										<span style="width:' . $score_percentage .';" class="star-ratings-sprite-rating"></span>
 									</div>
-								  </td>';
+								  </td>
+								<td class="status"><div class="watchlist_guest_status">' . get_watchlist_status_name($status) . '</div></td>';
 					}
 					
 					$element.='</tr>';

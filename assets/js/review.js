@@ -13,8 +13,8 @@ function initEditor() {
 	    },
 	    height : "400",
 	    auto_focus: "review_text_editor",
-	    plugins: "advlist,autolink,link,image,lists,charmap,print,preview,media,searchreplace,fullscreen,nonbreaking,visualchars", 
-	    toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink | image media | preview",
+	    plugins: "advlist,autolink,link,image,lists,charmap,print,preview,media,searchreplace,fullscreen,nonbreaking,visualchars,textcolor,colorpicker,emoticons,wordcount", 
+	    toolbar: "undo redo | forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink | image media | preview",
 	    skin: "lightgray"
 	});	
 

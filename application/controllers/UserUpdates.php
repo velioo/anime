@@ -60,11 +60,24 @@ class UserUpdates extends CI_Controller {
 		$gender = $_POST['gender'];
 		$location = $_POST['location'];
 		
-		if($bio != null && $birthdate != null && $gender != null && $location != null) {		
-			$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
-		} else {
-			$this->bad_request();
+		if($bio == null) {		
+			$bio = "";
 		}
+		
+		if($birthdate == null) {
+			$birthdate = "";
+		}
+		
+		if($gender == null) {
+			$gender = "unknown";
+		}
+		
+		if($location == null) {
+			$location = "";
+		}
+		
+		$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
+
 	}
 	
 	public function update_user_privacy_notifications() {
@@ -78,6 +91,20 @@ class UserUpdates extends CI_Controller {
 		} else {
 			$this->bad_request();
 		}
+	}
+	
+	public function update_user_preferences() {
+		$this->load->model('users_model');
+		
+		$default_watchlist_page = $this->input->post('default_watchlist_page');
+		echo $default_watchlist_page;
+	 	if($default_watchlist_page != null) {
+			$this->users_model->update_user_preferences($default_watchlist_page);
+			
+			redirect("users/profile/{$this->session->userdata['username']}");
+		} else {
+			$this->bad_request();
+		} 
 	}
 	
 	public function update_user_account_info() {		

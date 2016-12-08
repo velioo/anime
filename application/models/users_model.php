@@ -188,6 +188,22 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
+	function update_user_preferences($default_watchlist_page) {
+		if($default_watchlist_page >= 0 && $default_watchlist_page <= 5) {
+			$user_id = $this->session->userdata('id');
+			if($user_id != null) {
+				$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET default_watchlist_page = {$default_watchlist_page} WHERE user_settings.user_id = {$user_id}");
+				if($query) {
+					return TRUE;
+				} else {
+					return FALSE;
+				}
+			}
+		} else {
+			return FALSE;
+		}
+	}
+	
 	function update_user_password($id, $password) {
 		$query = $this->db->query("UPDATE users SET password = '{$password}' WHERE id = {$id}");
 		return $query;

@@ -305,7 +305,9 @@ if (!isset($this->session->userdata['is_logged_in'])) {
 					</li>
 				</ul>			
 			</div>		
-			<button id="submit_review_button" type="submit" class="btn btn-primary button-blue"><?php if(isset($review)) echo "Update"; else echo "Submit";?></button>
+			<div id="#submit_review_button_div">
+				<button id="submit_review_button" type="submit" class="btn btn-primary button-blue"><?php if(isset($review)) echo "Update"; else echo "Submit";?></button>
+			</div>
 		</form>
 			<hr>
 		</div>
