@@ -18,7 +18,9 @@ class UserUpdates extends CI_Controller {
 
         $offset = $this->input->post('top_offset');
         
-        $this->users_model->update_cover_offset($this->session->userdata['id'], $offset);
+        if($offset != null) {
+       		$this->users_model->update_cover_offset($this->session->userdata['id'], $offset);
+        }
         
         if (!$this->upload->do_upload('edit_cover')) {
         	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
@@ -54,85 +56,102 @@ class UserUpdates extends CI_Controller {
 	public function update_user_info() {
 		$this->load->model('users_model');		
 		$bio = $_POST['textAreaValue']; 
-		$age = $_POST['age'];
+		$birthdate = $_POST['birthValue'];
 		$gender = $_POST['gender'];
 		$location = $_POST['location'];
 		
-		$this->users_model->update_user_info($this->session->userdata['id'], $bio, $age, $gender, $location);
-
+		if($bio != null && $birthdate != null && $gender != null && $location != null) {		
+			$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
+		} else {
+			$this->bad_request();
+		}
+	}
+	
+	public function update_user_privacy_notifications() {
+		$this->load->model('users_model');		
+		$age_visibility = $this->input->post('age_visibility');
+		
+		if($age_visibility != null) {	
+			$this->users_model->update_user_privacy_notifications($age_visibility);	
+			
+			redirect("users/profile/{$this->session->userdata['username']}");
+		} else {
+			$this->bad_request();
+		}
 	}
 	
 	public function update_user_account_info() {		
 		$this->load->library('form_validation');
 		
-		$username = $this->session->userdata['username'];
-		$email = $this->session->userdata['email'];
+		$username = $this->session->userdata('username');
+		$email = $this->session->userdata('email');
 		$password = "";
-		
-		if($this->input->post('username') != $username) {
-			$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');
-			$username = $this->input->post('username');
-		}
-
-		
-		if($this->input->post('email') != $email) {
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
-			$email = $this->input->post('email');
-		}
-		
-		if($this->input->post('password') != "") {
-			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
-			$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
-			$password = $this->input->post('password');
-		}		
-		
-		if($this->form_validation->run() == FALSE) {
-			$this->user_settings();
-		} else {
-			$this->load->model('users_model');
-				
-			if(($username != $this->session->userdata['username']) or ($email != $this->session->userdata['email']) or $password != "") {
-				if($password != "")
-					$password = hash('sha256', $password);
-					$result = $this->users_model->update_user_acc_info($this->session->userdata['id'], $username, $email, $password);
+		if($username != null && $email != null) {
+			
+			if($this->input->post('username') != $username) {
+				$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');
+				$username = $this->input->post('username');
+			}
+			
+			if($this->input->post('email') != $email) {
+				$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
+				$email = $this->input->post('email');
+			}
+			
+			if($this->input->post('password') != "") {
+				$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
+				$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
+				$password = $this->input->post('password');
+			}		
+			
+			if($this->form_validation->run() == FALSE) {
+				$this->user_settings();
+			} else {
+				$this->load->model('users_model');
 					
-				if ($result) {
-					$data = array(
-							'id' => $result['id'],
-							'username' => $result['username'],
-							'email' => $result['email'],
-							'is_logged_in' => true
-					);
-					
-					$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
+				if(($username != $this->session->userdata['username']) or ($email != $this->session->userdata['email']) or $password != "") {
+					if($password != "")
+						$password = hash('sha256', $password);
+						$result = $this->users_model->update_user_acc_info($username, $email, $password);
 						
-					if($is_admin) {
-						$data['admin'] = TRUE;
+					if ($result) {
+						$data = array(
+								'id' => $result['id'],
+								'username' => $result['username'],
+								'email' => $result['email'],
+								'is_logged_in' => true
+						);
+						
+						$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
+							
+						if($is_admin) {
+							$data['admin'] = TRUE;
+						}
+							
+						$this->session->set_userdata($data);
 					}
-						
-					$this->session->set_userdata($data);
-				}
-			} 
-
-			$this->nocache();
-			redirect("users/profile/{$this->session->userdata['username']}");
+				} 
+	
+				$this->nocache();
+				redirect("users/profile/{$this->session->userdata['username']}");
+			}
+		} else {
+			$this->bad_request();
 		}
-		
 		
 	}
 	
 	public function user_settings($fb_message = "") {
 		$this->load->model('users_model');
-		$query = $this->users_model->get_user_info_logged($this->session->userdata['username']);
+		$user = $this->users_model->get_user_info_logged($this->session->userdata['username']);
 		$is_facebook_connected = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
-		if($query) {
+		if($user) {
 			if($is_facebook_connected) {
 				$data['is_fb_connected'] = "Disconnect Facebook";
 			} else {
 				$data['is_fb_connected'] = "Connect Facebook";
 			}
-			$data['username'] = $query['username'];
-			$data['email'] = $query['email'];
+			$data['user'] = $user;
 			$data['fb_message'] = $fb_message;
 			$data['title'] = 'Settings';
 			$data['css'] = 'user_settings.css';
@@ -212,6 +231,10 @@ class UserUpdates extends CI_Controller {
 	
 	public function check_if_username_exists($requested_username) {
 		$this->load->model('users_model');
+		
+		if(strtolower($this->session->userdata('username')) == strtolower($requested_username)) {
+			return TRUE;
+		}
 	
 		$username_available = $this->users_model->check_if_username_exists($requested_username);
 	
@@ -253,6 +276,13 @@ class UserUpdates extends CI_Controller {
 		header('HTTP/1.0 404 Not Found');
 		echo "<h1>Error 404 Not Found</h1>";
 		echo "The page that you have requested could not be found.";
+		exit();
+	}
+	
+	function bad_request() {
+		header('HTTP/1.1 400 Bad Request');
+		echo "<h1>Error 400 Bad request</h1>";
+		echo "The requested action cannot be executed.";
 		exit();
 	}
 	

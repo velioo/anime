@@ -5,16 +5,35 @@
 	background-color: #E9E9E9;
 }
 
+.nav.nav-tabs {
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+
+.nav.nav-tabs li {
+	font-size: 18px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.nav.nav-tabs li a:hover {
+	background-color: #DEDEDE;
+}
+
+.nav-tabs > li.active > a:hover {
+	background-color: white;
+}
+
+.nav.nav-tabs li a {
+	width: 100%;
+}
+
 #change_acc_info_div {
 	width: 550px;
     margin: 0 auto; 
-    border: 1px solid black;
-    background-color:#DEDEDE;
     padding-top:10px;
     padding-left:20px;
     padding-right:20px;
     padding-bottom:10px;
-    margin-bottom:100px;
 }
 
 #title {
@@ -44,16 +63,56 @@
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-#submit {
+input.submit {
 	opacity: 1;
 	font-size: 14px;
 	width:100px;
 	height:35px;
     margin-left:200px;
+    border: none;
     font-weight: normal;
+}
+
+input.submit_privacy {
+	display: block;
+	opacity: 1;
+	font-size: 14px;
+	min-width:130px;
+	min-height:35px;
+	margin-top: 30px;
+	margin-left: 100px;
+	padding: 10px 10px 10px 10px;
+    border: none;
+    font-weight: normal;
+}
+
+#fb-login {
+	margin: 0 auto;
+	margin-top: 30px;
+	width: 50%;
+}
+
+label[for=age_visibility] {
+	font-size: 16px;
+}
+
+#privacy_notifications_div {
+	padding: 30px 10px 10px 50px;
+	width: 100%;
+}
+
+#age_visibility {
+	font-size: 16px;
+	padding: 5px 10px 5px 10px;
+	border: 1px solid #DEDEDE;
+}
+
+#submit_privacy {
+	display: block;
 }
 
 .error {
 	color:red;
 	display:inline;
+	margin-left: 135px;
 }

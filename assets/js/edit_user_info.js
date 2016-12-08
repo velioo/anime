@@ -1,4 +1,3 @@
-var _URL = window.URL || window.webkitURL;
 var twoMB = 2097152;
 
 function editUserInfo(file_chosen, filesize) {
@@ -50,22 +49,22 @@ function editUserInfo(file_chosen, filesize) {
 
 function updateDb(baseurl) {
     var textValue = $("#user_description_area").val();
-	var ageValue = $("#age_edit").val();
+    var dayValue = $('#day_edit').val();
+    var monthValue = $('#month_edit').val();
+    var yearValue = $('#year_edit').val();
+    var birthValue = yearValue + "-" + monthValue + "-" + dayValue;
 	var genderValue = $("#gender_edit").val();
 	var locationValue = $("#location_edit").val();
-    if(!(ageValue < 0)){
-	    $.ajax({
-	          method: "POST",
-	          url: baseurl + '/userupdates/update_user_info',
-	          data: { textAreaValue: textValue, age: ageValue, gender: genderValue, location: locationValue }
-	        })
-	      .done(function( msg ) {	  
-	      });    
-	     showUpdateUserInfoContent();
-	} else {
-		$("#wtf_age").css('display', 'inline');
-		$("#wtf_age").text(" Baka...");
-	}
+	var url = getUserUpdatesUrl();
+
+    $.ajax({
+          method: "POST",
+          url: url,
+          data: { textAreaValue: textValue, birthValue: birthValue, gender: genderValue, location: locationValue }
+        })
+      .done(function( msg ) {	  
+      });    
+     showUpdateUserInfoContent();
 };
 
 $(document).ready(function() {	
@@ -108,6 +107,7 @@ $(document).ready(function() {
 			showCover(this, "#user_image");
 		}	
 	});	
+
 });
 
 function changeCoverPosition(bar) {
@@ -143,9 +143,7 @@ function showUpdateUserInfoContent() {
 	$('#edit_user_info').css('display', 'block');
 	$('#save_user_info').css('display', 'none');
 	$('#edit_content_div').css('display', 'none');
-	$('#wtf_age').css('display', 'none');
 	$("#user_description").text($("#user_description_area").val());
-	$("#age").text("Age: " + $("#age_edit").val());
 	
 	var gender_icon;
 	var gender = $("#gender_edit").val();

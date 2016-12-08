@@ -38,6 +38,7 @@ $(document).ready(function() {
 	var anime_in_watchlist = <?php if(isset($watchlist_status_name)) echo 1; else echo 0;?>;
 
 	if(anime_in_watchlist) {
+	    $('.watchlist_item').show();
 		$('.star-rating').css("display", "inline-block");
 		var score = <?php if(isset($score)) echo $score; else echo 0;?>;
 		$('input[name=userScore][value=' + score + ']').prop('checked',true);
@@ -180,9 +181,7 @@ function showEditFields() {
 					      <a class="watchlist_item" data-id="3">Want to Watch</a>
 					      <a class="watchlist_item" data-id="4">Stalled</a>
 					      <a class="watchlist_item" data-id="5">Dropped</a>
-					      <?php if(isset($watchlist_status_name)){ ?>
-					      <a class="watchlist_item" data-id="6">Remove from List</a>
-					      <?php }?>
+					      <a class="watchlist_item" data-id="6" style="display: none;">Remove from List</a>
 					    </div>
 				    </div>
 			    	<div class="star-rating">

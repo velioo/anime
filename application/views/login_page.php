@@ -29,14 +29,14 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_password('password'); echo "<br/>";echo "<br/>";
 			if(isset($incorrect))
 				echo "<p class='error' style='margin-left:180px;'>*" . $incorrect . "</p>"; echo "<br/>";
-			echo form_submit('submit', 'Login', 'id="submit" class="button-black"');echo "<br/>";echo "<br/>";
+			echo form_submit('submit', 'Login', 'class="submit button-black"');echo "<br/>";echo "<br/>";
 			echo anchor('signUp/signup_page', '<span class="red-text">Click here to create an account</span>', 'id="anchor" class="disable-link-decoration"');
 			echo form_close();
 		?>
 		<a href="<?php echo site_url("login/forgotten_password")?>" id="forgot_password" class="disable-link-decoration"><span class="red-text">Forgot your password?</span></a>
 		
 		 <form action="<?php echo site_url("login/facebook_login");?>" method="post">
-			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook" style="width:300px;margin-left:32%;margin-top:50px;">
+			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook">
 			    <span class="fa fa-facebook"></span>Connect with Facebook
 			 </button>
 		 </form>

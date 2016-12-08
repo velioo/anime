@@ -270,6 +270,11 @@ function get_watchlist_status_name($status) {
 	return $status_name;
 }
 
+function validateDate($date, $format = 'Y-m-d H:i:s') {
+	$d = DateTime::createFromFormat($format, $date);
+	return $d && $d->format($format) == $date;
+}
+
 function convert_cyrillic_to_latin($name) {
 	$cyr = [
 		'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п',

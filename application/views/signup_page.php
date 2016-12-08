@@ -30,9 +30,10 @@ if (isset($this->session->userdata['is_logged_in'])) {
 			echo form_label('Confirm Password', 'password_confirm');
 			echo form_password('password_confirm', '');
 			echo form_error('password_confirm', '<p class="error">*', '</p>');echo "<br/>";
-			echo form_submit('submit', 'Sign Up !', 'id="submit" class="button-black"');
+			echo form_submit('submit', 'Sign Up !', 'class="submit button-black"');
 			echo form_close();		
 		?>
+		<br>
 		<p class="center_paragraph">By clicking Sign Up, you are indicating that you have read and agree to the 
 			<a href="#" class="accept disable-link-decoration">
 				<span class="red-text">Terms of Use</span>
@@ -43,7 +44,7 @@ if (isset($this->session->userdata['is_logged_in'])) {
 		</p>
 		<p class="center_paragraph" style="display: inline;">Already have an account ?<a href="<?php echo site_url("login/login_page")?>" class="accept disable-link-decoration" style="display: inline;"> <span class="red-text">Sign in</span></a>.</p>
 		  <form action="<?php echo site_url("login/facebook_login");?>" method="post">
-			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook" style="width:300px;margin-left:32%;margin-top:50px;">
+			 <button type="submit" id="fb-login" class="btn btn-block btn-social btn-facebook">
 			    <span class="fa fa-facebook"></span>Connect with Facebook
 			 </button>
 		 </form>

@@ -63,12 +63,19 @@ label {
 	color:#651a1a;
 }
 
-#submit {
+input.submit {
 	font-size: 14px;
 	width:100px;
 	margin-left:180px;
 	font-weight: normal;
+	border: none;
 	opacity: 1;
+}
+
+#fb-login {
+	margin: 0 auto;
+	margin-top: 30px;
+	width: 280px;;
 }
 
 #update {

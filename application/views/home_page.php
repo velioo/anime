@@ -17,7 +17,7 @@
 		   <?php echo '<a href="' . site_url("home/test_v2") . '">JsonV2</a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get_update</a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get json data with FGC</a></br>'; ?>
-		   <?php //echo '<a href="' . site_url("watchlists/update_status/8270/3") . '">Update watchlist</a>'; ?>
+		   <?php //echo '<a href="' . site_url("userUpdates/update_user_info/hello/2005-09-01/female/London") . '">Update profile</a>'; ?>
 	</div>
 </div>
 <?php include 'footer.php';?>
