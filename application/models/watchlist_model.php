@@ -111,10 +111,7 @@ Class Watchlist_model extends CI_Model {
 			return FALSE;
 		}
 	}
-	
 
-
-	
 	function update_score($anime_id, $value) {
 		$user_id = $this->session->userdata('id');
 	
@@ -154,6 +151,33 @@ Class Watchlist_model extends CI_Model {
 			} else {
 				return FALSE;
 			}
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function add_user_statuses($animes) {
+		$user_id = $this->session->userdata('id');
+		if($user_id != null) {
+			foreach($animes as $anime) {
+				$anime_ids[] = $anime['id'];
+			}
+			
+			$ids = join("','",$anime_ids);
+			
+			$statuses = $this->db->query("SELECT watchlists.anime_id,status,score,eps_watched FROM watchlists JOIN animes ON animes.id=watchlists.anime_id 
+																				JOIN users ON users.id=watchlists.user_id WHERE watchlists.anime_id IN ('{$ids}') and watchlists.user_id = {$user_id}");
+			
+			for($i = 0; $i < count($animes); $i++) {
+				foreach($statuses->result_array() as $status) {
+					if($animes[$i]['id'] == $status['anime_id']) {
+						$animes[$i]['user_status'] = $status['status'];			
+						$animes[$i]['user_score'] = $status['score'];			
+					}
+				}
+			}
+			
+			return $animes;
 		} else {
 			return FALSE;
 		}

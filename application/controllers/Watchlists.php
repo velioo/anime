@@ -99,7 +99,7 @@ class Watchlists extends CI_Controller {
 				  			  	
 				  	
 					$element.= '<tr data-id="' . $status .'">
-								<td data-id="' . $row['anime_id'] .'" class="title" style="padding-top: 17px;"><a href="' . site_url("animeContent/anime/{$slug}") .'" class="disable-link-decoration" ><span class="red-text">' . convert_titles_to_hash($row['titles'])['main'] .'</span></a></td>
+								<td data-id="' . $row['anime_id'] .'" class="title" style="padding-top: 13px;"><a href="' . site_url("animeContent/anime/{$slug}") .'" class="disable-link-decoration" ><span class="red-text">' . convert_titles_to_hash($row['titles'])['main'] .'</span></a></td>
 								<td class="type">' . $type .'</td>
 								<td class="year">' . $year .'</td>';
 					if($this->session->userdata('id') == $user_id) {
@@ -108,7 +108,7 @@ class Watchlists extends CI_Controller {
 						$element.='<td class="anime_progress" style="text-align: center;">'. $row['eps_watched'] .' / '. $row['episode_count'] .'</td>';
 						
 					}
-						$element.='<td class="avg" style="padding-top: 17px;">' . number_format($row['average_rating']/2, 2) .'</td>';
+						$element.='<td class="avg" style="padding-top: 13px;">' . number_format($row['average_rating']/2, 2) .'</td>';
 					
 					if($this->session->userdata('id') == $user_id) {
 						

@@ -31,6 +31,7 @@ class SearchC extends CI_Controller {
 	
 	public function search_anime() {			
 		$this->load->model('search_model');
+		$this->load->model('watchlist_model');
 		$this->load->library('pagination');
 
 		$config = $this->configure_pagination();	
@@ -96,6 +97,8 @@ class SearchC extends CI_Controller {
 		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $user_sorted_results);
 		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order);
 		
+		$query = $this->watchlist_model->add_user_statuses($query);
+
 		$anime = $temp;
 		
 		if(($anime != "") and $this->input->get('sort_order') !== NULL) {
@@ -119,7 +122,7 @@ class SearchC extends CI_Controller {
 			$data['header'] = "Browse Anime";
 		else
 			$data['header'] = 'Results for ' . "\"" . $anime . "\"";
-		$data['css'] = 'login.css';
+		$data['css'] = 'search_animes.css';
 		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 	}

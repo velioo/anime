@@ -102,9 +102,13 @@
 	padding-top: 6px;
 }
 
-.table > tbody > tr  > td {
-	padding: 15px;
+.table > tbody > tr > td {
+	padding: 10px 15px 10px 15px;
 	padding-bottom: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #F2F1EC;
 }
 
 .title {

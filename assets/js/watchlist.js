@@ -288,5 +288,9 @@ function updateEpisodes(self, eps_watched, max_episodes) {
 		    }); 
 		
 		self.parent().find('.progress_input').val(eps_watched);
+		
+		if(eps_watched == max_episodes) {
+			var element = self.parent().parent().find('.status').find('.watchlist_dropdown').find('.watchlist_item[data-id=1]').click();
+		}
 	}
 }
