@@ -6,89 +6,99 @@ class UserUpdates extends CI_Controller {
 		$this->load->model('users_model');
 		$this->load->library('upload');
 		
-		$unique_id = uniqid();
+		if($this->session->userdata('is_logged_in')) {
 		
-	    $config['upload_path']          = './assets/user_cover_images/';
-        $config['allowed_types']        = 'gif|jpg|png';
-        $config['max_size']             = 2048;
-        $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
-        $config['overwrite'] = TRUE;
-        
-        $this->upload->initialize($config);
-
-        $offset = $this->input->post('top_offset');
-        
-        if($offset != null) {
-       		$this->users_model->update_cover_offset($offset);
-        }
-        
-        if (!$this->upload->do_upload('edit_cover')) {
-        	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
-        	$this->session->set_flashdata('error', $error['error']);
-        } else {
-        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
-        	unlink("./assets/user_cover_images/{$cover_image}");
-        	$query = $this->users_model->update_cover_image($config['file_name']);
-        	if(!$query) {
-        		$this->server_error();
-        	}
-         }             
-         
-         $config['upload_path']          = './assets/user_profile_images/';
-         $config['allowed_types']        = 'gif|jpg|png';
-         $config['max_size']             = 2048;
-         $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
-         $config['overwrite'] = TRUE;
-         
-         $this->upload->initialize($config);     
-         
-         if (!$this->upload->do_upload('edit_avatar')) {
-         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
-         	$this->session->set_flashdata('error_a', $error['error_a']);
-         } else {
-         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
-         	unlink("./assets/user_profile_images/{$avatar_image}");
-         	$query = $this->users_model->update_avatar_image($config['file_name']);
-         	if(!$query) {
-         		$this->server_error();
-         	}
-         }         
-         
-         redirect("users/profile/{$this->session->userdata['username']}");
+			$unique_id = uniqid();
+			
+		    $config['upload_path']          = './assets/user_cover_images/';
+	        $config['allowed_types']        = 'gif|jpg|png';
+	        $config['max_size']             = 2048;
+	        $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
+	        $config['overwrite'] = TRUE;
+	        
+	        $this->upload->initialize($config);
+	
+	        $offset = $this->input->post('top_offset');
+	        
+	        if($offset != null) {
+	       		$this->users_model->update_cover_offset($offset);
+	        }
+	        
+	        if (!$this->upload->do_upload('edit_cover')) {
+	        	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
+	        	$this->session->set_flashdata('error', $error['error']);
+	        } else {
+	        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
+	        	unlink("./assets/user_cover_images/{$cover_image}");
+	        	$query = $this->users_model->update_cover_image($config['file_name']);
+	        	if(!$query) {
+	        		$this->server_error();
+	        	}
+	         }             
+	         
+	         $config['upload_path']          = './assets/user_profile_images/';
+	         $config['allowed_types']        = 'gif|jpg|png';
+	         $config['max_size']             = 2048;
+	         $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
+	         $config['overwrite'] = TRUE;
+	         
+	         $this->upload->initialize($config);     
+	         
+	         if (!$this->upload->do_upload('edit_avatar')) {
+	         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
+	         	$this->session->set_flashdata('error_a', $error['error_a']);
+	         } else {
+	         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
+	         	unlink("./assets/user_profile_images/{$avatar_image}");
+	         	$query = $this->users_model->update_avatar_image($config['file_name']);
+	         	if(!$query) {
+	         		$this->server_error();
+	         	}
+	         }         
+	         
+	         redirect("users/profile/{$this->session->userdata['username']}");
+		} else {
+			$this->bad_request();
+		}
 	}
 	
 	public function update_user_info() {
 		$this->load->model('users_model');		
-		$bio = $_POST['textAreaValue']; 
-		$birthdate = $_POST['birthValue'];
-		$gender = $_POST['gender'];
-		$location = $_POST['location'];
 		
-		if($bio == null) {		
-			$bio = "";
+		if($this->session->userdata('is_logged_in')) {
+		
+			$bio = $_POST['textAreaValue']; 
+			$birthdate = $_POST['birthValue'];
+			$gender = $_POST['gender'];
+			$location = $_POST['location'];
+			
+			if($bio == null) {		
+				$bio = "";
+			}
+			
+			if($birthdate == null) {
+				$birthdate = "";
+			}
+			
+			if($gender == null) {
+				$gender = "unknown";
+			}
+			
+			if($location == null) {
+				$location = "";
+			}
+			
+			$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
+		} else {
+			$this->bad_request();
 		}
-		
-		if($birthdate == null) {
-			$birthdate = "";
-		}
-		
-		if($gender == null) {
-			$gender = "unknown";
-		}
-		
-		if($location == null) {
-			$location = "";
-		}
-		
-		$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
-
 	}
 	
 	public function update_user_privacy_notifications() {
 		$this->load->model('users_model');		
 		$age_visibility = $this->input->post('age_visibility');
 		
-		if($age_visibility != null) {	
+		if($age_visibility != null && $this->session->userdata('is_logged_in')) {	
 			$this->users_model->update_user_privacy_notifications($age_visibility);	
 			
 			redirect("users/profile/{$this->session->userdata['username']}");
@@ -101,8 +111,8 @@ class UserUpdates extends CI_Controller {
 		$this->load->model('users_model');
 		
 		$default_watchlist_page = $this->input->post('default_watchlist_page');
-		echo $default_watchlist_page;
-	 	if($default_watchlist_page != null) {
+
+	 	if($default_watchlist_page != null && $this->session->userdata('is_logged_in')) {
 			$this->users_model->update_user_preferences($default_watchlist_page);
 			
 			redirect("users/profile/{$this->session->userdata['username']}");
@@ -117,7 +127,7 @@ class UserUpdates extends CI_Controller {
 		$username = $this->session->userdata('username');
 		$email = $this->session->userdata('email');
 		$password = "";
-		if($username != null && $email != null) {
+		if($username != null && $email != null && $this->session->userdata('is_logged_in')) {
 			
 			if($this->input->post('username') != $username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');
@@ -174,24 +184,27 @@ class UserUpdates extends CI_Controller {
 	
 	public function user_settings($fb_message = "") {
 		$this->load->model('users_model');
-		$user = $this->users_model->get_user_info_logged($this->session->userdata['username']);
-		$is_facebook_connected = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
-		if($user) {
-			if($is_facebook_connected) {
-				$data['is_fb_connected'] = "Disconnect Facebook";
+		if($this->session->userdata('is_logged_in')) {
+			$user = $this->users_model->get_user_info_logged($this->session->userdata['username']);
+			$is_facebook_connected = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
+			if($user) {
+				if($is_facebook_connected) {
+					$data['is_fb_connected'] = "Disconnect Facebook";
+				} else {
+					$data['is_fb_connected'] = "Connect Facebook";
+				}
+				$data['user'] = $user;
+				$data['fb_message'] = $fb_message;
+				$data['title'] = 'Settings';
+				$data['css'] = 'user_settings.css';
+				$data['header'] = "Settings";
+				$this->load->view('user_account_settings', $data);
 			} else {
-				$data['is_fb_connected'] = "Connect Facebook";
+				echo "There was an internal error";
 			}
-			$data['user'] = $user;
-			$data['fb_message'] = $fb_message;
-			$data['title'] = 'Settings';
-			$data['css'] = 'user_settings.css';
-			$data['header'] = "Settings";
-			$this->load->view('user_account_settings', $data);
 		} else {
-			echo "There was an internal error";
+			$this->bad_request();
 		}
-
 	}
 	
 	public function reset_password($temp_pass){
@@ -241,22 +254,27 @@ class UserUpdates extends CI_Controller {
 	
 	function facebook_connect() {
 		$this->load->model('users_model');
-	
-		$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
-	
-		if($query) {
-				
-			$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);
-				
+		
+		if($this->session->userdata('is_logged_in')) {
+		
+			$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
+		
 			if($query) {
-				redirect("userUpdates/user_settings");
+					
+				$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);
+					
+				if($query) {
+					redirect("userUpdates/user_settings");
+				} else {
+					$error = "Please add a password to your account before disconnecting Facebook";
+					redirect("userUpdates/user_settings/$error");
+				}
+					
 			} else {
-				$error = "Please add a password to your account before disconnecting Facebook";
-				redirect("userUpdates/user_settings/$error");
+				redirect("login/facebook_login/connect");
 			}
-				
 		} else {
-			redirect("login/facebook_login/connect");
+			$this->bad_request();
 		}
 	}
 	

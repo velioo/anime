@@ -206,42 +206,50 @@ class Login extends CI_Controller {
 				$message = "This Facebook account is already connected with another account.";
 				redirect("userUpdates/user_settings/{$message}");
 			} else {
-				
-				if(($email != $this->session->userdata['email'])) {
-					$email_available = $this->users_model->check_if_email_exists($email);
-					if(!$email_available) {
-						$email = $this->session->userdata['email'];
-					} 
-				} else {
-					$email_available = TRUE;
-				}
-							
-				if($email_available)
-					$message = "";
-				else 
-					$message = "The email associated with your Facebook account was taken but you were still connected.";
-				
-				$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
+				if($this->sesssion->userdata('is_logged_in')) {				
+					if(($email != $this->session->userdata['email'])) {
+						$email_available = $this->users_model->check_if_email_exists($email);
+						if(!$email_available) {
+							$email = $this->session->userdata['email'];
+						} 
+					} else {
+						$email_available = TRUE;
+					}
+								
+					if($email_available)
+						$message = "";
+					else 
+						$message = "The email associated with your Facebook account was taken but you were still connected.";
 					
-				if($query) {
-					$data = array(
-							'id' => $this->session->userdata['id'],
-							'username' => $this->session->userdata['username'],
-							'is_logged_in' => true,
-							'email' => $query['email'],
-							'fb_access_token' => (string) $accessToken
-					);
+					$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
 						
-					$this->session->set_userdata($data);
+					if($query) {
+						$data = array(
+								'id' => $this->session->userdata['id'],
+								'username' => $this->session->userdata['username'],
+								'is_logged_in' => true,
+								'email' => $query['email'],
+								'fb_access_token' => (string) $accessToken
+						);
+							
+						$this->session->set_userdata($data);
+					} else {
+						$message = "There was an error connecting your account.";
+					}
+					redirect("userUpdates/user_settings/{$message}");
 				} else {
-					$message = "There was an error connecting your account.";
+					$this->unauthorized();
 				}
-				redirect("userUpdates/user_settings/{$message}");
 			}
 		}
 	}
 	
-	
+	function unauthorized() {
+		header('HTTP/1.0 401 Unauthorized');
+		echo "<h1>Error 401 Unauthorized</h1>";
+		echo "You aren't authorized to access this page.";
+		exit();
+	}
 }
 
 ?>

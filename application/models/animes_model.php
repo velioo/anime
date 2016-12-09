@@ -74,17 +74,11 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime($id) {
+		$query = $this->db->query("SELECT * FROM animes WHERE id = {$id}");
 		
-		if(is_numeric($id)) {
-		
-			$query = $this->db->query("SELECT * FROM animes WHERE id = {$id}");
-			
-			if($query->num_rows() == 1) {
-				$row_array = $this->add_anime_genre($id, $query->row_array());
-				return $row_array;
-			} else {
-				return FALSE;
-			}
+		if($query->num_rows() == 1) {
+			$row_array = $this->add_anime_genre($id, $query->row_array());
+			return $row_array;
 		} else {
 			return FALSE;
 		}

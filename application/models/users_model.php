@@ -83,13 +83,9 @@ Class Users_model extends CI_Model {
 	
 	function update_cover_image($image) {
 		$user_id = $this->session->userdata('id');
-		if($user_id != null) {
-			$query = $this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$user_id}");
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+		$query = $this->db->query("UPDATE users SET cover_image = '{$image}' WHERE id = {$user_id}");
+		if($query) {
+			return TRUE;
 		} else {
 			return FALSE;
 		}
@@ -97,13 +93,9 @@ Class Users_model extends CI_Model {
 	
 	function update_avatar_image($image) {
 		$user_id = $this->session->userdata('id');
-		if($user_id != null) {
-			$query = $this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$user_id}");
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+		$query = $this->db->query("UPDATE users SET profile_image = '{$image}' WHERE id = {$user_id}");
+		if($query) {
+			return TRUE;
 		} else {
 			return FALSE;
 		}
@@ -190,13 +182,9 @@ Class Users_model extends CI_Model {
 	function update_user_privacy_notifications($age_visibility) {
 		if($age_visibility == 0 || $age_visibility == 1) {
 			$user_id = $this->session->userdata('id');
-			if($user_id != null) {
-				$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET show_age = {$age_visibility} WHERE user_settings.user_id = {$user_id}");
-				if($query) {
-					return TRUE;
-				} else {
-					return FALSE;
-				}
+			$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET show_age = {$age_visibility} WHERE user_settings.user_id = {$user_id}");
+			if($query) {
+				return TRUE;
 			} else {
 				return FALSE;
 			}
@@ -205,17 +193,13 @@ Class Users_model extends CI_Model {
 	
 	function update_user_preferences($default_watchlist_page) {
 		if($default_watchlist_page >= 0 && $default_watchlist_page <= 5) {
-			$user_id = $this->session->userdata('id');
-			if($user_id != null) {
-				$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET default_watchlist_page = {$default_watchlist_page} WHERE user_settings.user_id = {$user_id}");
-				if($query) {
-					return TRUE;
-				} else {
-					return FALSE;
-				}
+		$user_id = $this->session->userdata('id');
+			$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET default_watchlist_page = {$default_watchlist_page} WHERE user_settings.user_id = {$user_id}");
+			if($query) {
+				return TRUE;
+			} else {
+				return FALSE;
 			}
-		} else {
-			return FALSE;
 		}
 	}
 	
@@ -257,13 +241,9 @@ Class Users_model extends CI_Model {
 	
 	function get_user_cover_image() {
 		$user_id = $this->session->userdata('id');
-		if($user_id != null) {
-			$query = $this->db->query("SELECT cover_image FROM users WHERE id = {$user_id}");
-			if($query->num_rows() == 1) {
-				return $query->row_array();
-			} else {
-				return FALSE;
-			}
+		$query = $this->db->query("SELECT cover_image FROM users WHERE id = {$user_id}");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
 		} else {
 			return FALSE;
 		}
@@ -271,13 +251,9 @@ Class Users_model extends CI_Model {
 	
 	function get_user_avatar_image() {
 		$user_id = $this->session->userdata('id');
-		if($user_id != null) {
-			$query = $this->db->query("SELECT profile_image FROM users WHERE id = {$user_id}");
-			if($query->num_rows() == 1) {
-				return $query->row_array();
-			} else {
-				return FALSE;
-			}
+		$query = $this->db->query("SELECT profile_image FROM users WHERE id = {$user_id}");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
 		} else {
 			return FALSE;
 		}

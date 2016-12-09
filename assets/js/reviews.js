@@ -48,14 +48,11 @@ function initScroll(total_groups, url, id) {
 
 function deleteReview(anime_id) {
 	$('.btn.danger').off('click');
-	var user_id = getUserId();
 	var url = getDeleteUrl();
-	console.log("User id: " + user_id);
-	console.log("Url: " + url);
     $.ajax({
         method: "POST",
         url: url,
-        data: { anime_id: anime_id, user_id: user_id}
+        data: { anime_id: anime_id}
       })
     .done(function(msg) {	  
     	if(msg == "Success") {

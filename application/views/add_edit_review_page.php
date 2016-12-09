@@ -32,6 +32,7 @@ if (!isset($this->session->userdata['is_logged_in'])) {
 		<div id="review_div">
 			<p id="review_title"><?php echo "<a id='anime_title' href='" . site_url("animeContent/anime/{$slug}") . "' >" . $anime_name . "</a>";?> <span style="color: #23272D;">Review</span></p>
 			<form id="submit_review_form" action="<?php echo site_url("reviews/submit_review/{$anime_id}")?>" method="post">
+			<input type="hidden" name="anime_id" value="<?php echo $anime_id;?>">
 			<div id="wrap_review_body">
 				<div id="review_text_div">
 					<textarea name="user_review" id="review_text_editor"><?php if(isset($review)) echo stripslashes($review['review_text']);?></textarea>

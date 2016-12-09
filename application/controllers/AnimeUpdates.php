@@ -6,62 +6,67 @@ class AnimeUpdates extends CI_Controller {
 		$this->load->model('animes_model');
 		$this->load->library('upload');
 		
-		$unique_id = uniqid();
+		if($this->session->userdata('is_logged_in') && $this->session->userdata('admin')) {
 		
-		$offset = $this->input->post('top_offset');		
-		$this->animes_model->update_cover_offset($anime_id, $offset);
-		
-		$result = $this->animes_model->get_anime_slug($anime_id);
-		$slug = str_replace(" ", "-", $result['slug']);
-		
-		if (!empty($_FILES['edit_cover']['name'])) {
+			$unique_id = uniqid();
 			
-			$config['upload_path']          = './assets/anime_cover_images/';
-			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 8192;
-			$config['file_name'] = "manual_" . $anime_id . "_" . $unique_id . ".jpg";
-			$config['overwrite'] = TRUE;
-		
-			$this->upload->initialize($config);
-
-			if (!$this->upload->do_upload('edit_cover')) {
-				$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
-				$this->session->set_flashdata('error', $error['error']);
-				redirect("animeContent/anime/{$slug}");
-			} else {
-				$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
-				if(!$query) {
-					$this->server_error();
-				} 
-			}
-		}
+			$offset = $this->input->post('top_offset');		
+			$this->animes_model->update_cover_offset($anime_id, $offset);
+			
+			$result = $this->animes_model->get_anime_slug($anime_id);
+			$slug = str_replace(" ", "-", $result['slug']);
+			
+			if (!empty($_FILES['edit_cover']['name'])) {
+				
+				$config['upload_path']          = './assets/anime_cover_images/';
+				$config['allowed_types']        = 'gif|jpg|png';
+				$config['max_size']             = 8192;
+				$config['file_name'] = "manual_" . $anime_id . "_" . $unique_id . ".jpg";
+				$config['overwrite'] = TRUE;
+			
+				$this->upload->initialize($config);
 	
-		if (!empty($_FILES['edit_poster']['name'])) {
-		
-			$config['upload_path']          = './assets/poster_images/';
-			$config['allowed_types']        = 'gif|jpg|png';
-			$config['max_size']             = 8192;
-			$config['file_name'] = "manual_". $anime_id . "_" . $unique_id . ".jpg";
-			$config['overwrite'] = TRUE;
-			
-			$this->upload->initialize($config);
-			
-			if (!$this->upload->do_upload('edit_poster')) {
-				$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Poster) ', '</p>'));
-				$this->session->set_flashdata('error_a', $error['error_a']);
-				redirect("animeContent/anime/{$slug}");
-			} else {
-				$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
-				if(!$query) {
-					$this->server_error();
+				if (!$this->upload->do_upload('edit_cover')) {
+					$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
+					$this->session->set_flashdata('error', $error['error']);
+					redirect("animeContent/anime/{$slug}");
+				} else {
+					$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
+					if(!$query) {
+						$this->server_error();
+					} 
 				}
 			}
-		}
 		
-		if (!empty($_FILES['edit_poster']['name'])) {
-			$this->write_json_autocomplete($slug);
+			if (!empty($_FILES['edit_poster']['name'])) {
+			
+				$config['upload_path']          = './assets/poster_images/';
+				$config['allowed_types']        = 'gif|jpg|png';
+				$config['max_size']             = 8192;
+				$config['file_name'] = "manual_". $anime_id . "_" . $unique_id . ".jpg";
+				$config['overwrite'] = TRUE;
+				
+				$this->upload->initialize($config);
+				
+				if (!$this->upload->do_upload('edit_poster')) {
+					$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Poster) ', '</p>'));
+					$this->session->set_flashdata('error_a', $error['error_a']);
+					redirect("animeContent/anime/{$slug}");
+				} else {
+					$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
+					if(!$query) {
+						$this->server_error();
+					}
+				}
+			}
+			
+			if (!empty($_FILES['edit_poster']['name'])) {
+				$this->write_json_autocomplete($slug);
+			} else {
+				redirect("animeContent/anime/{$slug}");
+			}
 		} else {
-			redirect("animeContent/anime/{$slug}");
+			$this->unauthorized();
 		}
 	
 	}
@@ -206,6 +211,13 @@ class AnimeUpdates extends CI_Controller {
 		header('HTTP/1.1 500 Internal Server Error');
 		echo "<h1>Error 500 Internal Server Error</h1>";
 		echo "There was a problem with the server";
+		exit();
+	}
+	
+	function unauthorized() {
+		header('HTTP/1.0 401 Unauthorized');
+		echo "<h1>Error 401 Unauthorized</h1>";
+		echo "You aren't authorized to access this page.";
 		exit();
 	}
 

@@ -61,7 +61,7 @@ class AnimeContent extends CI_Controller {
 			}
 
 		} else {
-			$this->page_not_found();
+			$this->bad_request();
 		}
 		
 	}
@@ -116,7 +116,7 @@ class AnimeContent extends CI_Controller {
 				$this->page_not_found();
 			}
 		} else {
-			$this->page_not_found();
+			$this->bad_request();
 		}
 	}
 	
@@ -131,6 +131,13 @@ class AnimeContent extends CI_Controller {
 		header('HTTP/1.1 500 Internal Server Error');
 		echo "<h1>Error 500 Internal Server Error</h1>";
 		echo "There was a problem with the server";
+		exit();
+	}
+	
+	function bad_request() {
+		header('HTTP/1.1 400 Bad Request');
+		echo "<h1>Error 400 Bad request</h1>";
+		echo "The requested action cannot be executed.";
 		exit();
 	}
 

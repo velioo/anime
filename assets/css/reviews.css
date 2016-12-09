@@ -93,6 +93,7 @@ body {
 .review_text {
 	position:absolute;
 	z-index: 3;
+	padding-right: 10px;
 }
 
 .read_more {

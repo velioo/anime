@@ -97,8 +97,10 @@ class SearchC extends CI_Controller {
 		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $user_sorted_results);
 		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order);
 		
-		$query = $this->watchlist_model->add_user_statuses($query);
-
+		if($this->session->userdata('is_logged_in')) {
+			$query = $this->watchlist_model->add_user_statuses($query);
+		}
+		
 		$anime = $temp;
 		
 		if(($anime != "") and $this->input->get('sort_order') !== NULL) {

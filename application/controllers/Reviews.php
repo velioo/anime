@@ -42,16 +42,18 @@ class Reviews extends CI_Controller {
 				$this->page_not_found();
 			}
 		} else {
-			$this->page_not_found();
+			$this->bad_request();
 		}
 	}
 	
-	public function submit_review($anime_id=null) {
+	public function submit_review() {
 		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
-
-		if($anime_id != null and is_numeric($anime_id)) {
 		
+		$anime_id = $this->input->post('anime_id');
+		
+		if($anime_id != null and is_numeric($anime_id) && $this->session->userdata('is_logged_in')) {
+
 			$user_review = addslashes($this->input->post('user_review'));
 			
 			$user_scores[] = $this->input->post('story');
@@ -86,7 +88,7 @@ class Reviews extends CI_Controller {
 				$this->server_error();
 			}		
 		} else {
-			$this->page_not_found();
+			$this->bad_request();
 		}
 	}
 	
@@ -153,7 +155,9 @@ class Reviews extends CI_Controller {
 			} else {
 				echo "<h1 style='text-align: center;margin-top:20px;'>No Reviews Yet</h1>";
 			}
-		}   
+		} else {
+			$this->bad_request();
+		}
 		
 	}
 	
@@ -203,38 +207,42 @@ class Reviews extends CI_Controller {
 				$this->page_not_found();
 			}
 		} else {
-			$this->page_not_found();
+			$this->bad_request();
 		}
 
 	}
 	
-	public function user_reviews($username) {
+	public function user_reviews($username=null) {
 		$this->load->model('reviews_model');
 		$this->load->model('users_model');
 		
-		if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
-			$query = $this->users_model->get_user_info_logged($username);
-		} else {
-			$query = $this->users_model->get_user_info($username);
-			if(!$query) {
-				$this->page_not_found();
+		if($username != null) {		
+			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
+				$query = $this->users_model->get_user_info_logged($username);
+			} else {
+				$query = $this->users_model->get_user_info($username);
+				if(!$query) {
+					$this->page_not_found();
+				}
 			}
-		}
-				
-		$data['user'] = $query;
-		
-		$total_reviews = $this->reviews_model->get_total_reviews_count_user($query['id']);
+					
+			$data['user'] = $query;
 			
-		if($total_reviews) {
-			$reviews_per_page = 10;
-			$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
+			$total_reviews = $this->reviews_model->get_total_reviews_count_user($query['id']);
+				
+			if($total_reviews) {
+				$reviews_per_page = 10;
+				$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
+			} else {
+				$this->server_error();
+			}
+	
+			$data['title'] = $username . '\'s profile';
+			$data['css'] = 'user_reviews.css';
+			$this->load->view('user_reviews', $data);
 		} else {
-			$this->server_error();
+			$this->bad_request();
 		}
-
-		$data['title'] = $username . '\'s profile';
-		$data['css'] = 'user_reviews.css';
-		$this->load->view('user_reviews', $data);
 	}
 	
 	public function load_reviews_user($user_id = null) {			
@@ -307,22 +315,29 @@ class Reviews extends CI_Controller {
 				} else {
 					echo "<h1 style='text-align: center;margin-top:20px;'>This user has no reviews yet</h1>";
 				}			
-			} 
-			
+			} 		
+		} else {
+			$this->bad_request();
 		}
 	}
 	
 	public function delete_review() {
 		$this->load->model('reviews_model');
 		
-		$anime_id = $this->input->post('anime_id');
-		$user_id = $this->input->post('user_id');		
-		$query = $this->reviews_model->delete_review($anime_id, $user_id);
-
-		if($query) {
-			echo "Success";
+		if($this->session->userdata('is_logged_in')) {
+			
+			$anime_id = $this->input->post('anime_id');
+			$user_id = $this->session->userdata('id');		
+			
+			$query = $this->reviews_model->delete_review($anime_id, $user_id);
+	
+			if($query) {
+				echo "Success";
+			} else {
+				echo "Fail";
+			}
 		} else {
-			echo "Fail";
+			$this->bad_request();
 		}
 	}
 	
@@ -340,6 +355,13 @@ class Reviews extends CI_Controller {
 		header('HTTP/1.1 500 Internal Server Error');
 		echo "<h1>Error 500 Internal Server Error</h1>";
 		echo "There was a problem with the server";
+		exit();
+	}
+	
+	function bad_request() {
+		header('HTTP/1.1 400 Bad Request');
+		echo "<h1>Error 400 Bad request</h1>";
+		echo "The requested action cannot be executed.";
 		exit();
 	}
 	
