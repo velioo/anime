@@ -145,9 +145,13 @@ function showUpdateUserInfoContent() {
 	$('#edit_content_div').css('display', 'none');
 	$("#user_description").text($("#user_description_area").val());
 	
-	var age = new Date().getFullYear() - $('#year_edit').val();
-	
-	$('#age').text("Age: " + age);
+	var year = $('#year_edit').val();
+	var month = $('#month_edit').val();
+	var day = $('#day_edit').val();
+	var birthdate =  month + "/" + day + "/" + year;	
+	var age = getAge(birthdate);
+	if(!isNaN(age))	
+		$('#age').text("Age: " + age);
 	
 	var gender_icon;
 	var gender = $("#gender_edit").val();
@@ -167,4 +171,15 @@ function showUpdateUserInfoContent() {
 	
 	var country_content = "<i class=\"fa fa-home\"></i> Lives in: <strong>" + location + "</strong>";
 	$("#country").html(country_content);
+}
+
+function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
 }

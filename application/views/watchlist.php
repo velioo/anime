@@ -23,10 +23,25 @@
 	function getUserId() {
 		return user_id;
 	}
+
+	function getIsYou() {
+		var is_you = <?php if($is_you) echo 1; else echo 0; ?>;
+		return is_you;
+	}
 	
 	function getWatchlistUrl() {
 		var watchlist_url = "<?php echo site_url("watchlists/load_watchlist");?>";
 		return watchlist_url;
+	}
+
+	function getUpdateDefaultWatchlistSortUrl() {
+		var update_watchlist_sort_url = "<?php echo site_url("watchlists/update_default_watchlist_sort"); ?>";
+		return update_watchlist_sort_url;
+	}
+
+	function getDefaultWatchlistSortUrl() {
+		var default_watchlist_sort = "<?php echo site_url("watchlists/get_default_watchlist_sort");?>";
+		return default_watchlist_sort;
 	}
 
 	function getDefaultPage() {
@@ -92,13 +107,13 @@
 				   <table class="table">
 					    <thead>
 					      <tr>
-					        <th style="width: 38%;">Title<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th style="padding-right: 2px; padding-left: 0px">Type<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th style="padding-right: 10px; width: 90px; padding-left: 0px;">Year<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th style="padding-right: 9px; width: 145px; padding-left: 0px;">Progress<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th>AVG<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th >Rating<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
-					        <th >Status<span class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="title_header"><span class="title_text">Title</span><span id="title_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="type_header"><span class="title_text">Type</span><span id="type_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="year_header"><span class="title_text">Year</span><span id="year_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="progress_header"><span class="title_text">Progress</span><span id="progress_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="avg_header"><span class="title_text">AVG</span><span id="avg_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="rating_header"><span class="title_text">Rating</span><span id="rating_sort" class="title_caret fa fa-caret-up"></span><span class="title_caret fa fa-caret-down"></span></th>
+					        <th id="status_header"><span class="title_text">Status</span></th>
 					      </tr>
 					    </thead>
 				  </table>
@@ -106,45 +121,50 @@
 			</div>
 			
 			<div id="watched_content" class="watchlist_content">
-				<div id="watched_row" class="title_row">Watched</div>			
+				<div id="watched_row" class="title_row">Watched<span class="anime_count"></span></div>			
 				<div class="table-responsive">
-				   <table class="table">
+				   <table class="table tablesorter">
+				   <thead></thead> 
 					    <tbody>
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
 			<div id="watching_content" class="watchlist_content">
-				<div id="watching_row" class="title_row">Watching</div>
+				<div id="watching_row" class="title_row">Watching<span class="anime_count"></span></div>
 				<div class="table-responsive">
-				   <table class="table">
+				   <table class="table tablesorter">
+				   <thead></thead> 
 					    <tbody>
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
 			<div id="want_watch_content" class="watchlist_content">
-				<div id="want_watch_row" class="title_row">Want to Watch</div>
+				<div id="want_watch_row" class="title_row">Want to Watch<span class="anime_count"></span></div>
 				<div class="table-responsive">
-				   <table class="table">
+				   <table class="table tablesorter">
+				   <thead></thead> 
 					    <tbody>
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
 			<div id="stalled_content" class="watchlist_content">
-				<div id="stalled_row" class="title_row">Stalled</div>
+				<div id="stalled_row" class="title_row">Stalled<span class="anime_count"></span></div>
 				<div class="table-responsive">
-				   <table class="table">
+				   <table class="table tablesorter">
+				   <thead></thead> 
 					    <tbody>
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
 			<div id="dropped_content" class="watchlist_content">
-				<div id="dropped_row" class="title_row">Dropped</div>
+				<div id="dropped_row" class="title_row">Dropped<span class="anime_count"></span></div>
 				<div class="table-responsive">
-				   <table class="table">
+				   <table class="table tablesorter">
+				   <thead></thead> 
 					    <tbody>
 					    </tbody>
 				  </table>

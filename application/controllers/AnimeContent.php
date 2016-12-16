@@ -1,5 +1,5 @@
 <?php 
-
+defined('BASEPATH') OR exit('No direct script access allowed');
 class AnimeContent extends CI_Controller {
 
 	public function anime($slug = null) {

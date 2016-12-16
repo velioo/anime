@@ -98,7 +98,7 @@
 		    <?php } else {?>
 				<div class="dropdown small_profile_menu">
 				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="small_user_button"><?php echo $this->session->userdata['username'];?> 
-				  </button>
+				</button>
 				  <ul class="dropdown-menu" style="min-width:50px;">
 				  	<li><a href="<?php echo site_url("users/profile/" . $this->session->userdata['username']); ?>" style="text-align: right;">Profile</a></li>
 				    <li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>
@@ -128,7 +128,9 @@
 	      		<li><a id="login_button" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       		<?php } else {?>
       	   	   <li class="dropdown profile_menu">
-				  <a id="user_button" href="<?php echo site_url("users/profile/" . $this->session->userdata['username']);?>" style="padding-top:10px;"><?php echo $this->session->userdata['username'];?></a>
+				  <a id="user_button" href="<?php echo site_url("users/profile/" . $this->session->userdata['username']);?>" style="padding-top:10px;">
+				  <div id="user_image_div_main_menu"><img id="user_image_main_menu" src="<?php echo asset_url(). "user_profile_images/" . $this->session->userdata('user_avatar');?>">
+				  </div><span id="user_username_main_menu"><?php echo $this->session->userdata['username'];?></span></a>
 			      <ul class="dropdown-menu">
 				  	<li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>
 			      	<li><a href="<?php echo site_url("Login/logout"); ?>" style="text-align: right;">Logout</a></li>

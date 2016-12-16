@@ -199,6 +199,28 @@
 		border-radius: 2px;
 		height:40px;
 		background-color:#23272D;
+		padding: 10px;
+	}
+	
+	#user_username_main_menu {
+		margin-left: 35px;
+		font-weight: normal;
+		font-family: font-family: "Times New Roman", Georgia, Serif;
+	}
+	
+	#user_image_div_main_menu {
+		position: absolute;
+		width:30px;
+		height:30px; 
+		display:inline-block;
+		margin-top: -5px;
+	} 
+	
+	#user_image_main_menu {
+		image-rendering: crisp-edges;
+		height: 100%; 
+		width: 100%; 
+		object-fit: cover;
 	}
 	
 	.profile_menu {

@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 Class Watchlist_model extends CI_Model {
 
 	function __construct() {
@@ -68,7 +70,8 @@ Class Watchlist_model extends CI_Model {
 				if($status == 1) {
 					$eps = " , watchlists.eps_watched = " . $query->row_array()['episode_count'] . " ";
 				} else {
-					$eps = " , watchlists.eps_watched = 0 ";
+					//$eps = " , watchlists.eps_watched = 0 ";
+					$eps = "";
 				}
 					
 				$query = $this->db->query("UPDATE watchlists JOIN animes ON animes.id=watchlists.anime_id
@@ -125,6 +128,18 @@ Class Watchlist_model extends CI_Model {
 		$query = $this->db->query("UPDATE watchlists JOIN animes ON animes.id=watchlists.anime_id
 				JOIN users ON users.id=watchlists.user_id SET eps_watched = {$eps_watched} WHERE watchlists.anime_id = {$anime_id} and watchlists.user_id = {$user_id}");
 			
+		if($query) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function update_default_watchlist_sort($default_watchlist_sort) {
+		$user_id = $this->session->userdata('id');
+		
+		$query = $this->db->query("UPDATE user_settings JOIN users ON users.id=user_settings.user_id SET default_watchlist_sort = '{$default_watchlist_sort}' WHERE user_settings.user_id = {$user_id}");
+		
 		if($query) {
 			return TRUE;
 		} else {

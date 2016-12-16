@@ -98,28 +98,34 @@ $(document).ready(function() {
 		    }		
 
 		});
-	});*/
-	
+	});*/	
 	if($('.text-over-img').length > 0) {
 		$('.text-over-img').each(function() {
 			var text = $(this).text();
-			
+			console.log(text + " " + text.length);
 			if(text.length > 26) {
 				if(text.length <= 50) {
 					$(this).css("margin-top", "-52px");
-				} else {
+				} else if(text.length <= 70){
 					$(this).css("margin-top", "-69px");
+				} else {
+					$(this).css("margin-top", "-87px");
 				}
 				var temp = $(this).text().split(" ");
 				var line_text = "", i;
 				var whole_text = "";
 				for (i = 0; i < temp.length; i++) {
-				    if((line_text.length + temp[i].length) >= 26) {
+				    if((line_text.length + temp[i].length) >= 26) { 
 				    	line_text = line_text + "\n";
 				    	whole_text = whole_text + line_text;
 				    	line_text = temp[i];
 				    } else {
 				    	line_text = line_text + " " + temp[i];
+				    	if(line_text.length >= 26) {
+				    		line_text = line_text + "\n";
+					    	whole_text = whole_text + line_text;
+					    	line_text = "";
+				    	}
 				    }
 				}
 				

@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class UserUpdates extends CI_Controller {
 	
 	function update_user_pictures() {
@@ -53,6 +55,8 @@ class UserUpdates extends CI_Controller {
 	         	$query = $this->users_model->update_avatar_image($config['file_name']);
 	         	if(!$query) {
 	         		$this->server_error();
+	         	} else {
+	         		$this->session->set_userdata('user_avatar', $config['file_name']);
 	         	}
 	         }         
 	         

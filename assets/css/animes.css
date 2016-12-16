@@ -357,7 +357,7 @@ body {
 #synopsis_div {
 	position: relative;
 	display: none;
-	width:600px;
+	width:inherit;
 	vertical-align: top;
 	margin-top:10px;
 	margin-bottom: 20px;
@@ -421,6 +421,7 @@ body {
 
 #watchlist_dropdown {
 	min-width: 170px;
+	z-index: 5;
 }
 
 .watchlist_item {
@@ -729,5 +730,35 @@ label.rb10l:hover ~ .rating
 @media (min-width: 5750px) {
 	.rating-bg {
 		width: 150px;
+	}
+}
+
+@media (max-width: 1100px) {
+	#wrap_synopsis_genres {
+		width: 500px;
+	}
+}
+
+@media (max-width: 970px) {
+	#wrap_synopsis_genres {
+		width: 400px;
+	}
+}
+
+@media (max-width: 650px) {
+	#wrap_synopsis_genres {
+		width: 300px;
+	}
+}
+
+@media (max-width: 500px) {
+	#wrap_synopsis_genres {
+		width: 100%;
+	}
+}
+
+@media (max-width: 390px) {
+	#anime_user_watchlist_div {
+		margin-left: -20px;
 	}
 }

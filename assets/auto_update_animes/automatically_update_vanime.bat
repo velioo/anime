@@ -1,1 +1,1 @@
-start http://localhost/anime/animeUpdates/get_update_animes
+start http://localhost/anime/animeUpdates/get_update_animes/8ghj30jhkll70gvk19f8kkujai90816k

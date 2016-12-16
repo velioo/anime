@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class SignUp extends CI_Controller {
 	
@@ -82,9 +83,12 @@ class SignUp extends CI_Controller {
 							'username' => $query['username'],
 							'is_logged_in' => true,
 							'email' => $query['email'],
+							'user_avatar' => $query['profile_image'],
 							'fb_access_token' => $fb_access_token
 					);
 					$this->session->set_userdata($data);
+					$this->users_model->update_user_activity();
+					
 					redirect("users/profile/{$query['username']}");
 				} else {
 					$this->signup_page();

@@ -62,11 +62,33 @@ body {
 	position:absolute;
 	bottom:0;
 	margin-bottom:60px;
-	margin-left:130px;
+	margin-left:150px;
 	font-weight:500;
 	color:white;
 	text-shadow: #000 0px 0px 1px,   #000 0px 0px 1px,   #000 0px 0px 1px,
              #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+}
+
+.green_dot {
+	position:absolute;
+	bottom:0;
+	height: 15px;
+	width: 15px;
+	margin-left: -23px;
+	margin-bottom: 6px;
+	border-radius: 50%;
+	background-color: green;
+}
+
+.red_dot {
+	position:absolute;
+	bottom:0;
+	height: 15px;
+	width: 15px;
+	margin-left: -23px;
+	margin-bottom: 6px;
+	border-radius: 50%;
+	background-color: red;
 }
 
 #user_navigation_div {	
@@ -175,6 +197,12 @@ body {
              #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
 }
 
+@media (max-width: 1280px) {
+	#edit_cover_label {
+		margin-bottom: 50px;
+	}
+}
+
 @media (max-width: 1098px) {	
 	#user_navigation_div {
 		width: 70%;
@@ -205,11 +233,11 @@ body {
 
 @media (max-width: 640px) {
 	#user_image_div {
-		margin-bottom: 90px;
+		margin-bottom: 120px;
 	}
 	
 	#username {
-		margin-bottom: 150px;
+		margin-bottom: 180px;
 	}
 }
 

@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AnimeUpdates extends CI_Controller {
 
@@ -19,7 +20,7 @@ class AnimeUpdates extends CI_Controller {
 			if (!empty($_FILES['edit_cover']['name'])) {
 				
 				$config['upload_path']          = './assets/anime_cover_images/';
-				$config['allowed_types']        = 'gif|jpg|png';
+				$config['allowed_types']        = 'gif|jpg|png|jpeg';
 				$config['max_size']             = 8192;
 				$config['file_name'] = "manual_" . $anime_id . "_" . $unique_id . ".jpg";
 				$config['overwrite'] = TRUE;
@@ -31,6 +32,10 @@ class AnimeUpdates extends CI_Controller {
 					$this->session->set_flashdata('error', $error['error']);
 					redirect("animeContent/anime/{$slug}");
 				} else {
+					$cover_image = $this->animes_model->get_anime_cover_image($anime_id)['cover_image_file_name'];
+					if($cover_image != '') {
+						unlink("./assets/anime_cover_images/{$cover_image}");
+					}
 					$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
 					if(!$query) {
 						$this->server_error();
@@ -41,7 +46,7 @@ class AnimeUpdates extends CI_Controller {
 			if (!empty($_FILES['edit_poster']['name'])) {
 			
 				$config['upload_path']          = './assets/poster_images/';
-				$config['allowed_types']        = 'gif|jpg|png';
+				$config['allowed_types']        = 'gif|jpg|png|jpeg';
 				$config['max_size']             = 8192;
 				$config['file_name'] = "manual_". $anime_id . "_" . $unique_id . ".jpg";
 				$config['overwrite'] = TRUE;
@@ -53,6 +58,10 @@ class AnimeUpdates extends CI_Controller {
 					$this->session->set_flashdata('error_a', $error['error_a']);
 					redirect("animeContent/anime/{$slug}");
 				} else {
+					$poster_image = $this->animes_model->get_anime_poster_image($anime_id)['poster_image_file_name'];
+					if($poster_image != '') {
+						unlink("./assets/poster_images/{$poster_image}");
+					}
 					$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
 					if(!$query) {
 						$this->server_error();
@@ -61,7 +70,7 @@ class AnimeUpdates extends CI_Controller {
 			}
 			
 			if (!empty($_FILES['edit_poster']['name'])) {
-				$this->write_json_autocomplete($slug);
+				$this->write_json_autocomplete($slug, VERIFICATION_TOKEN);
 			} else {
 				redirect("animeContent/anime/{$slug}");
 			}
@@ -71,140 +80,192 @@ class AnimeUpdates extends CI_Controller {
 	
 	}
 	
-	function get_update_animes() {	
-		$this->load->model('animes_model');
-	
-		$file_to_write_counter = 'assets/txt/anime_id_counter.txt';
-		$fp = fopen($file_to_write_counter, 'r');
-	
-		$failed_request = 0;
-		$poster_images_path = asset_url() . "poster_images/";
-		$anime_id_counter = fgets($fp);
-		$anime_id_counter-=500;
+	function get_update_animes($verification_token=null) {	
+
+		if($verification_token === VERIFICATION_TOKEN) {
 			
-		while($failed_request < 50) {
-				
-			$anime_id_counter++;
-
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_URL, 'https://hummingbird.me/api/v1/anime/' . $anime_id_counter);			
-			$result = curl_exec($ch);
-			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			curl_close($ch);
-				
-			if($httpcode == 200) {
-	
-				$failed_request = 0;
-	
-				$anime_object = json_decode($result);	
-				
-				$genres = array();
-				foreach($anime_object->genres as $key => $value) {
-					$genres[] = $value->name;
-				}
-					
-				$anime_object->genres = $genres;
-	
-				if(!in_array(UNALLOWED_GENRE, $genres)) {
-	
-					$poster_url = $anime_object->cover_image;
-					$poster_name = "auto_" . $anime_object->id . ".jpg";
-					if (!@getimagesize($poster_images_path . $poster_name)) {
-						$poster_path = 'assets/poster_images/' . $poster_name;
-						file_put_contents($poster_path, file_get_contents($poster_url));
-					}
-						
-					$anime_object->cover_image = $poster_name;
-						
-					$anime_object->slug = str_replace("-", " ", $anime_object->slug);
-					$anime_object->age_rating = get_age_rating($anime_object->age_rating);
-					$anime_object->age_rating_guide = get_age_rating_guide($anime_object->age_rating);
-					$anime_object->show_type = get_show_type($anime_object->show_type);
-						
-					if($anime_object->finished_airing == null) {
-						$anime_object->finished_airing = "0000-00-00";
-					}
-					if($anime_object->started_airing == null) {
-						$anime_object->started_airing = "0000-00-00";
-					}
-					if($anime_object->episode_count == null) {
-						$anime_object->episode_count = 0;
-					}
-					if($anime_object->episode_length == null) {
-						$anime_object->episode_length = 0;
-					}
-						
-					$titles = '"alt"=>"' . $anime_object->alternate_title . '", "main"=>"' . $anime_object->title . '"';
-					$anime_object->titles = $titles;
-	
-					echo $anime_object->title . "<br/>";
-	
-					$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->id);
-					if(!$anime_exists) {
-						$success =  $this->animes_model->add_anime($anime_object, $genres);
-					} else {
-						$success = $this->animes_model->update_anime($anime_object, $genres);
-					}
-				}
-			} else {
-				$failed_request++;
-			}
-		}
-	
-		fclose($fp);
-		$anime_id_counter-=49;
-		file_put_contents($file_to_write_counter, $anime_id_counter);
+			$this->load->model('animes_model');
 		
-		$this->write_json_autocomplete();
-
+			$file_to_write_counter = 'assets/txt/anime_id_counter.txt';
+			$fp = fopen($file_to_write_counter, 'r');
+		
+			$failed_request = 0;
+			$poster_images_path = asset_url() . "poster_images/";
+			$cover_images_path = asset_url() . "anime_cover_images/";
+			$anime_id_counter = fgets($fp);
+			$anime_id_counter-=500;
+				
+			while($failed_request < 100) {
+					
+				$anime_id_counter++;
+				
+				$headers = array(
+						"Accept: application/vnd.api+json",
+						"Content-Type: application/vnd.api+json"
+				);
+				
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_URL, 'https://kitsu.io/api/edge/anime/' . $anime_id_counter);			
+				$result = curl_exec($ch);
+				$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+				curl_close($ch);
+					
+				if($httpcode == 200) {
+		
+					$failed_request = 0;
+		
+					$anime_object = json_decode($result);	
+					
+					$genres = array();
+					
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					curl_setopt($ch, CURLOPT_URL, $anime_object->data->relationships->genres->links->self);			
+					$result = curl_exec($ch);
+					$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+					curl_close($ch);		
+					
+					$genres_object;
+					
+					if($httpcode == 200) {
+						$genres_object = json_decode($result);
+						foreach($genres_object->data as $key => $value) {
+							$genres[] = $value->id;
+						}
+						$anime_object->data->genres = $genres;				
+					} 					
+																	
+					if(!in_array(UNALLOWED_GENRE, $genres)) {
+		
+						if($anime_object->data->attributes->posterImage != null) {					
+						 	$poster_url = $anime_object->data->attributes->posterImage->original;
+							$poster_name = "auto_" . $anime_object->data->id . ".jpg";
+							if (!@getimagesize($poster_images_path . $poster_name)) {
+								$poster_path = 'assets/poster_images/' . $poster_name;
+								file_put_contents($poster_path, file_get_contents($poster_url));
+							}																				
+	 						$anime_object->data->attributes->posterImage = $poster_name;
+						} else {
+							$anime_object->data->attributes->posterImage = "";
+						}
+						
+ 						if($anime_object->data->attributes->coverImage != null) { 						
+ 							$cover_url = $anime_object->data->attributes->coverImage->original;
+	 						$cover_name = "auto_" . $anime_object->data->id . ".jpg";
+	 						if (!@getimagesize($cover_images_path . $cover_name)) {
+	 							$cover_path = 'assets/anime_cover_images/' . $cover_name;
+	 							file_put_contents($cover_path, file_get_contents($cover_url));
+	 						}
+	 						$anime_object->data->attributes->coverImage = $cover_name;
+ 						} else {
+ 							$anime_object->data->attributes->coverImage = "";
+ 						}												
+ 						
+						$anime_object->data->attributes->slug = str_replace("-", " ", $anime_object->data->attributes->slug);
+						$anime_object->data->attributes->ageRating = get_age_rating($anime_object->data->attributes->ageRating, $anime_object->data->attributes->ageRatingGuide);
+						$anime_object->data->attributes->showType = get_show_type($anime_object->data->attributes->showType);
+							
+						if($anime_object->data->attributes->startDate == null) {
+							$anime_object->data->attributes->startDate = "0000-00-00";
+						}
+						if($anime_object->data->attributes->endDate == null) {
+							$anime_object->data->attributes->endDate = "0000-00-00";
+						}
+						if($anime_object->data->attributes->episodeCount == null) {
+							$anime_object->data->attributes->episodeCount = 0;
+						}
+						if($anime_object->data->attributes->episodeLength == null) {
+							$anime_object->data->attributes->episodeLength = 0;
+						}
+						
+						if($anime_object->data->attributes->youtubeVideoId == null) {
+							$anime_object->data->attributes->youtubeVideoId = "";
+						}
+						
+						$anime_object->data->attributes->alternateTitle = get_alternate_title($anime_object->data->attributes->canonicalTitle, $anime_object->data->attributes->titles);
+																												
+ 						$titles = '"alt"=>"' . $anime_object->data->attributes->alternateTitle . '", "main"=>"' . $anime_object->data->attributes->canonicalTitle . '"';
+						$anime_object->data->attributes->titles = $titles;
+						
+						echo $anime_object->data->attributes->titles . "<br/>";
+		
+						$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->data->id);
+						if(!$anime_exists) {
+							$success =  $this->animes_model->add_anime($anime_object);
+						} else {
+							$success = $this->animes_model->update_anime($anime_object);
+						}   
+												
+					}
+				} else {	
+					$failed_request++;
+				}
+			}
+		
+			fclose($fp);
+			$anime_id_counter-=49;
+			file_put_contents($file_to_write_counter, $anime_id_counter);
+			
+			$this->write_json_autocomplete("", VERIFICATION_TOKEN);
+		} else {
+			$this->unauthorized();
+		}
 	}
 	
-	public function write_json_autocomplete($slug = "") {
-		$this->load->model('animes_model');
-	
-		$result_array = $this->animes_model->get_anime_json_data();
-	
-		if($result_array) {
-				
-			$response = array();
-			$all_names = "";
-				
-			foreach ($result_array as $anime) {
-				
-				$temp = $anime['titles'];
-				$titles = convert_titles_to_hash($temp);
-
+	public function write_json_autocomplete($slug = "", $verification_token=null) {
+		
+		if($verification_token === VERIFICATION_TOKEN) {
+		
+			$this->load->model('animes_model');
+		
+			$result_array = $this->animes_model->get_anime_json_data();
+		
+			if($result_array) {
+					
+				$response = array();
 				$all_names = "";
-				if($titles['main'] != "" && $titles['main'] != "NULL") {
-					$all_names.=$titles['main'] . " ";
-				} if($titles['alt'] != "" && $titles['alt'] != "NULL") {
-					$all_names.=$titles['alt'] . " ";
-				}		
-				
-				$all_names.=$anime['slug'];
+					
+				foreach ($result_array as $anime) {
+					
+					$temp = $anime['titles'];
+					$titles = convert_titles_to_hash($temp);
 	
-				$name = $titles['main'];
-				$id = $anime['id'];
-				$image = $anime['poster_image_file_name'];
-				$anime_slug = str_replace(" ", "-", $anime['slug']);
-				
+					$all_names = "";
+					if($titles['main'] != "" && $titles['main'] != "NULL") {
+						$all_names.=$titles['main'] . " ";
+					} if($titles['alt'] != "" && $titles['alt'] != "NULL") {
+						$all_names.=$titles['alt'] . " ";
+					}		
+					
+					$all_names.=$anime['slug'];
+		
+					$name = $titles['main'];
+					$id = $anime['id'];
+					$image = $anime['poster_image_file_name'];
+					$anime_slug = str_replace(" ", "-", $anime['slug']);
+					
+		
+					$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $anime_slug, 'id' => $id, 'image'=> $image);
+				}
 	
-				$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $anime_slug, 'id' => $id, 'image'=> $image);
+				$fp = fopen('assets/json/autocomplete.json', 'w');
+				fwrite($fp, json_encode($result));
+				fclose($fp);
+				
+				if($slug != "") {
+					redirect("animeContent/anime/{$slug}");
+				} else {
+					redirect("Home");
+				}			
 			}
-
-			$fp = fopen('assets/json/autocomplete.json', 'w');
-			fwrite($fp, json_encode($result));
-			fclose($fp);
-			
-			if($slug != "") {
-				redirect("animeContent/anime/{$slug}");
-			} else {
-				redirect("Home");
-			}			
+		} else {
+			$this->unauthorized();
 		}
-	
 	}
 	
 	function server_error() {

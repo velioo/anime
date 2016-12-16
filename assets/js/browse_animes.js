@@ -65,6 +65,7 @@ $(document).ready(function() {
 	    	$('#watchlist_button').html(user_anime_status + '<span class="watchlist_caret fa fa-caret-down"></span>');
 	    } else {
 	    	$('#watchlist_button').html('Add to Watchlist <span class="watchlist_caret fa fa-caret-down"></span>');
+	    	$('.star-rating').hide();
 	    }
 	    $('input[name=userScore][value=' + user_anime_score + ']').prop('checked',true);
 	    

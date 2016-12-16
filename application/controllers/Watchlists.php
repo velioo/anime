@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Watchlists extends CI_Controller {
 	
 	public function user_watchlist($username=null) {		
@@ -87,6 +89,20 @@ class Watchlists extends CI_Controller {
 		}
 	}
 	
+	public function update_default_watchlist_sort() {
+		$this->load->model('watchlist_model');
+		
+		if($this->session->userdata('is_logged_in')) {
+			
+			$default_watchlist_sort = $this->input->post('default_watchlist_sort');
+			
+			$this->watchlist_model->update_default_watchlist_sort($default_watchlist_sort);
+			
+		} else {
+			$this->bad_request();
+		}
+	}
+	
 	public function load_watchlist() {
 		$this->load->model('watchlist_model');
 		
@@ -119,22 +135,30 @@ class Watchlists extends CI_Controller {
 					  	
 					  	$score_percentage = (($row['score'] * 10) . "%");
 					  			  	
-					  	
-						$element.= '<tr data-id="' . $status .'">
-									<td data-id="' . $row['anime_id'] .'" class="title" style="padding-top: 13px;"><a href="' . site_url("animeContent/anime/{$slug}") .'" class="disable-link-decoration" ><span class="red-text">' . convert_titles_to_hash($row['titles'])['main'] .'</span></a></td>
+					  	if($row['episode_count'] == 0) {
+					  		if($row['show_type'] == 1) {
+					  			$row['episode_count'] = "?";
+					  		} else if($row['show_type'] == 5) {
+					  			$row['episode_count'] = 1;
+					  		}
+					  	}
+					  					  	
+						$element.= '<tr class="anime_row" data-id="' . $status .'"> 
+									<td data-id="' . $row['anime_id'] .'" class="title" style="padding-top: 13px;"><span class="hidden_row_number">' . $row_counter . '</span><a href="' . site_url("animeContent/anime/{$slug}") .'" class="disable-link-decoration" ><span class="red-text">' . convert_titles_to_hash($row['titles'])['main'] .'</span></a></td>
 									<td class="type">' . $type .'</td>
 									<td class="year">' . $year .'</td>';
 						if($this->session->userdata('id') == $user_id) {
-							$element.='<td class="anime_progress" style="text-align: center;"><input type="text" class="progress_input" name="progress_input" value="'. $row['eps_watched'] .'"> / '. '<span class="max_episodes" style="display: inline;">' . $row['episode_count'] . '</span>' .' <button class="button-black count_up">+Ep</button></td>';
+							$element.='<td class="anime_progress" style="text-align: center;"><span class="hidden_watched_eps">' . $row['eps_watched'] .'</span><input type="text" class="progress_input" name="progress_input" value="'. $row['eps_watched'] .'"> / '. '<span class="max_episodes" style="display: inline;">' . $row['episode_count'] . '</span>' .' <button class="button-black count_up">+Ep</button></td>';
 						} else {
-							$element.='<td class="anime_progress" style="text-align: center;">'. $row['eps_watched'] .' / '. $row['episode_count'] .'</td>';
+							$element.='<td class="anime_progress" style="text-align: center;"><span class="eps_watched_guest">'. $row['eps_watched'] .'</span> / '. $row['episode_count'] .'</td>';
 							
 						}
 							$element.='<td class="avg" style="padding-top: 13px;">' . number_format($row['average_rating']/2, 2) .'</td>';
 						
 						if($this->session->userdata('id') == $user_id) {
 							
-							$element.='<td class="anime_rating" >
+							$element.='<td class="anime_rating">
+									<span class="hidden_user_score">' . $row['score'] . '</span>
 									<div data-id="' . $row['score'] . '" class="star-rating">
 	
 									    <input id="Ans_' . $id_counter++ .'" class="rb0" name="userScore'. $row_counter .'" type="radio" value="0"/>                       
@@ -196,6 +220,7 @@ class Watchlists extends CI_Controller {
 							
 						} else {
 							$element.='<td title="' . $row['score']/2 . ' out of 5'  .'" class="anime_rating">
+										<span class="hidden_user_score">' . $row['score'] . '</span>
 										<div class="star-ratings-sprite" style="display: inline-block;">
 											<span style="width:' . $score_percentage .';" class="star-ratings-sprite-rating"></span>
 										</div>
@@ -216,6 +241,12 @@ class Watchlists extends CI_Controller {
 			$this->bad_request();
 		}
 		
+	}
+	
+	function get_default_watchlist_sort() {
+		$this->load->model('users_model');		
+		$query = $this->users_model->get_user_info_logged($this->session->userdata('username'));		
+		echo $query['default_watchlist_sort'];
 	}
 	
 	function page_not_found() {

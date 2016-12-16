@@ -1,6 +1,10 @@
 @CHARSET "UTF-8";
 @import url("home.css");
 
+#user_content {
+	margin-bottom: 150px;
+}
+
 .main_title {
 	background-color: white;
 }
@@ -107,6 +111,43 @@
 	padding-bottom: 10px;
 }
 
+#title_header {
+	width: 38%;
+}
+
+#type_header {
+	padding-right: 2px; 
+	padding-left: 0px
+}
+
+#year_header {
+	padding-right: 10px; 
+	width: 90px; 
+	padding-left: 0px;
+}
+
+#progress_header {
+	padding-right: 9px; 
+	width: 145px; 
+	padding-left: 0px;
+}
+
+#avg_header {
+	
+}
+
+#rating_header {
+	
+}
+
+#status_header {
+	
+}
+
+.anime_row {
+	visibility: hidden;
+} 
+
 tr:nth-child(even) {
     background-color: #F2F1EC;
 }
@@ -127,6 +168,18 @@ tr:nth-child(even) {
 	max-width: 170px;
 	min-width: 170px;
 	white-space: nowrap;
+}
+
+.hidden_row_number {
+	display: none;
+}
+
+.hidden_watched_eps {
+	display: none;
+}
+
+.hidden_user_score {
+	display: none;
 }
 
 .progress_input {
@@ -159,18 +212,27 @@ tr:nth-child(even) {
 .title_caret.fa.fa-caret-up {
 	position: absolute;
 	margin-left: 5px;
+	padding-bottom: 5px;
 	cursor: pointer;
 }
 
 .title_caret.fa.fa-caret-down {
 	position: absolute;
-	margin-top: 8px;
+	margin-top: 3px;
 	margin-left: 5px;
+	padding-top: 5px;
 	cursor: pointer;
 }
 
 .watchlist_content {
 	display: none;
+}
+
+.anime_count {
+	float: right;
+	margin-right: 20px;
+	margin-top: 5px;
+	font-size: 14px;
 }
 
 .title_row {
@@ -368,20 +430,63 @@ label.rb10l:hover ~ .rating
 }
 
 .watchlist_guest_status {
-	width: 130px;
+	width: 135px;
 	font-size: 15px;
 	padding-right: 40px;
 	text-align: center;
 }
 
+@media (max-width: 1100px) { 
+	#title_header {
+		width: 34.5%;
+	} 
+}
+
+@media (max-width: 970px) { 
+	#title_header {
+		width: 24.5%;
+	} 
+}
+
+@media (max-width: 770px) { 
+	#title_header {
+		width: 20%;
+	} 
+	
+	#type_header {
+		width: 12%;
+	}
+	
+	.table-responsive>.table>tbody>tr .year,  .table-responsive>.table>tbody>tr .anime_progress, .table-responsive>.table>tbody>tr .avg{
+		display: block;
+	}
+}
+
+@media (max-width: 650px) { 	
+	.table-responsive>.table>tbody>tr .anime_rating{
+		display: block;
+	}
+	
+	.table-responsive>.table>tbody>tr>td {
+		white-space: normal;
+	}
+}
+
 @media (max-width: 480px) { 
+	.table-responsive>.table>tbody>tr .status{
+		display: block;
+	}
+	
 	#sort_options_div {
 		margin-top: 30px;
+	}
+	.title_caret.fa.fa-caret-up, .title_caret.fa.fa-caret-down {
+		position: relative;	
 	}
 }
 
 @media (max-width: 387px) { 
-	.fa.fa-caret-up, .fa.fa-caret-down {
-		position: relative;	
+		.table-responsive>.table>tbody>tr .type{
+		display: block;
 	}
 }

@@ -1,33 +1,39 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 Class Animes_model extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
 	}
 	
-	function add_anime($anime_object, $genres) {
+	function add_anime($anime_object) {
        	$new_anime_data = array (
-       		'id' => $anime_object->id,
-			'slug' => $anime_object->slug,
-			'age_rating' => $anime_object->age_rating,
-			'episode_count' => $anime_object->episode_count,
-			'episode_length' => $anime_object->episode_length,
-			'synopsis' => $anime_object->synopsis,
-			'age_rating_guide' => $anime_object->age_rating_guide,
-			'show_type' => $anime_object->show_type,
-			'start_date' => $anime_object->started_airing,
-			'end_date' => $anime_object->finished_airing,
-			'poster_image_file_name' => $anime_object->cover_image,
-			'titles' => $anime_object->titles,
+       			'id' => $anime_object->data->id,
+       			'slug' => $anime_object->data->attributes->slug,
+       			'age_rating' => $anime_object->data->attributes->ageRating,
+       			'episode_count' => $anime_object->data->attributes->episodeCount,
+       			'episode_length' => $anime_object->data->attributes->episodeLength,
+       			'synopsis' => $anime_object->data->attributes->synopsis,
+       			'age_rating_guide' => $anime_object->data->attributes->ageRatingGuide,
+       			'show_type' => $anime_object->data->attributes->showType,
+       			'start_date' => $anime_object->data->attributes->startDate,
+       			'end_date' => $anime_object->data->attributes->endDate,
+       			'titles' => $anime_object->data->attributes->titles,
+       			'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,    			      					
+				'poster_image_file_name' => $anime_object->data->attributes->posterImage,
+				'cover_image_file_name' => $anime_object->data->attributes->coverImage,
+       			'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
 		);   
        	
 		$query = $this->db->insert('animes', $new_anime_data);
 		
 		if($query) {
-			foreach($genres as $genre) {
-				$genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
-				$genre_id = $genre_query->row_array()['id'];				
-				$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})");		
+			foreach($anime_object->data->genres as $genre) {
+/* 				$genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
+				$genre_id = $genre_query->row_array()['id'];	 */			
+				$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
+				//$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})");		
 			}
 	
 			return TRUE;
@@ -36,36 +42,42 @@ Class Animes_model extends CI_Model {
 		}
 	}
 	
-	function update_anime($anime_object, $genres) {
+	function update_anime($anime_object) {		
 		 $update_anime_data = array (
-				'slug' => $anime_object->slug,
-				'age_rating' => $anime_object->age_rating,
-				'episode_count' => $anime_object->episode_count,
-				'episode_length' => $anime_object->episode_length,
-				'synopsis' => $anime_object->synopsis,
-				'age_rating_guide' => $anime_object->age_rating_guide,
-				'show_type' => $anime_object->show_type,
-				'start_date' => $anime_object->started_airing,
-				'end_date' => $anime_object->finished_airing,
-				'titles' => $anime_object->titles,
+				'slug' => $anime_object->data->attributes->slug,
+				'age_rating' => $anime_object->data->attributes->ageRating,
+				'episode_count' => $anime_object->data->attributes->episodeCount,
+				'episode_length' => $anime_object->data->attributes->episodeLength,
+				'synopsis' => $anime_object->data->attributes->synopsis,
+				'age_rating_guide' => $anime_object->data->attributes->ageRatingGuide,
+				'show_type' => $anime_object->data->attributes->showType,
+				'start_date' => $anime_object->data->attributes->startDate,
+				'end_date' => $anime_object->data->attributes->endDate,
+				'titles' => $anime_object->data->attributes->titles,
+		 		'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,
+		 		'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
 		); 
 		
-		$query = $this->db->query("SELECT poster_image_file_name FROM animes WHERE id = {$anime_object->id}");
+		$query = $this->db->query("SELECT poster_image_file_name, cover_image_file_name FROM animes WHERE id = {$anime_object->data->id}");
 		if($query->num_rows() == 1) {
 			if((strpos($query->row_array()['poster_image_file_name'], 'manual_') === false)) {
-				$update_anime_data['poster_image_file_name'] = $anime_object->cover_image;
+				$update_anime_data['poster_image_file_name'] = $anime_object->data->attributes->posterImage;
+			}
+			if((strpos($query->row_array()['cover_image_file_name'], 'manual_') === false)) {
+				$update_anime_data['cover_image_file_name'] = $anime_object->data->attributes->coverImage;
 			}
 		}
 
-		$this->db->where('id', $anime_object->id);
+		$this->db->where('id', $anime_object->data->id);
 		$query = $this->db->update('animes', $update_anime_data);
 		
 		if($query) {
-			 $this->db->query("DELETE FROM anime_genres WHERE anime_id = {$anime_object->id}");
-			 foreach($genres as $genre) {
-				$genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
+			 $this->db->query("DELETE FROM anime_genres WHERE anime_id = {$anime_object->data->id}");
+			 foreach($anime_object->data->genres as $genre) {
+				/* $genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
 				$genre_id = $genre_query->row_array()['id'];
-				$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})");
+				$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})"); */
+			 	$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
 			}	  
 			return TRUE;
 		} else {
@@ -90,8 +102,7 @@ Class Animes_model extends CI_Model {
 			return $query->row_array();
 		} else {
 			return FALSE;
-		}
-		
+		}		
 	}
 	
 	function get_anime_slug($id) {
@@ -101,7 +112,24 @@ Class Animes_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
 	
+	function get_anime_cover_image($anime_id) {
+		$query = $this->db->query("SELECT cover_image_file_name FROM animes WHERE id = {$anime_id}");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_anime_poster_image($anime_id) {
+		$query = $this->db->query("SELECT poster_image_file_name FROM animes WHERE id = {$anime_id}");
+		if($query->num_rows() == 1) {
+			return $query->row_array();
+		} else {
+			return FALSE;
+		}
 	}
 	
 	function update_cover_offset($id, $offset) {

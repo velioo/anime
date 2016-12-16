@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 $path =  $_SERVER['DOCUMENT_ROOT'] . '/anime/' . 'vendor/autoload.php';
 require_once $path;
 
@@ -39,12 +41,13 @@ class Login extends CI_Controller {
 			if($query) {				
 				$username = $this->input->post('username');
 				$result = $this->users_model->get_user_info_logged($username);
-				if ($result != false) {
+				if ($result) {
 					
 					$data = array(
 							'id' => $result['id'],
 							'username' => $result['username'],
 							'email' => $result['email'],
+							'user_avatar' => $result['profile_image'],
 							'is_logged_in' => true
 					);
 					
@@ -55,7 +58,11 @@ class Login extends CI_Controller {
 					}
 					
 					$this->session->set_userdata($data);
+					$this->users_model->update_user_activity();
+					
 					redirect("users/profile/{$username}");
+				} else {
+					echo "error";
 				}
 			} else {
 				$data['incorrect'] = "Username or password is incorrect !";
@@ -170,6 +177,7 @@ class Login extends CI_Controller {
 							'username' => $user['username'],
 							'is_logged_in' => true,
 							'email' => $user['email'],
+							'user_avatar' => $user['profile_image'],
 							'fb_access_token' => (string) $accessToken
 					);
 					
@@ -179,7 +187,9 @@ class Login extends CI_Controller {
 						$data['admin'] = TRUE;
 					}
 					
-					$this->session->set_userdata($data);			
+					$this->session->set_userdata($data);	
+					$this->users_model->update_user_activity();
+					
 					redirect("users/profile/{$user['username']}");
 			} else {
 				
@@ -206,7 +216,7 @@ class Login extends CI_Controller {
 				$message = "This Facebook account is already connected with another account.";
 				redirect("userUpdates/user_settings/{$message}");
 			} else {
-				if($this->sesssion->userdata('is_logged_in')) {				
+				if($this->session->userdata('is_logged_in')) {				
 					if(($email != $this->session->userdata['email'])) {
 						$email_available = $this->users_model->check_if_email_exists($email);
 						if(!$email_available) {
@@ -229,10 +239,11 @@ class Login extends CI_Controller {
 								'username' => $this->session->userdata['username'],
 								'is_logged_in' => true,
 								'email' => $query['email'],
+								'user_avatar' => $this->session->userdata('user_avatar'),
 								'fb_access_token' => (string) $accessToken
 						);
 							
-						$this->session->set_userdata($data);
+						$this->session->set_userdata($data);					
 					} else {
 						$message = "There was an error connecting your account.";
 					}

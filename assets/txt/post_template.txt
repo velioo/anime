@@ -1,0 +1,44 @@
+<div class="post">
+	<div class="post_header">
+		<div class="user_image_div">
+			<a href="#"><img class="user_image" src="<?php echo asset_url() . "user_profile_images/10.jpg";?>"></a>
+		</div>
+		<div class="user_name">
+			<a href="#" class="disable-link-decoration">Light Yagami</a>
+		</div>
+		<div class="post_settings_div">
+			<span class="fa fa-angle-down open_post_settings"></span>
+			<div class="post_settings">
+				<div class="post_option edit_post">Edit</div>
+				<div class="post_option delete_post">Delete</div>
+			</div>
+		</div>
+		<div class="post_time">
+			a day ago
+		</div>
+	</div>
+	<div class="post_body">
+		Body text
+	</div>
+	<div class="comments">
+		<div class="comment">
+			<div class="user_image_div">
+				<a href="#"><img class="user_image" src="<?php echo asset_url() . "user_profile_images/10.jpg";?>"></a>
+			</div>
+			 <div class="comment_text"><span class="user_name"><a href="#" class="disable-link-decoration">Light Yagami</a></span> Hello There das dasd asd asd asd asdasd f</div>	
+			 <div class="post_settings_div">
+				<span class="fa fa-angle-down open_post_settings"></span>
+				<div class="post_settings">
+					<div class="post_option edit_comment">Edit</div>
+					<div class="post_option delete_comment">Delete</div>
+				</div>
+			</div>		        					       
+			<div class="post_time">
+				a day ago
+			</div>
+		</div>				
+	</div>
+	<div class="post_footer">
+		<input type="text" class="submit_comment" placeholder="Leave a Comment...">
+	</div>
+</div>

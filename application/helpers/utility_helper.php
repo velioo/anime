@@ -126,28 +126,32 @@ function get_show_type($type) {
 			case 6:
 				$show_type = "Music";
 				break;
+			default:
+				$show_type = "Unknown";
+				break;
 		}
 	} else {
+		$type = strtolower($type);
 		switch($type) {
-			case "Unknown":
+			case "unknown":
 				$show_type = 0;
 				break;
-			case "TV":
+			case "tv":
 				$show_type = 1;
 				break;
-			case "Special":
+			case "special":
 				$show_type = 2;
 				break;
-			case "OVA":
+			case "ova":
 				$show_type = 3;
 				break;
-			case "ONA":
+			case "ona":
 				$show_type = 4;
 				break;
-			case "Movie":
+			case "movie":
 				$show_type = 5;
 				break;
-			case "Music":
+			case "music":
 				$show_type = 6;
 				break;
 			default: 
@@ -159,7 +163,7 @@ function get_show_type($type) {
 	return $show_type;
 }
 
-function get_age_rating($age_rating) {
+function get_age_rating($age_rating, $age_rating_guide="") {
 	
 	if(is_numeric($age_rating)) {
 		switch($age_rating) {
@@ -190,15 +194,24 @@ function get_age_rating($age_rating) {
 					$age_rating = 1;
 					break;
 				case "PG":
-					$age_rating = 2;
+					if(strpos($age_rating_guide, "13")) {
+						$age_rating = 3;
+					} else {
+						$age_rating = 2;
+					}					
 					break;
 				case "PG13":
 					$age_rating = 3;
 					break;
+				case "R":
+					$age_rating = 4;
+					break;
 				case "R17+":
 					$age_rating = 4;
 					break;
-				default:		
+				default:	
+					$age_rating = 0;
+					break;				
 			}
 		} else {
 			$age_rating = 0;
@@ -275,12 +288,47 @@ function validateDate($date, $format = 'Y-m-d H:i:s') {
 	return $d && $d->format($format) == $date;
 }
 
+function get_alternate_title($canonical, $titles) {
+	$alternate_title;
+	if($titles->en == $canonical) {
+		if($titles->en_jp != null) {
+			$alternate_title = $titles->en_jp;
+		} else if($titles->ja_jp != null) {
+			$alternate_title = $titles->ja_jp;
+		} else {
+			$alternate_title = "";
+		}
+	}
+	
+	if($titles->en_jp == $canonical) {
+		if($titles->en != null) {
+			$alternate_title = $titles->en;
+		} else if($titles->ja_jp != null) {
+			$alternate_title = $titles->ja_jp;
+		} else {
+			$alternate_title = "";
+		}
+	}
+	
+	if($titles->ja_jp == $canonical) {
+		if($titles->en_jp != null) {
+			$alternate_title = $titles->en_jp;
+		} else if($titles->en != null) {
+			$alternate_title = $titles->en;
+		} else {
+			$alternate_title = "";
+		}
+	}
+	
+	return $alternate_title;
+}
+
 function convert_cyrillic_to_latin($name) {
 	$cyr = [
-		'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п',
-		'р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я',
-		'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П',
-		'Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
+		'Р°','Р±','РІ','Рі','Рґ','Рµ','С‘','Р¶','Р·','Рё','Р№','Рє','Р»','Рј','РЅ','Рѕ','Рї',
+		'СЂ','СЃ','С‚','Сѓ','С„','С…','С†','С‡','С€','С‰','СЉ','С‹','СЊ','СЌ','СЋ','СЏ',
+		'Рђ','Р‘','Р’','Р“','Р”','Р•','РЃ','Р–','Р—','Р�','Р™','Рљ','Р›','Рњ','Рќ','Рћ','Рџ',
+		'Р ','РЎ','Рў','РЈ','Р¤','РҐ','Р¦','Р§','РЁ','Р©','РЄ','Р«','Р¬','Р­','Р®','РЇ'
      ];
 	$lat = [
 		'a','b','v','g','d','e','io','zh','z','i','y','k','l','m','n','o','p',

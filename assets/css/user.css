@@ -1,6 +1,81 @@
 @CHARSET "UTF-8";
 @import url("home.css");
 
+body.modal-open {
+    overflow: visible;
+}
+
+#confirm_delete_modal {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.wrap_modal_elements {
+	position: fixed;
+	top: 45%;
+	left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close {
+	padding: 5px;
+}
+
+.modal-header, .modal-body, .modal-footer {
+	background-color: white;
+	width: 600px;
+}
+
+.modal-header {
+	padding: 0px 0px 0px 20px;
+	height: 50px;
+}
+
+.modal-body {
+	height: auto;
+}
+
+.modal-footer {
+	position: relative;
+	height: 50px;
+}
+
+.btn.danger, .btn.secondary {
+	background-color: #EEEEEE;
+	margin-top: -10px;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.btn.danger:hover, .btn.secondary:hover {
+	background-color: #b3b3b3;
+}
+
+.hide {
+	display: none;
+}
+
+.fade {
+   opacity: 0;
+   -webkit-transition: opacity 0.1s linear;
+      -moz-transition: opacity 0.1s linear;
+       -ms-transition: opacity 0.1s linear;
+        -o-transition: opacity 0.1s linear;
+           transition: opacity 0.1s linear;
+}
+ 
+.not_logged {
+ 	width: 56%; 
+ 	display: inline-block;
+ 	text-align: center;
+ 	background-color: white;
+ 	padding: 10px;
+ 	float: right;
+ 	margin-right: 25px;
+ 	margin-top: -40px;
+}
+
 #timeline {
 	background-color: #23272D;
 	opacity: 1;
@@ -84,7 +159,338 @@
 	padding-left:5px;
 }
 
-#wtf_age { 
-	display:none;	
-	color:red;
+#wrap_area_options {
+	display: inline-block;
+	width: 56%;
+	margin-right: 25px;
+	margin-top: -40px;
+	float: right;
+}
+
+#new_post_area {
+	display: inline-block;
+	width: 100%;
+	resize: none;
+	overflow: hidden;
+	outline: none;
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 2px;
+	border: none;
+}
+
+#post_options {
+	display: none;
+	width: 100%;
+	position: relative;
+	height: 40px;
+	background-color: #F5F5F5;
+	margin-top: -10px;
+}
+
+#submit_post {
+	float: right;
+	margin-right: 10px;
+	margin-top: 4px;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+#timeline_div {
+	display: inline-block;
+	height: auto;
+	margin-right: 25px;
+	width: 56%;
+	margin-bottom: 50px;
+	float: right;
+}
+
+.post {
+	position: relative;
+	height: auto;
+	width: 100%;
+	margin-bottom: 90px;
+	margin-top: 30px;
+	border-radius: 2px;
+	background-color: white;
+	font-family: "Open Sans", sans-serif;
+}
+
+.post_header {
+	height: 70px;
+	width: 100%;
+	padding: 15px;
+}
+
+.post_header .user_image_div {
+	vertical-align: top;
+	width:50px;
+	height:50px; 
+	display:inline-block;
+} 
+
+.post_header .user_image {
+	height: 100%; 
+	width: 100%; 
+	object-fit: cover;
+	border-radius: 3px;
+}
+
+.post_header .user_name {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.post_settings_div {
+	display: inline-block;
+	float: right;
+	font-size: 20px;
+	vertical-align: top;
+	color: #A9AAAC;
+}
+
+.open_post_settings {
+	cursor: pointer;
+}
+
+.post_settings {
+	position: absolute;
+	width: 120px;
+	z-index: 10;
+	display: none;
+	background-color: white;
+	border: 1px solid #DEDEDE;
+	font-size: 14px;
+	text-align: left;
+	color: black;
+	margin-left: -100px;
+	cursor: pointer;
+}
+
+.post_option {
+	padding: 5px 20px 5px 20px;
+}
+
+.post_option:hover {
+	background-color: #F5F5F5;
+}
+
+.post_header .post_time {
+	display: block;
+	margin-top: -20px;
+	margin-left: 65px;
+	font-size: 14px;
+	color: gray;
+}
+
+.remove_post {
+	display: inline-block;
+	float: right;
+	font-size: 13px;
+	color: gray;
+	cursor: pointer;
+}
+
+.post_body {
+	height: auto;
+	width: 100%;
+	padding: 20px;
+	border-bottom: 1px solid #DEDEDE;
+}
+
+.wrap_edit_post_area_div {
+	padding: 20px;
+	height: auto;
+	width: 100%;
+	text-align: right;
+}
+
+.edit_post_area {
+	width: 100%;
+	padding: 5px;
+	resize: none;
+	border: 1px solid #2F4CA1;
+	border-radius: 2px;
+}
+
+.save_edit_post {
+	padding: 8px 15px 8px 15px;
+	cursor: pointer;
+}
+
+.comments {
+	width: 100%;
+	height: auto;
+}
+
+.comment {
+	width: 100%;
+	padding: 10px;
+	background-color: #F5F5F5;
+	border-bottom: 1px solid #DEDEDE;
+}
+
+.comment .user_image_div {
+	vertical-align: top;
+	width:40px;
+	height:40px; 
+	display:inline-block;
+} 
+
+.comment .user_image {
+	height: 100%; 
+	width: 100%; 
+	object-fit: cover;
+	border-radius: 3px;
+}
+
+.comment .user_name {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 0px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.comment .post_settings_div {
+	margin-right: 5px;
+}
+
+.comment .post_time {
+	display: block;
+	margin-left: 50px;
+	font-size: 14px;
+	color: gray;
+}
+
+.comment_text {
+	display: inline-block;
+	vertical-align: top;
+	width: 83%;
+	margin-left: 5px;
+}
+
+.read_more {
+	color: #cb3434;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bolder;
+}
+
+.read_more:hover {
+	text-decoration: none;
+	color: #651a1a;
+}
+
+.read_more:focus, .read_more:active {
+	text-decoration: none;
+	color: #cb3434;
+}
+
+.morecontent span {
+    display: none;
+}
+
+.morelink {
+    display: inline;
+    color: #cb3434;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.morelink:hover {
+	color: #651a1a;
+}
+
+.post_footer {
+	position: absolute;
+    bottom: 0;
+	height: 70px;
+	width: 100%;
+	padding: 10px;
+	margin-bottom: -70px;
+	background-color: #F5F5F5;
+}
+
+.submit_comment {
+	width: 100%;
+	height: 40px;
+	margin-top: 5px;
+	border: 1px solid #DEDEDE;
+	border-radius: 2px;
+	font-family: "Open Sans", sans-serif;
+	padding: 10px;
+}
+
+.submit_comment:focus{
+	outline: none;
+}
+
+#loader_image_div {
+	position: relative;
+	display: none;
+	height: 100px;
+	text-align: center;
+	width: 100%;
+}
+
+.loader_image {
+	width: 100px;
+	height: 100px;
+}
+
+@media (max-width: 1100px) {		
+	#timeline_div {
+		width: 53%;
+	}
+	
+	#wrap_area_options {
+		width: 53%;
+	}
+	
+	.not_logged {
+		width: 53%;
+	}
+
+}
+
+@media (max-width: 970px) {		
+	#timeline_div {
+		width: 47%;
+	}
+	
+	#wrap_area_options {
+		width: 47%;
+	}
+	
+	.not_logged {
+		width: 47%;
+	}
+}
+
+@media (max-width: 770px) {		
+	#timeline_div {
+		width: 100%;
+		margin: 20px 0px 20px 0px;
+	}
+	
+	#wrap_area_options {
+		margin: 20px 0px 0px 0px;
+		width: 100%;
+	}
+
+	.not_logged {
+		width: 100%;
+		margin-top: 30px;
+		margin: 20px 0px 0px 0px;
+	}
+}
+
+@media (max-width: 390px) {		 
+	#personal_info_div {
+		width: 100%;
+	}
 }

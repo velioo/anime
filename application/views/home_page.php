@@ -14,10 +14,11 @@
 	    <button onclick="myFunction()">Try it</button>
 		<p id="demo"></p>
 	
-		   <?php echo '<a href="' . site_url("home/test_v2") . '">JsonV2</a>'; ?>
+		   <?php echo '<a href="' . site_url("home/test_v3") . '">JsonV3</a>'; ?>
+		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes/8ghj30jhkll70gvk19f8kkujai90816k") . '">Get Update Animes</br></a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get_update</a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get json data with FGC</a></br>'; ?>
-		   <?php //echo '<a href="' . site_url("userUpdates/update_user_info/hello/2005-09-01/female/London") . '">Update profile</a>'; ?>
+		   <?php //echo '<a href="' . site_url("posts/load_posts/7") . '">Posts</a>'; ?>
 	</div>
 </div>
 <?php include 'footer.php';?>

@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 Class Users_model extends CI_Model {
 	
@@ -28,7 +29,16 @@ Class Users_model extends CI_Model {
 				'joined_on' => date("Y-m-d")
 		);
 		$query = $this->db->insert('users', $new_user_data);
-		return $query;
+		
+		if($query) {
+			$user_settings_date = array(
+					'user_id' => $this->db->insert_id(),			
+			);			
+			$query = $this->db->insert('user_settings', $user_settings_date);			
+			return $query;
+		} else {
+			return FALSE;
+		}
 	}
 	
 	function create_new_user_by_facebook_login($fb_user_id, $username, $email, $access_token) {
@@ -39,12 +49,32 @@ Class Users_model extends CI_Model {
 				'joined_on' => date("Y-m-d")
 		);
 		$query = $this->db->insert('users', $new_user_data);
-		$query = $this->db->query("SELECT * FROM users WHERE username = '{$username}'");
+		
+		if($query) {			
+			$user_id = $this->db->insert_id();			
+			$query = $this->db->insert('user_settings', array('user_id' => $user_id));
+			if(!$query) {
+				return FALSE;
+			}
+		} else {
+			return FALSE;
+		}
 	
-		$user_id = $query->result_array()[0]['id'];
+		$facebook_data = array(
+			'user_id' => $user_id,
+			'fb_user_id' => $fb_user_id,
+			'email' => $email,
+			'access_token' => $access_token
+		);
+		
+		$query = $this->db->insert('facebook_accounts', $facebook_data);
+		
+		if(!$query) {
+			return FALSE;
+		}
 	
-		$this->db->query("INSERT INTO facebook_accounts(user_id, fb_user_id, email, access_token) VALUES ({$user_id}, '{$fb_user_id}', '{$email}', '{$access_token}')");
-	
+		$query = $this->db->get_where('users', array('username' => $username));
+		
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -79,6 +109,12 @@ Class Users_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
+	
+	function update_user_activity() {
+		$user_id = $this->session->userdata('id');
+		$date = date('Y-m-d H:i:s');
+		$this->db->query("UPDATE users SET last_online = '{$date}' WHERE id = {$user_id}");
 	}
 	
 	function update_cover_image($image) {
@@ -209,7 +245,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function get_user_info_logged($username) {
-		$query = $this->db->query("SELECT u.*,us.show_age,us.default_watchlist_page,us.show_last_online FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE username='{$username}'");
+		$query = $this->db->query("SELECT u.*,us.show_age,us.default_watchlist_page,us.default_watchlist_sort,us.show_last_online FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE username='{$username}'");
 	
 		if ($query->num_rows() == 1) {
 			return $query->row_array();
@@ -218,11 +254,17 @@ Class Users_model extends CI_Model {
 		}
 	}
 	
-	function get_user_info($username) {
+	function get_user_info($username, $id = 0) {
+		if($id == 0) {			
+			$where_clause = "username='{$username}'";		
+		} else {
+			$where_clause = "id='{$id}'";
+		}
+		
 		$query = $this->db->query("SELECT u.id,u.username,u.joined_on,u.country,u.profile_image,u.cover_image,u.top_offset,u.gender,u.bio,u.life_anime,u.last_online,u.total_episodes,u.birthdate,
-				us.show_age,us.default_watchlist_page,us.show_last_online
-				FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE username='{$username}'");
-	
+				us.show_age,us.default_watchlist_sort,us.default_watchlist_page,us.show_last_online
+				FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE {$where_clause}");
+		
 		if ($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -301,10 +343,7 @@ Class Users_model extends CI_Model {
 	}	
 	
 	function check_if_fb_acc_exist_and_return_user($fb_user_id) {
-		$query = $this->db->query("SELECT u.id,u.username,u.email,u.joined_on,u.country,u.cover_image,u.top_offset,
-				u.gender,u.bio,u.life_anime,u.last_online,u.total_episodes,u.birthdate,us.show_age,us.default_watchlist_page,
-				us.show_last_online FROM users as u JOIN facebook_accounts ON facebook_accounts.user_id=u.id
-				JOIN user_settings as us ON us.user_id=u.id WHERE fb_user_id = '{$fb_user_id}'");
+		$query = $this->db->query("SELECT u.id,u.username,u.email,u.profile_image FROM users as u JOIN facebook_accounts ON facebook_accounts.user_id=u.id WHERE fb_user_id = '{$fb_user_id}'");
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {

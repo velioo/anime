@@ -1,4 +1,6 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Users extends CI_Controller {
 	
 	public function index() {
@@ -9,12 +11,13 @@ class Users extends CI_Controller {
 		
 		if($username != null) {
 			$this->load->model('users_model');
+			$this->load->model('posts_model');
 			$data['title'] = $username . '\'s profile';
 			$data['css'] = 'user.css';
 			$data['header'] = $username;
 			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
 				$query = $this->users_model->get_user_info_logged($username);
-				$this->nocache();
+				//$this->nocache();
 			} else {
 				$query = $this->users_model->get_user_info($username);
 				if(!$query) {
@@ -23,6 +26,12 @@ class Users extends CI_Controller {
 			}
 			
 			$data['user'] = $query;
+			
+			$total_posts = $this->posts_model->get_total_posts($query['id']);
+			
+			$posts_per_page = 10;
+			$data['total_groups'] = ceil($total_posts/$posts_per_page);
+			
 			$this->load->view('user_page', $data);
 		} else {
 			$this->page_not_found();
@@ -40,6 +49,13 @@ class Users extends CI_Controller {
 		header('HTTP/1.0 404 Not Found');
 		echo "<h1>Error 404 Not Found</h1>";
 		echo "The page that you have requested could not be found.";
+		exit();
+	}
+	
+	function server_error() {
+		header('HTTP/1.1 500 Internal Server Error');
+		echo "<h1>Error 500 Internal Server Error</h1>";
+		echo "There was a problem with the server";
 		exit();
 	}
 }

@@ -117,9 +117,14 @@ function showEditFields() {
 						else 
 							$ep = "eps";
 						
-						if($anime['episode_count'] == 0)
-							$ep_count = "?";
-						else 
+						if($anime['episode_count'] == 0) {
+							if($anime['show_type'] == 1)
+								$ep_count = "?";
+							else if($anime['show_type'] == 5)
+								$ep_count = "1";
+							else 
+								$ep_count = $anime['episode_count'];
+						} else 
 							$ep_count = $anime['episode_count'];
 					?>
 					<p id="type_episodes"><?php echo $show_type . " (" . $ep_count . " " . $ep . ")" . " * " . $anime['episode_length'] . " min";?></p>
