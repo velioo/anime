@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class UserUpdates extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	function update_user_pictures() {
 		
 		$this->load->model('users_model');
@@ -34,7 +39,7 @@ class UserUpdates extends CI_Controller {
 	        	unlink("./assets/user_cover_images/{$cover_image}");
 	        	$query = $this->users_model->update_cover_image($config['file_name']);
 	        	if(!$query) {
-	        		$this->server_error();
+	        		$this->helpers_model->server_error();
 	        	}
 	         }             
 	         
@@ -54,15 +59,16 @@ class UserUpdates extends CI_Controller {
 	         	unlink("./assets/user_profile_images/{$avatar_image}");
 	         	$query = $this->users_model->update_avatar_image($config['file_name']);
 	         	if(!$query) {
-	         		$this->server_error();
+	         		$this->helpers_model->server_error();
 	         	} else {
 	         		$this->session->set_userdata('user_avatar', $config['file_name']);
+	         		$this->write_users_json(VERIFICATION_TOKEN);
 	         	}
 	         }         
 	         
 	         redirect("users/profile/{$this->session->userdata['username']}");
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -94,7 +100,7 @@ class UserUpdates extends CI_Controller {
 			
 			$this->users_model->update_user_info($this->session->userdata['id'], $bio, $birthdate, $gender, $location);
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -107,7 +113,7 @@ class UserUpdates extends CI_Controller {
 			
 			redirect("users/profile/{$this->session->userdata['username']}");
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -121,7 +127,7 @@ class UserUpdates extends CI_Controller {
 			
 			redirect("users/profile/{$this->session->userdata['username']}");
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		} 
 	}
 	
@@ -174,6 +180,8 @@ class UserUpdates extends CI_Controller {
 						}
 							
 						$this->session->set_userdata($data);
+						
+						$this->write_users_json(VERIFICATION_TOKEN);
 					}
 				} 
 	
@@ -181,7 +189,7 @@ class UserUpdates extends CI_Controller {
 				redirect("users/profile/{$this->session->userdata['username']}");
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 		
 	}
@@ -207,7 +215,7 @@ class UserUpdates extends CI_Controller {
 				echo "There was an internal error";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -252,7 +260,7 @@ class UserUpdates extends CI_Controller {
 				}
 			}
 		} else {
-			$this->page_not_found();
+			$this->helpers_model->page_not_found();
 		}
 	}
 	
@@ -278,7 +286,7 @@ class UserUpdates extends CI_Controller {
 				redirect("login/facebook_login/connect");
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -312,6 +320,34 @@ class UserUpdates extends CI_Controller {
 	
 	}
 	
+	function write_users_json($verification_token=null) {
+		if($verification_token === VERIFICATION_TOKEN) {
+	
+			$this->load->model('users_model');
+	
+			$result_array = $this->users_model->get_users_json_data();
+	
+			if($result_array) {
+	
+				$all_names = "";
+					
+				foreach ($result_array as $user) {
+						
+					$name = $user['username'];
+					$image = $user['profile_image'];
+
+					$result[] = array('name'=> $name, 'image'=> $image);
+				}
+	
+				$fp = fopen('assets/json/autocomplete_users.json', 'w');
+				fwrite($fp, json_encode($result));
+				fclose($fp);
+			}
+		} else {
+			$this->helpers_model->unauthorized();
+		}
+	}
+	
 	public function login_page($data) {
 		$data['title'] = 'Login';
 		$data['css'] = 'login.css';
@@ -323,29 +359,7 @@ class UserUpdates extends CI_Controller {
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
 		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	}
-	
-	function page_not_found() {
-		header('HTTP/1.0 404 Not Found');
-		echo "<h1>Error 404 Not Found</h1>";
-		echo "The page that you have requested could not be found.";
-		exit();
-	}
-	
-	function bad_request() {
-		header('HTTP/1.1 400 Bad Request');
-		echo "<h1>Error 400 Bad request</h1>";
-		echo "The requested action cannot be executed.";
-		exit();
-	}
-	
-	function server_error() {
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "<h1>Error 500 Internal Server Error</h1>";
-		echo "There was a problem with the server";
-		exit();
-	}
-	
+	}	
 }
 	
 ?>

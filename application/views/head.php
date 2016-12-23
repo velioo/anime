@@ -14,7 +14,7 @@
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/bootstrap-social.css";?>">	  
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.min.css"?>"/>
 	  <link rel="stylesheet" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.themes.min.css"?>"> 
-	  
+	  <link rel="stylesheet" href="<?php echo asset_url() . "css/resize_autocomplete.css"?>" id="resize_autocomplete">
 	  <script src="<?php echo asset_url() . "js/jquery-3.1.1.min.js"?>"></script>
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 	  <script type="text/javascript" src="<?php echo asset_url() . "EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"?>"></script>

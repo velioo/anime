@@ -28,8 +28,7 @@
 <?php include 'navigation.php'; ?>
 
 <div id="wrap">
-	<?php $random_num = time();?>
-	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != ""){ echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; if($this->session->flashdata('new_cover')) echo "?rand={$random_num}"; } else echo asset_url() . "anime_cover_images/Default.jpg"?>'); ">
+	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != ""){ echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; } else echo asset_url() . "anime_cover_images/Default.jpg"?>'); ">
 		<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $anime['cover_image_top_offset'];?>">
 	</div>
 	<div class="container-fluid scrollable" id="review_div">

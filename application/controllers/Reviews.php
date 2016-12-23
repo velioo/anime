@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Reviews extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function add_edit_review($slug = null) {
 		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
@@ -33,17 +38,17 @@ class Reviews extends CI_Controller {
 					} 
 					
 				} else {
-					$this->page_not_found();
+					$this->helpers_model->page_not_found();
 				}
 				
 				$data['title'] = 'V-Anime';
 				$data['css'] = 'review.css';
 				$this->load->view('add_edit_review_page', $data);
 			} else {
-				$this->page_not_found();
+				$this->helpers_model->page_not_found();
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -86,10 +91,10 @@ class Reviews extends CI_Controller {
 				
 				redirect("reviews/review/{$slug}/{$this->session->userdata('username')}");
 			} else {
-				$this->server_error();
+				$this->helpers_model->server_error();
 			}		
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -157,7 +162,7 @@ class Reviews extends CI_Controller {
 				echo "<h1 style='text-align: center;margin-top:20px;'>No Reviews Yet</h1>";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 		
 	}
@@ -194,21 +199,21 @@ class Reviews extends CI_Controller {
 						}
 						
 					} else {
-						$this->page_not_found();
+						$this->helpers_model->page_not_found();
 					}
 					
 					$data['title'] = 'V-Anime';
 					$data['css'] = 'user_review.css';
 					$this->load->view('show_review_page', $data);
 				} else {
-					$this->page_not_found();
+					$this->helpers_model->page_not_found();
 				}
 				
 			} else {
-				$this->page_not_found();
+				$this->helpers_model->page_not_found();
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 
 	}
@@ -223,7 +228,7 @@ class Reviews extends CI_Controller {
 			} else {
 				$query = $this->users_model->get_user_info($username);
 				if(!$query) {
-					$this->page_not_found();
+					$this->helpers_model->page_not_found();
 				}
 			}
 					
@@ -235,14 +240,14 @@ class Reviews extends CI_Controller {
 				$reviews_per_page = 10;
 				$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
 			} else {
-				$this->server_error();
+				$this->helpers_model->server_error();
 			}
 	
 			$data['title'] = $username . '\'s profile';
 			$data['css'] = 'user_reviews.css';
 			$this->load->view('user_reviews', $data);
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -318,7 +323,7 @@ class Reviews extends CI_Controller {
 				}			
 			} 		
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -338,7 +343,7 @@ class Reviews extends CI_Controller {
 				echo "Fail";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -350,29 +355,6 @@ class Reviews extends CI_Controller {
 		}
 		return false;
 	}
-
-	
-	function server_error() {
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "<h1>Error 500 Internal Server Error</h1>";
-		echo "There was a problem with the server";
-		exit();
-	}
-	
-	function bad_request() {
-		header('HTTP/1.1 400 Bad Request');
-		echo "<h1>Error 400 Bad request</h1>";
-		echo "The requested action cannot be executed.";
-		exit();
-	}
-	
-	function page_not_found() {
-		header('HTTP/1.0 404 Not Found');
-		echo "<h1>Error 404 Not Found</h1>";
-		echo "The page that you have requested could not be found.";
-		exit();
-	}
-	
 }
 
 ?>

@@ -56,6 +56,44 @@ class Home extends CI_Controller {
 		
 		var_dump($anime_object);
 	}
+	
+	function character_v1() {	
+		$data = array(
+				'grant_type' => 'client_credentials',
+				'client_id' => 'velioo-umtdx',
+				'client_secret' => 'bSvLMpaKvwSo55Cv8zrF',
+		);
+		
+		$data = http_build_query($data);		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt($ch, CURLOPT_URL, "https://anilist.co/api/auth/access_token");
+		$result = curl_exec($ch);
+		curl_close($ch);	
+		$response = json_decode($result);
+	
+		$access_token = $response->access_token;
+		
+		echo "Access token: " . $access_token;
+	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		//curl_setopt($ch, CURLOPT_URL, 'https://anilist.co/api/anime/21825/characters?access_token=' . $access_token);
+		//curl_setopt($ch, CURLOPT_URL, "https://anilist.co/api/anime/search/danganronpa?access_token=" . $access_token);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		
+		$character = json_decode($result);
+		
+		var_dump($character);
+		
+	}
 
 	
 }

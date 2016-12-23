@@ -38,8 +38,7 @@ $(document).ready(function() {
 <?php $slug = str_replace(" ", "-", $anime['slug']);?>
 
 <div id="wrap">
-	<?php $random_num = time();?>
-	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != ""){ echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; if($this->session->flashdata('new_cover')) echo "?rand={$random_num}"; } else echo asset_url() . "anime_cover_images/Default.jpg"?>'); ">
+	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != "") echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; else echo asset_url() . "anime_cover_images/Default.jpg";?>'); ">
 		<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $anime['cover_image_top_offset'];?>">
 	</div>
 	<div class="container-fluid scrollable" id="reviews_content">	
@@ -50,16 +49,16 @@ $(document).ready(function() {
 	
 		<div class="col-sm-12" id="anime_navigation_bar">
 			<div class="menu_title_div" id="menu_home_div">
-				<a href="<?php echo site_url("animeContent/anime/" .  str_replace(" ", "-", $anime['slug']));?>" class="menu_title" id="home_menu_title">HOME</a>
+				<a href="<?php echo site_url("animeContent/anime/{$slug}");?>" class="menu_title" id="home_menu_title">HOME</a>
 			</div>
 			<div class="menu_title_div" id="menu_reviews_div">
-				<a href="<?php echo site_url("animeContent/reviews/" . str_replace(" ", "-", $anime['slug']));?>" class="menu_title" id="reviews_menu_title">REVIEWS</a>
+				<a href="<?php echo site_url("animeContent/reviews/{$slug}");?>" class="menu_title" id="reviews_menu_title">REVIEWS</a>
 			</div>
 			<div class="menu_title_div" id="menu_recommendations_div">
 				<a href="#" class="menu_title" id="recommendations_menu_title">RECOMMENDATIONS</a>
 			</div>
 			<div class="menu_title_div" id="menu_characters_div">
-				<a href="#" class="menu_title" id="characters_menu_title">CHARACTERS</a>
+				<a href="<?php echo site_url("animeContent/characters/{$slug}");?>" class="menu_title" id="characters_menu_title">CHARACTERS</a>
 			</div>
 			<div class="menu_title_div" id="menu_user_stats_div">
 				<a href="#" class="menu_title" id="user_stats_menu_title">USER STATS</a>
@@ -73,7 +72,7 @@ $(document).ready(function() {
 		</div>
 		
 		<div class="col-sm-12" id="new_review_div">
-			<a href="<?php echo site_url("reviews/add_edit_review/" . str_replace(" ", "-", $anime['slug']));?>" style="height: 50px;"><button class="btn btn-primary button-blue" id="reviews_user_button"><?php echo $button_name; ?></button></a>
+			<a href="<?php echo site_url("reviews/add_edit_review/{$slug}");?>" style="height: 50px;"><button class="btn btn-primary button-blue" id="reviews_user_button"><?php echo $button_name; ?></button></a>
 		</div>
 		
 		<div class="col-sm-12" id="reviews_div">

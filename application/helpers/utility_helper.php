@@ -323,6 +323,157 @@ function get_alternate_title($canonical, $titles) {
 	return $alternate_title;
 }
 
+function format_character_info($info_text) {	
+	$delete_first_nl = FALSE;
+	if(strpos($info_text, '__') !== false) {
+		$split_info = explode("  ", $info_text);		
+		$info_text = "";
+		for($i = 0; $i < count($split_info); $i++) {
+			$words = explode(" ", $split_info[$i]);
+			$split_info[$i] = "";		
+			$count = 0;
+			for($j = 0; $j < count($words); $j++) {
+				if(strpos($words[$j], '__') !== false) {
+					if(substr_count($words[$j], "__") == 2) {		
+						if(strpos($words[$j], "\n") !== false) {	
+							$temp = explode("\n", $words[$j]);
+							$words[$j] = "";
+							for($t = 0; $t < count($temp); $t++) {
+								if(strpos($temp[$t], "__") !== false) {
+									$words[$j].= "<strong>" . $temp[$t] . "</strong>";
+								} else {
+									$words[$j].=$temp[$t];
+								}
+							}
+						} else {
+							$words[$j] = "<strong>" . $words[$j] . "</strong>";
+							$count = 0;
+						}						
+					} else {
+						$temp = explode("\n", $words[$j]);
+						if(count($temp) > 1) {
+							$words[$j] = "";
+							for($t = 0; $t < count($temp); $t++) {
+								if(strpos($temp[$t], "__") !== false) {
+									$words[$j].= "<strong>" . $temp[$t] . "</strong>";
+								} else {
+									$words[$j].=$temp[$t] . "\n";
+								}
+							}
+						} else {
+							$count++;
+							if($count == 1) {
+								$words[$j] = "<strong>" . $words[$j] . " ";
+							} else if($count == 2){
+								$words[$j] = $words[$j] . "</strong>";
+								$count = 0;
+							}
+						}
+					}
+				} else if(strpos($words[$j], ':') !== false) {
+					if(strpos($words[$j], "\n") != false) {
+						$temp = explode("\n", $words[$j]);
+						$words[$j] = "";
+						for($t = 0; $t < count($temp); $t++) {
+							if(strpos($temp[$t], ":") != false) {
+								$words[$j].= " <strong>" . $temp[$t] . "</strong>";
+							} else {
+								$words[$j].=$temp[$t]. "\n";;
+							}
+						}
+					} else {
+						if($i == 0 && $j == 0) {
+							$delete_first_nl = TRUE;
+						}
+						$words[$j] = "\n<strong>" . $words[$j] . "</strong>";
+					}
+				}
+				if(strpos($words[$j], '*') !== false) {
+					$words[$j].="\n" . $words[$j];
+				}
+				$split_info[$i].=$words[$j] . " ";
+			}
+				
+			$info_text.=$split_info[$i];
+		}		
+	
+		$length = strlen($info_text);	
+		$count = 0;
+		for($i = 0; $i < $length; $i++) {
+			if($info_text[$i] == '_') {
+				$count++;
+				if($i != 0) {
+					if($info_text[$i - 1] == '_') {
+						if($count == 2) {
+							$info_text[$i] = "\n";
+							$info_text[$i - 1] = "";
+						} else if($count == 4) {
+							$info_text[$i] = "";
+							$info_text[$i - 1] = "";
+							$count = 0;
+						}
+					}
+				}
+			}
+		}
+		
+		if(strpos($info_text, "~~~") !== false) {
+			$info_text = str_replace("~~~", "", $info_text);
+			$info_text = str_replace("_", "", $info_text);
+		}
+		
+		$delete_first_nl = TRUE;
+	
+	} else {	
+		$split_info = explode(" ", $info_text);
+		//$split_info = preg_split('/[\s]+/', $info_text);
+		$info_text = "";
+		for($i = 0; $i < count($split_info); $i++) {
+			$words = explode(" ", $split_info[$i]);
+			$split_info[$i] = "";
+			$count = 0;
+			for($j = 0; $j < count($words); $j++) {
+				if(strpos($words[$j], ':') !== false) {
+					if(strpos($words[$j], "\n") != false) {
+						$temp = explode("\n", $words[$j]);
+						$words[$j] = "";
+						for($t = 0; $t < count($temp); $t++) {
+							if(strpos($temp[$t], ":") != false) {
+								$words[$j].= " <strong>" . $temp[$t] . "</strong>";
+							} else {
+								$words[$j].=$temp[$t]. "\n";;
+							}
+						}
+					} else {
+						if($i == 0 && $j == 0) {
+							$delete_first_nl = TRUE;
+						}
+						$words[$j] = "\n<strong>" . $words[$j] . "</strong>";
+					}
+				} 
+				if(strpos($words[$j], '*') !== false) {
+					$words[$j].="\n" . $words[$j];
+				}
+				$split_info[$i].=$words[$j] . " ";
+			}
+			$info_text.=$split_info[$i];
+		}		
+	}
+	
+	if($delete_first_nl) {
+		$pos = strpos($info_text, "\n");
+		if ($pos !== false) {
+			$info_text = substr_replace($info_text, "", $pos, 1);
+		}	
+	}
+	
+	$info_text = str_replace("~!", "", $info_text);
+	$info_text = str_replace("!~", "", $info_text);	
+	$info_text = nl2br($info_text);
+	
+	return $info_text;
+}
+
 function convert_cyrillic_to_latin($name) {
 	$cyr = [
 		'Р°','Р±','РІ','Рі','Рґ','Рµ','С‘','Р¶','Р·','Рё','Р№','Рє','Р»','Рј','РЅ','Рѕ','Рї',
@@ -341,5 +492,4 @@ function convert_cyrillic_to_latin($name) {
 	
 	return $name;
 }
-
 ?>

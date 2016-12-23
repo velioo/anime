@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Watchlists extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function user_watchlist($username=null) {		
 		$this->load->model('watchlist_model');
 		$this->load->model('users_model');
@@ -14,7 +19,7 @@ class Watchlists extends CI_Controller {
 			} else {
 				$query = $this->users_model->get_user_info($username);
 				if(!$query) {
-					$this->page_not_found();
+					$this->helpers_model->page_not_found();
 				}
 			}
 			
@@ -24,7 +29,7 @@ class Watchlists extends CI_Controller {
 			$data['css'] = 'watchlist.css';
 			$this->load->view('watchlist', $data);
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 
@@ -45,7 +50,7 @@ class Watchlists extends CI_Controller {
 				echo "Fail";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -65,7 +70,7 @@ class Watchlists extends CI_Controller {
 				echo "Fail";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -85,7 +90,7 @@ class Watchlists extends CI_Controller {
 				echo "Fail";
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -99,7 +104,7 @@ class Watchlists extends CI_Controller {
 			$this->watchlist_model->update_default_watchlist_sort($default_watchlist_sort);
 			
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -238,7 +243,7 @@ class Watchlists extends CI_Controller {
 				  }
 			}
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 		
 	}
@@ -247,20 +252,6 @@ class Watchlists extends CI_Controller {
 		$this->load->model('users_model');		
 		$query = $this->users_model->get_user_info_logged($this->session->userdata('username'));		
 		echo $query['default_watchlist_sort'];
-	}
-	
-	function page_not_found() {
-		header('HTTP/1.0 404 Not Found');
-		echo "<h1>Error 404 Not Found</h1>";
-		echo "The page that you have requested could not be found.";
-		exit();
-	}
-	
-	function bad_request() {
-		header('HTTP/1.1 400 Bad Request');
-		echo "<h1>Error 400 Bad request</h1>";
-		echo "The requested action cannot be executed.";
-		exit();
 	}
 }
 ?>

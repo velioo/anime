@@ -113,6 +113,7 @@ Class Users_model extends CI_Model {
 	
 	function update_user_activity() {
 		$user_id = $this->session->userdata('id');
+		date_default_timezone_set('Europe/Sofia');
 		$date = date('Y-m-d H:i:s');
 		$this->db->query("UPDATE users SET last_online = '{$date}' WHERE id = {$user_id}");
 	}
@@ -299,6 +300,12 @@ Class Users_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
+	
+	function get_users_json_data() {
+		$this->db->select('username, profile_image');
+		$query = $this->db->get('users');
+		return $query->result_array();
 	}
 	
 	function check_if_username_exists($username) {

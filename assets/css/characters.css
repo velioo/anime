@@ -1,0 +1,228 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+#wrap {
+	margin-top:-20px;
+}
+
+body {
+	padding-top:63px;
+}
+
+#anime-bar {
+	position:relative;
+	height:350px;
+	width:100%;
+	background-repeat: no-repeat;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+    -webkit-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
+	-moz-box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
+	box-shadow: inset 0px -500px 0px -1px rgba(0,0,0,0.1);
+}
+
+#anime_navigation_bar {
+	margin-bottom: 20px;
+}
+
+#characters_content {
+	background-color: #E9E9E9;
+	border:none;
+}
+
+#anime_title_div {
+	text-align: left;
+	padding-left: 60px;
+}
+
+#menu_characters_div {
+	border-bottom: 3px solid #2F4CA1;
+}
+
+#characters_menu_title {
+	color: #2F4CA1
+}
+
+.characters_div {
+	background-color: white;
+	height:auto;
+}
+
+#main_characters_div {
+	margin-bottom: 20px;
+}
+
+#secondary_characters_div {
+	margin-bottom: 50px;
+}
+
+.characters_title {
+	text-align: left;
+	font-size: 27px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px 20px 10px 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #F2F1EC;
+}
+
+.table-responsive {
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.character_actor_image {
+	border-radius: 3px;
+	display: inline-block;
+	margin-top:5px;
+	max-height:77x;
+	max-width: 50px;
+}
+
+.character_name_image {
+	width: 50%;
+	font-weight: bold;
+	font-size: 17px;
+}
+
+.wrap_character_name_div {
+	margin-left: 5px;
+	vertical-align: top;
+	padding-top: 10px;
+	display: inline-block;
+}
+
+.character_name {
+}
+
+.aliases {
+	margin-top: 10px; 
+	font-weight: normal; 
+	font-size: 14px;
+	width: 500px;
+}
+
+.aliases_text {
+	color: #86878A;
+}
+
+.character_user_status {
+	width: 15%;
+}
+
+.wrap_all_actors_div {
+	width: 100%;
+}
+
+.actor:not(:first-child) {
+	margin-top: 10px;
+}
+
+.wrap_user_status {
+	display: inline-block;
+	font-size: 0px;
+	margin-top: 5px;
+}
+
+.fa-heart {   
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+    opacity: 0.7;
+}
+
+.fa-stack {
+	border: 1px solid #DEDEDE;
+	display: inline-block;
+	cursor: pointer;
+	font-size: 25px;
+}
+
+.fa-stack.love {
+	padding-left: 13px;
+	background-color: #F2F1EC;
+	color: #808182;
+}
+
+.fa-stack.love:hover {
+	color:#E4287C;
+}
+
+.fa-stack.hate {
+	background-color: white;
+	color: #808182;
+}
+
+.fa-stack.hate:hover {
+	color: black;
+}
+
+.fa-bolt {
+    top:-5%;
+    left:2%;
+    font-size:70%;
+}
+
+.character_voice_actor {
+	width: 25%;
+	text-align: right;
+}
+
+.wrap_actor_name_div {
+	margin-right: 5px;
+	vertical-align: top;
+	padding-top: 10px;
+	display: inline-block;
+	font-weight: bold;
+}
+
+.actor_name {	
+}
+
+.table {
+	margin-bottom: 0px;
+}
+
+.table>tbody>tr>td {
+	padding: 8px 8px 15px 8px;
+}
+
+#loader_image_div {
+	display: none;
+	height: 100px;
+	text-align: center;
+	width: 100%;
+}
+
+.loader_image {
+	width: 100px;
+	height: 100px;
+	margin-top: -50px;
+}
+
+@media (max-width: 970px) {
+	.aliases {
+		width: 310px;
+	}
+}
+
+@media (max-width: 770px) {
+	.aliases {
+		width: 250px;
+	}
+}
+
+@media (max-width: 650px) {
+	.table-responsive>.table>tbody>tr>td {
+		white-space: normal;
+	}
+}
+
+@media (max-width: 490px) {
+	.aliases {
+		width: 150px;
+	}
+}
+
+	

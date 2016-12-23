@@ -29,11 +29,8 @@ Class Animes_model extends CI_Model {
 		$query = $this->db->insert('animes', $new_anime_data);
 		
 		if($query) {
-			foreach($anime_object->data->genres as $genre) {
-/* 				$genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
-				$genre_id = $genre_query->row_array()['id'];	 */			
-				$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
-				//$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})");		
+			foreach($anime_object->data->genres as $genre) {	
+				$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));	
 			}
 	
 			return TRUE;
@@ -74,9 +71,6 @@ Class Animes_model extends CI_Model {
 		if($query) {
 			 $this->db->query("DELETE FROM anime_genres WHERE anime_id = {$anime_object->data->id}");
 			 foreach($anime_object->data->genres as $genre) {
-				/* $genre_query = $this->db->query("SELECT id FROM genres WHERE name = '{$genre}'");
-				$genre_id = $genre_query->row_array()['id'];
-				$query = $this->db->query("INSERT INTO anime_genres(anime_id, genre_id) VALUES ({$anime_object->id}, {$genre_id})"); */
 			 	$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
 			}	  
 			return TRUE;
@@ -109,6 +103,19 @@ Class Animes_model extends CI_Model {
 		$query = $this->db->query("SELECT slug FROM animes WHERE id = '{$id}' ");
 		if($query->num_rows() == 1) {
 			return $query->row_array();
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_anime_id_by_title($anime_title_en, $anime_title_en_jp, $anime_title_ja_jp) {
+		$this->db->select('id, titles');
+		$this->db->like('titles', $anime_title_en);
+		$this->db->or_like('titles', $anime_title_en_jp);
+		$this->db->or_like('titles', $anime_title_ja_jp);
+		$query = $this->db->get('animes');
+		if($query->num_rows() > 0) {
+			return $query->result_array();
 		} else {
 			return FALSE;
 		}

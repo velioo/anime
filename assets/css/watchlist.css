@@ -429,6 +429,19 @@ label.rb10l:hover ~ .rating
 	height: 80px;
 }
 
+#loader_watchlist_image_div {
+	display: none;
+	height: 100px;
+	text-align: center;
+	width: 100%;
+}
+
+.loader_watchlist_image {
+	width: 100px;
+	height: 100px;
+	margin-top: 120px;
+}
+
 .watchlist_guest_status {
 	width: 135px;
 	font-size: 15px;

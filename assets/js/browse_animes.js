@@ -156,4 +156,6 @@ $(document).ready(function() {
 		
 	});
 	
+	$("#users_table").tablesorter(); 
+	
 });

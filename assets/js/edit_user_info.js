@@ -79,7 +79,11 @@ $(document).ready(function() {
 		
 		if(size > twoMB) {
 			if($('.error').length <= 0) {
-				$("<p class='error'>Yout file is too large. Max size 2MB</p>").insertAfter('#edit_avatar_button');
+				if($('#edit_avatar_button').length > 0) {
+					$("<p class='error'>Yout file is too large. Max size 2MB</p>").insertAfter('#edit_avatar_button');
+				} else {
+					$("<p class='error'>Yout file is too large. Max size 2MB</p>").insertAfter('#edit_poster_button');
+				}
 			}
 	        cover_button.replaceWith(cover_button = cover_button.clone(true));
 		} else {

@@ -170,6 +170,9 @@
 				  </table>
 			  </div>
 			</div>
+			<div id="loader_watchlist_image_div">
+				<img src="<?php echo asset_url() . "imgs/loading_records.gif";?>" class="loader_watchlist_image">
+			</div>
 		</div>
 	</div>
 </div>

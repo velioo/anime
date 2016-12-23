@@ -1,5 +1,6 @@
 <?php $random_num = time(); 
 	$online = false;
+	date_default_timezone_set('Europe/Sofia');
 	$current_time = $date = date('Y-m-d H:i:s'); $current_time = strtotime($current_time);
 	$last_online = strtotime($user['last_online']);	
 	$time_difference = round(abs($current_time - $last_online) / 60) . " minutes ago";

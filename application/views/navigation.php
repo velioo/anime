@@ -5,8 +5,18 @@
 	}
 
 	function get_anime_url() {
-		var animeUrl = "<?php echo site_url("animeContent/anime/")?>"
+		var animeUrl = "<?php echo site_url("animeContent/anime/");?>"
 		return animeUrl;
+	}
+
+	function get_character_url() {
+		var characterUrl = "<?php echo site_url("characters/character/");?>"
+		return characterUrl;
+	}
+
+	function get_user_url() {
+		var userUrl = "<?php echo site_url("users/profile/");?>"
+		return userUrl;
 	}
 
 	function get_data_url() {
@@ -31,13 +41,13 @@
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="<?php echo site_url("home");?>" style="font-weight: normal;">Home</a>
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
 		  		<ul class="dropdown-menu">
-                  <li><a href="<?php echo site_url('searchC/search_anime?search=""')?>">Browse Anime</a></li>
+                  <li><a href="<?php echo site_url('searchC/search_anime?search=""');?>">Browse Anime</a></li>
                   <li><a href="#">Top Anime</a></li>
                  </ul>
 		  	</li>
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Characters</a>
 		    	<ul class="dropdown-menu">
-                  <li><a href="#">Browse Characters</a></li>
+                  <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
                   <li><a href="#">Top Loved Characters</a></li>
                   <li><a href="#">Top Hated Characters</a></li>
                 </ul>
@@ -62,7 +72,7 @@
 	  <li class="dropdown">
 		  <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Characters</a>
 	      <ul class="dropdown-menu">
-			  <li><a href="<?php echo base_url(); ?>">Browse Characters</a></li>
+			  <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
 		      <li><a href="<?php echo base_url(); ?>">Top Loved Characters</a></li>
 		      <li><a href="<?php echo base_url(); ?>">Top Hated Characters</a></li>
 		  </ul>
@@ -82,7 +92,7 @@
 				    <option value="animes" selected="selected" class="navigation_small_search_option">Anime</option>
 				    <option value="characters" class="navigation_small_search_option">Characters</option>
 				    <option value="users" class="navigation_small_search_option">Users</option>
-				    <option value="lists" class="navigation_small_search_option">Lists</option>
+				    <!-- <option value="lists" class="navigation_small_search_option">Lists</option> -->
 				</select>
 				<input type="text" name="search" id="small_search_box" placeholder="Search..."> 
 				<button type="submit" name="submit" id="submit_button">
@@ -115,7 +125,7 @@
 					    <option value="animes" selected="selected">Anime</option>
 					    <option value="characters">Characters</option>
 					    <option value="users">Users</option>
-					    <option value="lists">Lists</option>
+					    <!-- <option value="lists">Lists</option> -->
 					</select>
 					<input type="text" name="search" id="search_box" placeholder="Search...">
 					<button class="btn btn-primary dropdown-toggle" type="submit" name="submit" id="submit_button">

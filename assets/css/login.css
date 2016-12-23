@@ -54,15 +54,6 @@ label {
 	margin-left:20%;
 }
 
-#table_first_column {
-	color:#cb3434;
-	text-decoration: none;
-}
-
-#table_first_column:hover {
-	color:#651a1a;
-}
-
 input.submit {
 	font-size: 14px;
 	width:100px;

@@ -26,7 +26,7 @@ function initScroll(total_groups, url, id) {
 		if(total_records >= total_groups) {
 			$(window).off('scroll');
 		}
-	    if(($(window).scrollTop() + $(window).height() == $(document).height()) && loading == false) {    
+	    if(($(window).scrollTop() + $(window).height() > $(document).height() - 100) && loading == false) {    
 	        if(total_records < total_groups) {
 	          loading = true; 
 	          $('#loader_image_div').show(); 

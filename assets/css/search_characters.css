@@ -1,0 +1,164 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+h1 {
+	font-size: 30px;
+	text-align: center;
+	color: #3C50D2;
+	padding: 14px 15px 20px 15px;
+	border-bottom: 1px solid #D0D0D0;
+	margin-bottom: 0px;
+}
+
+tr:nth-child(even) {
+    background-color: #F2F1EC;
+}
+
+.table-responsive {
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+	background-color: white;
+}
+
+.table {
+	margin-bottom: 0px;
+}
+
+.character_name_image {
+	width: 45%;
+	font-weight: bold;
+	font-size: 17px;
+}
+
+.character_appears_in {
+	width: 40%;
+}
+
+.character_image_div {
+	max-width:45px;
+	max-height:66px; 
+	display:inline-block;
+	margin-right: 5px;
+}
+
+.character_image {
+	border-radius: 2px;
+	display: inline-block;
+	margin-top:5px;
+	max-height:66x;
+	max-width: 45px;
+}
+
+.wrap_character_name_div {
+	margin-left: 5px;
+	vertical-align: top;
+	padding-top: 10px;
+	display: inline-block;
+}
+
+.wrap_character_name {
+	vertical-align: top;
+	margin-top: 5px; 
+	display: inline-block;
+}
+
+.aliases {
+	margin-top: 10px; 
+	font-weight: normal; 
+	font-size: 14px;
+	margin-right: 10px;
+	width: 390px;
+}
+
+.aliases_text {
+	color: #86878A;
+}
+
+.character_user_status {
+}
+
+.wrap_user_status {
+	display: inline-block;
+	font-size: 0px;
+	margin-top: 5px;
+}
+
+.fa-heart {   
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+    opacity: 0.7;
+}
+
+.fa-stack {
+	border: 1px solid #DEDEDE;
+	display: inline-block;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.fa-stack.love {
+	padding-left: 11px;
+	background-color: #F2F1EC;
+}
+
+.fa-stack.love:hover {
+	color:#E4287C;
+}
+
+.fa-stack.hate {
+	background-color: white;
+}
+
+.fa-stack.hate:hover {
+	color: black;
+}
+
+.fa-bolt {
+    top:-5%;
+    left:2%;
+    font-size:70%;
+}
+
+.table>tbody>tr>td {
+	padding: 8px 8px 15px 8px;
+}
+
+.container-fluid.scrollable .pagination li a {
+	color: #2F343B;
+}
+
+.container-fluid.scrollable .pagination li.active a {
+	color:white;
+	background-color:#2F343B;
+	border-color: #2F343B;
+}
+
+@media (max-width: 970px) {
+	.aliases {
+		width: 310px;
+	}
+}
+
+@media (max-width: 770px) {
+	.aliases {
+		width: 250px;
+	}
+}
+
+@media (max-width: 650px) {
+	.table-responsive>.table>tbody>tr>td {
+		white-space: normal;
+	}
+}
+
+@media (max-width: 490px) {
+	.aliases {
+		width: 160px;
+	}
+}
+
+
+@media (max-width: 390px) {
+	.aliases {
+		width: 10px;
+	}
+}

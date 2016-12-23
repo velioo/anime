@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AnimeUpdates extends CI_Controller {
 
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function update_anime($anime_id) {
 		$this->load->model('animes_model');
 		$this->load->library('upload');
@@ -38,7 +43,7 @@ class AnimeUpdates extends CI_Controller {
 					}
 					$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
 					if(!$query) {
-						$this->server_error();
+						$this->helpers_model->server_error();
 					} 
 				}
 			}
@@ -64,18 +69,18 @@ class AnimeUpdates extends CI_Controller {
 					}
 					$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
 					if(!$query) {
-						$this->server_error();
+						$this->helpers_model->server_error();
 					}
 				}
 			}
 			
 			if (!empty($_FILES['edit_poster']['name'])) {
-				$this->write_json_autocomplete($slug, VERIFICATION_TOKEN);
+				$this->write_json_autocomplete(VERIFICATION_TOKEN, $slug);
 			} else {
 				redirect("animeContent/anime/{$slug}");
 			}
 		} else {
-			$this->unauthorized();
+			$this->helpers_model->unauthorized();
 		}
 	
 	}
@@ -208,16 +213,16 @@ class AnimeUpdates extends CI_Controller {
 			}
 		
 			fclose($fp);
-			$anime_id_counter-=49;
+			$anime_id_counter-=99;
 			file_put_contents($file_to_write_counter, $anime_id_counter);
 			
-			$this->write_json_autocomplete("", VERIFICATION_TOKEN);
+			$this->write_json_autocomplete(VERIFICATION_TOKEN);
 		} else {
-			$this->unauthorized();
+			$this->helpers_model->unauthorized();
 		}
 	}
 	
-	public function write_json_autocomplete($slug = "", $verification_token=null) {
+	public function write_json_autocomplete($verification_token=null, $slug = "") {
 		
 		if($verification_token === VERIFICATION_TOKEN) {
 		
@@ -227,7 +232,6 @@ class AnimeUpdates extends CI_Controller {
 		
 			if($result_array) {
 					
-				$response = array();
 				$all_names = "";
 					
 				foreach ($result_array as $anime) {
@@ -247,8 +251,7 @@ class AnimeUpdates extends CI_Controller {
 					$name = $titles['main'];
 					$id = $anime['id'];
 					$image = $anime['poster_image_file_name'];
-					$anime_slug = str_replace(" ", "-", $anime['slug']);
-					
+					$anime_slug = str_replace(" ", "-", $anime['slug']);					
 		
 					$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $anime_slug, 'id' => $id, 'image'=> $image);
 				}
@@ -264,23 +267,10 @@ class AnimeUpdates extends CI_Controller {
 				}			
 			}
 		} else {
-			$this->unauthorized();
+			$this->helpers_model->unauthorized();
 		}
 	}
-	
-	function server_error() {
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "<h1>Error 500 Internal Server Error</h1>";
-		echo "There was a problem with the server";
-		exit();
-	}
-	
-	function unauthorized() {
-		header('HTTP/1.0 401 Unauthorized');
-		echo "<h1>Error 401 Unauthorized</h1>";
-		echo "You aren't authorized to access this page.";
-		exit();
-	}
+
 
 }
 

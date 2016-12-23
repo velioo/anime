@@ -69,7 +69,7 @@ body {
 	z-index: -1;
 }
 
-#wrap_poster_span_div {
+#wrap_poster_info_div {
 	display:inline-block; 
 	position: relative; 
 	text-align: center;
@@ -224,6 +224,24 @@ body {
 	cursor: pointer;
 }
 
+.anime_titles {
+	width: 200px;
+	border-bottom: 1px solid #DEDEDE;
+}
+
+#anime_titles_header {
+	text-align: center; 
+	font-weight: bold; 
+	margin-top: 15px; 
+	border-bottom: 1px solid #DEDEDE;
+}
+
+.anime_titles_p {
+	text-align: left;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #838A91;
+}
+
 .modal {
     display: none; 
     position: fixed; 
@@ -362,7 +380,7 @@ body {
 	margin-top:10px;
 	margin-bottom: 20px;
 	padding-left:10px;
-	color: #838A91;
+	color: black;
 	font-size: 16px;
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -458,6 +476,14 @@ body {
 	display: inline-block;
 	margin-left:20px;
 	vertical-align: top;
+	margin-top: -30px;
+}
+
+.youtube_trailer_header {
+	font-size: 20px;
+	text-align: center; 
+	font-weight: bold; 
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 #reviews {

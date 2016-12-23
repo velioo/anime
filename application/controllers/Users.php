@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Users extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function index() {
 		$this->profile();
 	}
@@ -21,7 +26,7 @@ class Users extends CI_Controller {
 			} else {
 				$query = $this->users_model->get_user_info($username);
 				if(!$query) {
-					$this->page_not_found();
+					$this->helpers_model->page_not_found();
 				}
 			}
 			
@@ -34,7 +39,7 @@ class Users extends CI_Controller {
 			
 			$this->load->view('user_page', $data);
 		} else {
-			$this->page_not_found();
+			$this->helpers_model->page_not_found();
 		}
 	}
 	
@@ -43,20 +48,6 @@ class Users extends CI_Controller {
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 		$this->output->set_header('Pragma: no-cache');
 		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	}
-	
-	function page_not_found() {
-		header('HTTP/1.0 404 Not Found');
-		echo "<h1>Error 404 Not Found</h1>";
-		echo "The page that you have requested could not be found.";
-		exit();
-	}
-	
-	function server_error() {
-		header('HTTP/1.1 500 Internal Server Error');
-		echo "<h1>Error 500 Internal Server Error</h1>";
-		echo "There was a problem with the server";
-		exit();
 	}
 }
 ?>

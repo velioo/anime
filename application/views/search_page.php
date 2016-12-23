@@ -1,6 +1,8 @@
 <?php include 'head.php';?>
 
 <script src="<?php echo asset_url() . "js/browse_animes.js";?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
+<script src="<?php echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>
 
 <?php
 	if(isset($this->session->userdata['is_logged_in'])) 
@@ -12,7 +14,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		addListeners();
-
 		var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
 		var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
 
@@ -34,7 +35,7 @@
 <?php include 'navigation.php';?>
 
 <div id="wrap">
-	<div class="container-fluid scrollable content">
+	<div class="container-fluid scrollable content" style="padding: 0px;">
 		<h1><?php echo $header;?></h1>
 		<?php if(isset($animes_matched)) {  $counter = 0;?>
 			<div id="search_navigation">
@@ -112,25 +113,92 @@
 			</div>
 		  <?php } else if(isset($users_matched)) { ?>
 		  <div class="table-responsive">
-			   <table class="table">
+			   <table id="users_table" class="table tablesorter">
 			    <thead>
 			      <tr>
-			        <th>Username</th>
-			        <th>Join Date</th>
+			        <th>USERNAME</th>
+			        <th>JOIN DATE</th>
+			        <th>ANIMES</th>
 			      </tr>
 			    </thead>
 			    <tbody>
 			      <?php foreach ($users_matched as $user) { ?>
-			      <tr>
-			        <td><a id="table_first_column" href="<?php echo site_url("users/profile/{$user['username']}");?>"><?php echo $user['username'];?></a></td>
+			      <tr class="user_row">
+			        <td>
+				        <a href="<?php echo site_url("users/profile/{$user['username']}");?>" class="disable-link-decoration red-text">
+				        	<div class="user_image_div"><img src="<?php echo asset_url() . "user_profile_images/{$user['profile_image']}";?>" class="user_image">
+				        	</div>
+				        	<?php echo $user['username'];?>
+				        </a>
+			        </td>
 			        <td><?php echo $user['joined_on'];?></td>
+			        <td><?php if($user['anime_count'] != 0){ 
+			        	echo "<a href='" . site_url("watchlists/user_watchlist/{$user['username']}") . "' class='disable-link-decoration red-text'>" . $user['anime_count'] . "</a>";} else echo "0";?>
+			        </td>
 			      </tr>
 			      <?php }?>
 			    </tbody>
 			  </table>
 			  </div>
 		  <?php } else if(isset($characters_matched)) { ?>
-		  
+		    <div class="table-responsive">
+			   <table class="table">
+			    <thead>
+			      <tr>
+			        <th>NAME</th>
+			        <th>APPEARS IN</th>
+			        <th></th>
+			      </tr>
+			    </thead>
+			    <tbody>
+			      <?php foreach ($characters_matched as $character) { ?>			      
+			      <?php $character_slug = "";					
+					if($character['first_name'] != "") {
+						$character_slug.=$character['first_name'] . "-";
+					} 
+					if($character['last_name'] != "") {
+						$character_slug.=$character['last_name'];
+					}
+				   ?>
+			      <tr class="user_row">
+			        <td class="character_name_image">
+				        <a href="<?php echo site_url("characters/character/{$character['id']}/{$character_slug}");?>" class="disable-link-decoration red-text">
+				        	<img src="<?php echo asset_url() . "character_images/{$character['image_file_name']}";?>" class="character_image">				        	
+				        </a>
+				        
+				        <div class="wrap_character_name_div">
+					    	<a href="<?php echo site_url("characters/character/{$character['id']}/{$character_slug}");?>" class="disable-link-decoration red-text">
+					    		<?php echo stripslashes($character['first_name']) . " " . stripslashes($character['last_name']);?>
+					    	</a>
+					    	<?php if($character['alt_name'] != "") {?>
+					    		<p class="aliases"><strong>Aliases: </strong><span class="aliases_text"><?php echo stripslashes($character['alt_name']); ?></span></p>
+					    	<?php }?>
+					    </div>
+			        </td>
+			        <td class="character_appears_in">
+			        	<?php foreach($character['animes'] as $anime) {?>
+			        		<a href="<?php echo site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug']));?>" class="disable-link-decoration red-text"><?php echo convert_titles_to_hash($anime['titles'])['main'];?></a><br/>
+			        	<?php }?>
+			        </td>
+			        <td class="character_user_status">
+		    			<div class="wrap_user_status">
+				    		<span title="I love this character" class="fa-stack fa-2x love">
+				    			<i class="fa fa-heart"></i>
+				    		</span>
+			    			<span title="I hate this character" class="fa-stack fa-2x hate">
+							    <i class="fa fa-heart fa-stack-1x"></i>
+							    <i class="fa fa-bolt fa-stack-1x fa-inverse"></i>
+							</span>
+						</div>
+		    		</td>
+			      </tr>
+			      <?php }?>
+			    </tbody>
+			  </table>
+			  </div>
+			  <div class="text-center">
+			  	<?php if(isset($characters_matched)) echo $pagination?>
+			  </div>
 		  <?php } else if(isset($lists_matched)) { ?>
 		  
 		  <?php } else { ?>

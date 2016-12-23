@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+h1 {
+	font-size: 30px;
+	text-align: center;
+	color: #3C50D2;
+	padding: 14px 15px 10px 15px;
+	border-bottom: 1px solid #D0D0D0;
+}
+
+
+#users_table {
+	font-size: 15px;
+}
+
+tr {
+	background-color: white;
+}
+
+th {
+	color: black;
+	outline: none;
+}
+
+th:hover {
+	background-color: #F5F5F5;
+}
+
+td {
+	border-bottom: #ccc 1px solid;	
+}
+
+#users_table tbody tr:nth-child(even).user_row {
+    background-color: #F2F1EC;
+}
+
+.user_image_div {
+	width:30px;
+	height:30px; 
+	display:inline-block;
+	margin-right: 5px;
+} 
+
+.user_image {
+	image-rendering: crisp-edges;
+	height: 100%; 
+	width: 100%; 
+	object-fit: cover;
+}
+
+#users_table th {
+	cursor: pointer;
+}

@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class SearchC extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function index() {
 		redirect("home");
 	}
@@ -16,7 +21,7 @@ class SearchC extends CI_Controller {
 				$this->search_anime();
 				break;
 			case 'characters':
-				$this->search_characters();
+				$this->search_character();
 				break;
 			case 'users':
 				$this->search_users();
@@ -37,7 +42,10 @@ class SearchC extends CI_Controller {
 
 		$config = $this->configure_pagination();	
 		
-		$sortable_columns = $this->get_sortable_columns();
+		$config['base_url'] = site_url("SearchC/search_anime");
+		$config['per_page'] = 30;
+		
+		$sortable_columns = $this->get_sortable_columns_anime();
 		
 		if($this->input->get('search') !== NULL) { //get user search
 			$anime = $this->input->get('search');					
@@ -85,11 +93,11 @@ class SearchC extends CI_Controller {
 		}
 		
 		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
-			$start =$this->input->get('page') * $config['per_page'] - $config['per_page'];
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
 		} else {
 			$start = 0;
 		}
-		
+			
 		$temp = $anime;	
 		$anime = addslashes($anime);
 		$sort_by = addslashes($sort_by);
@@ -165,8 +173,6 @@ class SearchC extends CI_Controller {
 	}
 
 	function configure_pagination() {
-		$config['base_url'] = site_url("SearchC/search_anime");
-		$config['per_page'] = 30;
 		$config['num_links'] = 4;
 		$config['use_page_numbers'] = TRUE;
 		$config['page_query_string'] = TRUE;
@@ -190,34 +196,61 @@ class SearchC extends CI_Controller {
 		return $config;
 	}
 	
-	function get_sortable_columns() {
-		$this->load->model('animes_model');	
-		
+	function get_sortable_columns_anime() {		
 		$columns = "id,slug,episode_count,episode_length,synopsis,average_rating, age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at";	
 		$columns = explode(",", $columns);
 		
 		return $columns;
 	}
 	
-	
-	public function search_characters() {
-		redirect("home");
-		$character = $this->input->get('search');
+	public function search_character() {
 		
-		$query = $this->search_model->search_characters($character);
+		$this->load->model('search_model');
+		$this->load->model('characters_model');
+		$this->load->library('pagination');
 		
-		if($query) {
-			$data['characters_matched'] = $query;
-			if($character == '')
-				$data['header'] = 'All characters';
-			else
-				$data['header'] = 'Results for "' . $character . '"';
+		$config = $this->configure_pagination();
+		
+		$config['base_url'] = site_url("SearchC/search_character");
+		$config['per_page'] = 50;
+		
+		if($this->input->get('search') !== NULL) { //get user search
+			$character = $this->input->get('search');
+		} else if($this->input->get('last_search') !== NULL) {
+			$character = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
 		} else {
-			$data['header'] = 'Browse Characters';
+			$character = "";
 		}
 		
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+		} else {
+			$start = 0;
+		}
+		
+		$temp = $character;
+		$character = addslashes($character);
+
+		$query = $this->search_model->search_characters($character, $config['per_page'], $start);
+		$config['total_rows'] = $this->search_model->get_characters_count($character, $config['per_page'], $start);
+		
+		$character = $temp;
+		
+		if($query) {
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();
+			$data['characters_matched'] = $query;
+		}
+		
+		$data['last_search'] = $character;
 		$data['title'] = 'V-Anime';
-		$data['css'] = 'login.css';
+		if($character == "")
+			$data['header'] = "Browse Characters";
+		else
+			$data['header'] = 'Results for ' . "\"" . $character . "\"";
+		
+		$data['css'] = 'search_characters.css';
+		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
 	}
 	
@@ -238,7 +271,7 @@ class SearchC extends CI_Controller {
 		}
 		
 		$data['title'] = 'V-Anime';
-		$data['css'] = 'login.css';
+		$data['css'] = 'search_users.css';
 		$this->load->view('search_page', $data);
 		
 	}

@@ -14,11 +14,11 @@
 	    <button onclick="myFunction()">Try it</button>
 		<p id="demo"></p>
 	
-		   <?php echo '<a href="' . site_url("home/test_v3") . '">JsonV3</a>'; ?>
-		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes/8ghj30jhkll70gvk19f8kkujai90816k") . '">Get Update Animes</br></a>'; ?>
-		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get_update</a>'; ?>
+		   <?php //echo '<a href="' . site_url("home/test_v3") . '">JsonV3</a>'; ?>
+		   <?php //echo '<a href="' . site_url("CharacterUpdates/get_add_characters_actors/8ghj30jhkll70gvk19f8kkujai90816k") . '">Update Characters</br></a>'; ?>
+		   <?php echo '<a href="' . site_url("characterUpdates/write_characters_json/8ghj30jhkll70gvk19f8kkujai90816k") . '">Write characters json<br/></a>'; ?>
 		   <?php //echo '<a href="' . site_url("animeUpdates/get_update_animes") . '">Get json data with FGC</a></br>'; ?>
-		   <?php //echo '<a href="' . site_url("posts/load_posts/7") . '">Posts</a>'; ?>
+		   <?php echo '<a href="' . site_url("home/character_v1") . '">AniList</a>'; ?>
 	</div>
 </div>
 <?php include 'footer.php';?>

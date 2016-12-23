@@ -94,7 +94,7 @@ function showEditFields() {
 			<a href="#" class="menu_title" id="recommendations_menu_title">RECOMMENDATIONS</a>
 		</div>
 		<div class="menu_title_div" id="menu_characters_div">
-			<a href="#" class="menu_title" id="characters_menu_title">CHARACTERS</a>
+			<a href="<?php echo site_url("animeContent/characters/{$anime['slug']}");?>" class="menu_title" id="characters_menu_title">CHARACTERS</a>
 		</div>
 		<div class="menu_title_div" id="menu_user_stats_div">
 			<a href="#" class="menu_title" id="user_stats_menu_title">USER STATS</a>
@@ -153,9 +153,14 @@ function showEditFields() {
 					<p id="ranked">Rank #</p>
 				</div>
 			</div>
-			<div id="wrap_poster_span_div">
-				<img src="<?php echo asset_url() . "poster_images/" . $anime['poster_image_file_name']; if($this->session->flashdata('new_poster')) echo "?rand={$random_num}";?>" onerror="this.src='<?php echo asset_url()."imgs/None.jpg"?>'"  alt="Image" id="poster_image">
+			<div id="wrap_poster_info_div">
+				<img src="<?php if($anime['poster_image_file_name'] != "") echo asset_url() . "poster_images/" . $anime['poster_image_file_name']; else echo asset_url()."imgs/None.jpg";?>"  alt="Image" id="poster_image">
 				<span id="edit_poster_span" class="fa fa-camera"></span>
+				<div class="anime_titles">
+					<p id="anime_titles_header">Titles</p>
+					<p class="anime_titles_p"><?php echo "<strong>Main: </strong>" . $titles['main'];?></p>
+					<p class="anime_titles_p"><?php if($titles['alt'] != "") echo "<strong>Alt: </strong>" . $titles['alt'];?></p>
+				</div>
 			</div>
 			<div id="anime_modal" class="modal">
 			  <div id="center_div">
@@ -238,6 +243,7 @@ function showEditFields() {
 			</div>
 			<?php if($anime['youtube_video_id'] != "") {?>
 			<div id="youtube_trailer_div">
+				<p class="youtube_trailer_header">Trailer</p>
 				<div id="show_video" style="background-image: url('https://i3.ytimg.com/vi/<?php echo $anime['youtube_video_id']?>/hqdefault.jpg');">
 					<span class="fa fa-youtube-play"></span>
 				</div>
@@ -295,12 +301,3 @@ function showEditFields() {
 
 
 <?php include 'footer.php';?>
-
-
-
-
-
-
-
-
-

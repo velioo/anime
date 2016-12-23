@@ -9,6 +9,7 @@ class Posts extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('posts_model');
+		$this->load->model('helpers_model');
 		$this->logged = $this->session->userdata('is_logged_in');
 	}
 		
@@ -129,7 +130,7 @@ class Posts extends CI_Controller {
 			}
 			
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -150,7 +151,7 @@ class Posts extends CI_Controller {
 			}
 				
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -168,7 +169,7 @@ class Posts extends CI_Controller {
 			}
 				
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -189,7 +190,7 @@ class Posts extends CI_Controller {
 			}
 				
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -210,7 +211,7 @@ class Posts extends CI_Controller {
 			}
 				
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
 	}
 	
@@ -228,15 +229,8 @@ class Posts extends CI_Controller {
 			}
 				
 		} else {
-			$this->bad_request();
+			$this->helpers_model->bad_request();
 		}
-	}
-	
-	function bad_request() {
-		header('HTTP/1.1 400 Bad Request');
-		echo "<h1>Error 400 Bad request</h1>";
-		echo "The requested action cannot be executed.";
-		exit();
 	}
 	
 }

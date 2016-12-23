@@ -40,6 +40,8 @@ $(document).ready(function() {
 			break;
 	}
 	
+	
+	$('#loader_watchlist_image_div').show();
     $.post(url, {'user_id': user_id},
     function(data){ 
         if (data != "") {  
@@ -74,6 +76,8 @@ $(document).ready(function() {
         	  }
         	  
       	  });
+          
+          $('#loader_watchlist_image_div').hide();
           
                   
       	$('input:radio').change(function() {
@@ -165,6 +169,8 @@ $(document).ready(function() {
   		  count_animes();
   		  if(is_you) {
   			  setDefaultSort();
+  		  } else {
+  			$('.anime_row').css("visibility", "visible");
   		  }
         }
     }); 

@@ -6,6 +6,11 @@ require_once $path;
 
 class Login extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function index() {
 		$this->login_page();
 	}
@@ -249,17 +254,10 @@ class Login extends CI_Controller {
 					}
 					redirect("userUpdates/user_settings/{$message}");
 				} else {
-					$this->unauthorized();
+					$this->helpers_model->unauthorized();
 				}
 			}
 		}
-	}
-	
-	function unauthorized() {
-		header('HTTP/1.0 401 Unauthorized');
-		echo "<h1>Error 401 Unauthorized</h1>";
-		echo "You aren't authorized to access this page.";
-		exit();
 	}
 }
 

@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class SignUp extends CI_Controller {
 	
+	public function __construct() {
+		parent::__construct();
+		$this->load->model('helpers_model');
+	}
+	
 	public function index() {
 		$this->signup_page();
 	}
@@ -26,8 +31,10 @@ class SignUp extends CI_Controller {
 			$this->signup_page();
 		} else {
 			$this->load->model('users_model');
+			$query = $this->users_model->create_user();
 			
-			if($query = $this->users_model->create_user()) {
+			if($query) {
+				$this->write_users_json(VERIFICATION_TOKEN);
 				$data['account_created'] = "Your account has been created.<br/><br/> You may now log in";
 				$data['title'] = 'Login';
 				$data['css'] = 'login.css';
@@ -78,6 +85,7 @@ class SignUp extends CI_Controller {
 			if(isset($result->id)) {				
 				$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);					
 				if($query) {
+					$this->write_users_json(VERIFICATION_TOKEN);
 					$data = array(
 							'id' => $query['id'],
 							'username' => $query['username'],
@@ -94,11 +102,8 @@ class SignUp extends CI_Controller {
 					$this->signup_page();
 				}				
 			} else {
-				$this->unauthorized_error();
+				$this->helpers_model->unauthorized_error();
 			}
-
-			
-
 		} 
 	}
 	
@@ -127,12 +132,34 @@ class SignUp extends CI_Controller {
 		}
 	}	
 	
-	public function unauthorized_error() {
-		header("HTTP/1.1 401 Unauthorized");
-		echo "<h1>Error 401 Unauthorized</h1>";
-		echo "Your access token is invalid";
-		exit;
+	function write_users_json($verification_token=null) {
+		if($verification_token === VERIFICATION_TOKEN) {
+	
+			$this->load->model('users_model');
+	
+			$result_array = $this->users_model->get_users_json_data();
+	
+			if($result_array) {
+	
+				$all_names = "";
+					
+				foreach ($result_array as $user) {
+	
+					$name = $user['username'];
+					$iamge = $user['profile_image'];
+	
+					$result[] = array('name'=> $name, 'image'=> $image);
+				}
+	
+				$fp = fopen('assets/json/autocomplete_users.json', 'w');
+				fwrite($fp, json_encode($result));
+				fclose($fp);
+			}
+		} else {
+			$this->helpers_model->unauthorized();
+		}
 	}
+
 }
 	
 
