@@ -72,7 +72,7 @@ $(document).ready(function() {
 		</div>
 		
 		<div class="col-sm-12" id="new_review_div">
-			<a href="<?php echo site_url("reviews/add_edit_review/{$slug}");?>" style="height: 50px;"><button class="btn btn-primary button-blue" id="reviews_user_button"><?php echo $button_name; ?></button></a>
+			<a href="<?php if($logged) { echo site_url("reviews/add_edit_review/{$slug}");} else echo "#";?>" style="height: 50px;"><button class="btn btn-primary button-blue log_in_modal" id="reviews_user_button"><?php echo $button_name; ?></button></a>
 		</div>
 		
 		<div class="col-sm-12" id="reviews_div">
@@ -85,3 +85,5 @@ $(document).ready(function() {
 </div>
 
 <?php include 'footer.php';?>
+
+<?php if(!$logged) { include 'login_modal.php'; }?>

@@ -218,11 +218,11 @@ class Reviews extends CI_Controller {
 
 	}
 	
-	public function user_reviews($username=null) {
-		$this->load->model('reviews_model');
-		$this->load->model('users_model');
-		
-		if($username != null) {		
+	public function user_reviews($username=null) {		
+		if($username != null) {			
+			$this->load->model('reviews_model');
+			$this->load->model('users_model');
+			
 			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {

@@ -2,6 +2,7 @@
 
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>">
 <script src="<?php echo asset_url() . "js/characters.js";?>"></script>
+<script src="<?php echo asset_url() . "js/character_user_status.js";?>"></script>
 
 <?php
 	if(isset($this->session->userdata['is_logged_in'])) 
@@ -28,6 +29,11 @@ $(document).ready(function() {
 
 	initScroll(total_groups, site_url, anime_id);
 });
+
+function getCharacterUserStatusUrl() {
+	var character_status_url = "<?php echo site_url("characters/change_character_user_status");?>";
+	return character_status_url;
+}
 
 <?php if($is_admin) { ?>
 <?php }?>
@@ -101,3 +107,5 @@ $(document).ready(function() {
 </div>
 
 <?php include 'footer.php';?>
+
+<?php if(!$logged) { include 'login_modal.php'; }?>

@@ -11,6 +11,9 @@
 	  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 	  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/" . $css;?>">
+	  <?php if(isset($additional_css)) {?>
+	  	<link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/" . $additional_css;?>">
+	  <?php }?>
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/bootstrap-social.css";?>">	  
 	  <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.min.css"?>"/>
 	  <link rel="stylesheet" href="<?php echo asset_url() . "EasyAutocomplete-1.3.5/easy-autocomplete.themes.min.css"?>"> 

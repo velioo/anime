@@ -43,6 +43,10 @@ $(document).ready(function() {
 		var score = <?php if(isset($score)) echo $score; else echo 0;?>;
 		$('input[name=userScore][value=' + score + ']').prop('checked',true);
 	}
+
+	<?php if($logged) {?>
+		$('')
+	<?php }?>
 });
 
 	function getStatusUrl() {
@@ -258,14 +262,14 @@ function showEditFields() {
 		</div>
 		<p class="anime_content_title">Reviews</p>
 		<div class="col-sm-9" id="reviews">	
-		<a href="<?php echo site_url("reviews/add_edit_review/" . $anime['slug']);?>" class="add_edit_review disable-link-decoration"><?php if($logged && $has_written_review) echo "<span class='blue-text'> Edit your Review</span>"; else echo "<span class='red-text'> Write a Review</span>";?></a>
+		<a href="<?php if($logged) { echo site_url("reviews/add_edit_review/" . $anime['slug']);} else echo "#";?>" class="add_edit_review disable-link-decoration"><?php if($logged && $has_written_review) echo "<span class='blue-text'> Edit your Review</span>"; else echo "<span class='red-text log_in_modal'> Write a Review</span>";?></a>
 			<?php if(isset($reviews)) foreach($reviews as $review) {?>
 			<div class="wrap_review">
 			    <div class="review_header_div">
 			      <div class="user_review_image_div">
-			      	<a href="<?php echo site_url("users/profile/{$review['username']}");?>"><img class="user_review_image" src="<?php echo asset_url() . "user_profile_images/{$review['profile_image']}"?>"></a>
+			      	<a href="<?php echo site_url("users/profile/{$review['username']}");?>" class="disable-link-decoration blue-text"><img class="user_review_image" src="<?php echo asset_url() . "user_profile_images/{$review['profile_image']}"?>"></a>
 			      </div>
-			      <a href="<?php echo site_url("users/profile/{$review['username']}")?>" class="user_name"><?php echo $review['username']?></a>
+			      <a href="<?php echo site_url("users/profile/{$review['username']}")?>" class="user_name disable-link-decoration blue-text"><?php echo $review['username']?></a>
 			      <div class="review_header_right_part">
 				      <p class="review_right_p">
 				      <?php if($review['updated_at'] != NULL) echo convert_date(date('Y-m-d', strtotime($review['updated_at']))); else echo convert_date(date('Y-m-d', strtotime($review['created_at'])));?>
@@ -287,17 +291,18 @@ function showEditFields() {
 		   <?php } else { ?>
 		   		<p style="margin-top:20px;">No Reviews yet</p> 
 		   		<div id="wrap_write_first_review">
-		   			<a id="write_first_review" href="<?php echo site_url("reviews/add_edit_review/" . $anime['slug']);?>"><button id="write_first_review_button" class="btn btn-primary button-red">Be the first to write one</button> </a>
+		   			<a id="write_first_review" href="<?php if($logged) { echo site_url("reviews/add_edit_review/" . $anime['slug']); } else echo "#";?>"><button id="write_first_review_button" class="btn btn-primary button-red log_in_modal">Be the first to write one</button> </a>
 		   		</div>
 		   <?php }?>
 		   <?php if(isset($reviews)) {?>
 			   <div id="wrap_see_all_reviews">
-			  		<a id="link_see_all_reviews" href="<?php echo site_url("animeContent/reviews/" . $anime['slug']);?>"><button id="see_all_reviews_button" class="btn btn-primary button-blue">See All</button></a>
+			  		<a id="link_see_all_reviews" href="<?php if($logged) { echo site_url("animeContent/reviews/" . $anime['slug']);} else echo "#";?>"><button id="see_all_reviews_button" class="btn btn-primary button-blue">See All</button></a>
 			   </div>
 		   <?php } ?>
 		</div>
 	</div>
 </div>
 
-
 <?php include 'footer.php';?>
+
+<?php if(!$logged) { include 'login_modal.php'; }?>

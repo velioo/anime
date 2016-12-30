@@ -323,7 +323,7 @@ function get_alternate_title($canonical, $titles) {
 	return $alternate_title;
 }
 
-function format_character_info($info_text) {	
+function format_info($info_text) {	
 	$delete_first_nl = FALSE;
 	if(strpos($info_text, '__') !== false) {
 		$split_info = explode("  ", $info_text);		

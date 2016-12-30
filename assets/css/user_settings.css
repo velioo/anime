@@ -115,6 +115,23 @@ input.submit_privacy {
 	display: block;
 }
 
+.loading_div {	
+	display: none;
+	height: 100px;
+	width: 100px;
+	white-space: nowrap;
+	text-align: center;
+	float: right;
+	margin-top: -70px;
+}
+
+.loading_icon {
+	max-width: 200px;
+	max-height: 500px;	
+	height: 100px;
+	vertical-align: middle;
+}
+
 .error {
 	color:red;
 	display:inline;

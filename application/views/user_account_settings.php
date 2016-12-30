@@ -14,6 +14,11 @@ $(document).ready(function() {
 	var default_watchlist_page = <?php echo $user['default_watchlist_page'];?>;
 	$('#age_visibility').val(age_visibility);
 	$('#default_watchlist_page').val(default_watchlist_page);
+
+	$('#fb-login').click(function() {
+		$('.loading_div').show();
+	});
+	
 });
 </script>
 
@@ -55,6 +60,7 @@ $(document).ready(function() {
 				    <span class="fa fa-facebook"></span><?php echo $is_fb_connected;?>
 				 </button>
 			 	</form>
+			 	<div class="loading_div"><img src="<?php echo asset_url() . "imgs/loading_icon.gif";?>" class="loading_icon"></div>
 			 	<br/>
 			</div>
 		  <div id="privacy_notifications_div" class="preferences_div tab-pane fade">

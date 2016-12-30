@@ -26,11 +26,11 @@ class SearchC extends CI_Controller {
 			case 'users':
 				$this->search_users();
 				break;
-			case 'lists':
-				$this->search_lists();
+			case 'people':
+				$this->search_people();
 				break;
 			default:
-				$this->load->library('../controllers/home');
+				$this->index();
 		}
 		
 	}
@@ -106,7 +106,7 @@ class SearchC extends CI_Controller {
 		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $user_sorted_results);
 		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order);
 		
-		if($this->session->userdata('is_logged_in')) {
+		if($this->session->userdata('is_logged_in') && $config['total_rows'] > 0) {
 			$query = $this->watchlist_model->add_user_statuses($query);
 		}
 		
@@ -274,6 +274,56 @@ class SearchC extends CI_Controller {
 		$data['css'] = 'search_users.css';
 		$this->load->view('search_page', $data);
 		
+	}
+	
+	public function search_people() {
+		$this->load->model('search_model');
+		$this->load->model('actors_model');
+		$this->load->library('pagination');
+		
+		$config = $this->configure_pagination();
+		
+		$config['base_url'] = site_url("SearchC/search_people");
+		$config['per_page'] = 50;
+		
+		if($this->input->get('search') !== NULL) { //get user search
+			$actor = $this->input->get('search');
+		} else if($this->input->get('last_search') !== NULL) {
+			$actor = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
+		} else {
+			$actor = "";
+		}
+		
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+		} else {
+			$start = 0;
+		}
+		
+		$temp = $actor;
+		$actor = addslashes($actor);
+		
+		$query = $this->search_model->search_actors($actor, $config['per_page'], $start);
+		$config['total_rows'] = $this->search_model->get_actors_count($actor, $config['per_page'], $start);
+		
+		$actor = $temp;
+		
+		if($query) {
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();
+			$data['actors_matched'] = $query;
+		}
+		
+		$data['last_search'] = $actor;
+		$data['title'] = 'V-Anime';
+		if($actor == "")
+			$data['header'] = "Browse Actors";
+			else
+				$data['header'] = 'Results for ' . "\"" . $actor . "\"";
+		
+				$data['css'] = 'search_actors.css';
+				$data['javascript'] = 'home.js';
+				$this->load->view('search_page', $data);
 	}
 	
 	public function search_lists() {

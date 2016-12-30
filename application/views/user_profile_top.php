@@ -14,6 +14,7 @@
 		$time_difference = round(abs($current_time - $last_online) / (3600 * 24)) . " days ago";
 	}
 ?>
+
 <div id="user-bar" style="background-image:url('<?php if($user['cover_image'] != "") { echo asset_url() . "user_cover_images/" . $user['cover_image']; } else echo asset_url() . "user_cover_images/Default.jpg"?>'); ">
 	<div class="container-fluid top-container">		
 		<a class="thumbnail">
@@ -29,8 +30,10 @@
 			<a href="#"><label class="button-black navigation_item" id="groups" onClick="">Groups</label></a>	
 			<a href="<?php echo site_url("reviews/user_reviews/{$user['username']}");?>"><button class="button-black navigation_item" id="reviews" onClick="">Reviews</button></a>	
 			<a href="#"><label class="button-black navigation_item" id="recommendations" onClick="">Recommendations</label></a>	
-			<a href="#"><label class="button-black navigation_item" id="followers" onClick="">Followers</label></a>	
-			<a href="#"><label class="button-black navigation_item" id="following" onClick="">Following</label></a>
+			<a href="<?php echo site_url("follow/followers/{$user['username']}");?>"><label class="button-black navigation_item" id="followers">Followers</label></a>	
+			<a href="<?php echo site_url("follow/following/{$user['username']}");?>"><label class="button-black navigation_item" id="following">Following</label></a>
+			<a href="<?php echo site_url("characters/loves/{$user['username']}");?>"><label class="button-black navigation_item" id="loves">Loves</label></a>
+			<a href="<?php echo site_url("characters/hates/{$user['username']}");?>"><label class="button-black navigation_item" id="hates">Hates</label></a>
 		</div>
 		<?php if($is_you) {?>
 		<div class="wrap_buttons_div">
@@ -48,10 +51,17 @@
 				  		echo $this->session->flashdata('error_a');
 				  }
 				?>
-		<?php } else { ?>
-		<div class="wrap_buttons_div">
-			<button class="btn btn-primary button-blue" id="follow_button" onClick="">Follow</button>	
-		</div>
+		<?php } else if($logged) { ?>
+			<?php if($user['follow_status'] == 1) {?>
+				<div class="wrap_buttons_div">
+					<button class="btn btn-primary button-red" id="follow_button">Unfollow</button>	
+				</div>
+			<?php } else {?>
+				<div class="wrap_buttons_div">
+					<button class="btn btn-primary button-blue" id="follow_button">Follow</button>	
+				</div>
+			<?php }?>
+			
 		<?php }?>	
 				<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $user['top_offset'];?>">	
 		<?php if($is_you) {?>		

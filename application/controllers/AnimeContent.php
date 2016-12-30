@@ -139,7 +139,7 @@ class AnimeContent extends CI_Controller {
 				$total_characters = $this->characters_model->get_characters_count($anime_id);
 				
 				if($total_characters) {	
-					$characters_per_page = 20;
+					$characters_per_page = 50;
 					$data['total_groups'] = ceil($total_characters['count']/$characters_per_page);
 				} else {
 					$this->helpers_model->server_error();

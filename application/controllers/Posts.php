@@ -16,6 +16,22 @@ class Posts extends CI_Controller {
 	public function index() {
 		redirect("home");
 	}
+	
+	public function post($post_id=null) {		
+		if($post_id != null && is_numeric($post_id)) {
+		$post = $this->posts_model->get_post($post_id);	
+		if($post) {
+			$data['post'] = $post;		
+			$data['css'] = 'user.css';
+			$data['title'] = 'V-Anime';
+			$this->load->view('post_permalink', $data);
+		} else {
+			$this->helpers_model->page_not_found();
+		}
+		} else {
+			$this->helpers_model->bad_request();
+		}
+	}
 
 	public function load_posts() {
 		
@@ -61,6 +77,7 @@ class Posts extends CI_Controller {
 					
 				        $element.='<div class="post_time">';
 				        $element.=convert_date(date("Y-m-d", strtotime($post['created_at'])));
+				        $element.='<a href="' . site_url("posts/post/{$post['id']}") . '" class="disable-link-decoration gray-text"> &middot; Permalink</a>';
 				        $element.='</div>
 					</div>
 					<div class="post_body">' . stripslashes($post['content'])	. '</div>
@@ -97,7 +114,7 @@ class Posts extends CI_Controller {
         				if($this->logged) {
 							$element.='<input type="text" class="submit_comment" placeholder="Leave a Comment...">';
         				} else {
-        					$element.="<p style='text-align: center; margin-top: 10px;'><a href='" . site_url("login/login_page") . "' class='disable-link-decoration blue-text'>Log in</a> to comment</p>";
+        					//$element.="<p style='text-align: center; margin-top: 10px;'><a href='" . site_url("login/login_page") . "' class='disable-link-decoration blue-text'>Log in</a> to comment</p>";
         				}
 					$element.='</div>
 				</div>';
@@ -115,16 +132,24 @@ class Posts extends CI_Controller {
 	
 	public function add_post() {
 		if($this->logged) {
+			$this->load->model('notifications_model');
 			
 			$wall_owner = $this->input->post('wall_owner');
 			$content = $this->input->post('content');
 			
 			$content = addslashes(trim($content));
 			
-			$query = $this->posts_model->add_post($wall_owner, $content);
-			
-			if($query) {
-				echo $query;
+			$post_id = $this->posts_model->add_post($wall_owner, $content);
+			if($post_id) {
+				
+				if($wall_owner != $this->session->userdata('id')) {
+					$description = "posted on your wall";			
+					$type = "post";
+					$notification_id = $this->notifications_model->add_notification($post_id, $description, $type);	
+					$this->notifications_model->spread_notification($notification_id, $wall_owner);
+				}
+				
+				echo $post_id;
 			} else {
 				echo 0;
 			}
@@ -157,10 +182,14 @@ class Posts extends CI_Controller {
 	
 	public function delete_post() {
 		if($this->logged) {
+			$this->load->model('notifications_model');
 			
 			$post_id = $this->input->post('post_id');
 			
-			$query = $this->posts_model->delete_post($post_id);
+			$query = $this->posts_model->delete_post($post_id);		
+			
+			$type = 'post';		
+			$this->notifications_model->delete_notifications($post_id, $type);
 			
 			if($query) {
 				echo "Success";
@@ -175,15 +204,26 @@ class Posts extends CI_Controller {
 	
 	public function add_comment() {
 		if($this->logged) {
-			
+			$this->load->model('notifications_model');
 			$post_id = $this->input->post('post_id');
 			$content = $this->input->post('content');
 				
 			$content = addslashes(trim($content));
 				
-			$query = $this->posts_model->add_comment($post_id, $content);
+			$query_comment_id = $this->posts_model->add_comment($post_id, $content);			
 			
-			if($query) {
+			if($query_comment_id) {
+				
+				$is_yours = $this->posts_model->check_if_is_your_post($post_id);
+				
+				if($is_yours != "your") {
+					$description = "commented on your post.";
+					$additional_info = $query_comment_id;
+					$type = "post_comment";
+					$notification_id = $this->notifications_model->add_notification($post_id, $description, $type, $additional_info);
+					$this->notifications_model->spread_notification($notification_id, $is_yours);
+				}
+				
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -217,11 +257,16 @@ class Posts extends CI_Controller {
 	
 	public function delete_comment() {
 		if($this->logged) {
-			
+			$this->load->model('notifications_model');
 			$comment_id = $this->input->post('comment_id');
 				
+			$post_id = $this->posts_model->get_post_from_comment($comment_id);
+			
 			$query = $this->posts_model->delete_comment($comment_id);
 				
+			$type = "post_comment";
+			$this->notifications_model->delete_notifications($post_id, $type);
+			
 			if($query) {
 				echo "Success";
 			} else {

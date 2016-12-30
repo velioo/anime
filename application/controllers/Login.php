@@ -76,6 +76,40 @@ class Login extends CI_Controller {
 		}
 	}
 	
+	public function asynch_log_in() {
+		$this->load->model('users_model');
+		$query = $this->users_model->validate();
+		if($query) {
+			$username = $this->input->post('username');
+			$result = $this->users_model->get_user_info_logged($username);
+			if($result) {
+					
+				$data = array(
+						'id' => $result['id'],
+						'username' => $result['username'],
+						'email' => $result['email'],
+						'user_avatar' => $result['profile_image'],
+						'is_logged_in' => true
+				);
+					
+				$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
+					
+				if($is_admin) {
+					$data['admin'] = TRUE;
+				}
+					
+				$this->session->set_userdata($data);
+				$this->users_model->update_user_activity();
+					
+				echo "Success";
+			} else {
+				$this->helpers_model->page_not_found();
+			}
+		} else {
+			echo "Fail";
+		}
+	}
+	
 	public function logout() {
 		if(isset($this->session->userdata['is_logged_in'])) {
 			$this->session->sess_destroy();
@@ -111,6 +145,12 @@ class Login extends CI_Controller {
 		$helper = $fb->getRedirectLoginHelper();
 		$permissions = ['email']; 
 		$loginUrl = $helper->getLoginUrl(site_url("login/facebook_login_callback/{$connect_existing_account}"), $permissions);
+		
+		$redirect_url = $this->input->post('redirect_url');
+		
+		if ($redirect_url != "") {
+			$this->session->set_flashdata('redirect_url', $redirect_url);
+		}
 		
 		redirect($loginUrl);
 	}
@@ -195,7 +235,12 @@ class Login extends CI_Controller {
 					$this->session->set_userdata($data);	
 					$this->users_model->update_user_activity();
 					
-					redirect("users/profile/{$user['username']}");
+					if($this->session->flashdata('redirect_url')) {
+						redirect($this->session->flashdata('redirect_url'));
+					} else {
+						redirect("users/profile/{$user['username']}");
+					}					
+					
 			} else {
 				
 				$email_available = $this->users_model->check_if_email_exists($email);		
@@ -213,8 +258,7 @@ class Login extends CI_Controller {
 				$data['header'] = 'Create new account';
 				$data['title'] = "Sign Up";
 				$data['css'] = 'login.css';
-				$this->load->view('fb_user_signup', $data);
-				
+				$this->load->view('fb_user_signup', $data);				
 			}
 		} else {
 			if($user) {

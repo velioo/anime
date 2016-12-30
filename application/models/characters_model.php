@@ -8,31 +8,8 @@ Class Characters_model extends CI_Model {
 		parent::__construct();
 	}
 	
-	function get_character($character_id) {
-		$query = $this->db->get_where('characters', array('id' => $character_id));
-				
-		if($query->num_rows() == 1) {
-			$row_array = $query->row_array();
-			$row_array = $this->add_character_related_animes($row_array);
-			$row_array = $this->add_character_actors($row_array, FALSE);	
-			return $row_array;
-		} else {
-			return FALSE;
-		}			
-	}
-	
-	function get_characters_actors($anime_id, $limit, $offset) {
-		$this->db->select('characters.id,characters.first_name,characters.last_name,characters.alt_name,character_animes.role,characters.image_file_name,character_animes.anime_id');
-		$this->db->join('character_animes', 'character_animes.character_id=characters.id');
-		$this->db->join('animes', 'animes.id=character_animes.anime_id');
-		$this->db->where('character_animes.anime_id', $anime_id);
-		$this->db->order_by('character_animes.role', 'asc');
-		$this->db->order_by('characters.first_name', 'asc');
-		$characters = $this->db->get('characters', $limit, $offset);
-		
-		$result = $this->add_character_actors($characters->result_array(), TRUE);
-		
-		return $result;
+	function add_character($character_array) {
+		$this->db->insert('characters', $character_array);
 	}
 	
 	function add_character_actors($characters, $many_characters=FALSE) {		
@@ -46,10 +23,23 @@ Class Characters_model extends CI_Model {
 				$this->db->where('animes.id', $characters[$i]['anime_id']);
 				$actors = $this->db->get('actors');
 				$characters[$i]['actors'] = $actors->result_array();
+	
+				for($j = 0; $j < count($characters[$i]['actors']); $j++) {
+					$actor_slug = "";
+					if($characters[$i]['actors'][$j]['first_name'] != "") {
+						$actor_slug.=$characters[$i]['actors'][$j]['first_name'];
+					}
+					if($characters[$i]['actors'][$j]['last_name'] != "") {
+						if($actor_slug != "")
+							$actor_slug.="-";
+							$actor_slug.=$characters[$i]['actors'][$j]['last_name'];
+					}					
+					$characters[$i]['actors'][$j]['actor_slug'] = $actor_slug;		
+				}
 			}
 		} else {
 			for($i = 0; $i < count($characters['animes']); $i++) {
-				$this->db->select('animes.id as anime_id,actors.id as actor_id,actors.first_name,actors.last_name,actors.language,actors.image_file_name');
+				$this->db->select('animes.id as anime_id,actors.id,actors.first_name,actors.last_name,actors.language,actors.image_file_name');
 				$this->db->join('character_actors', 'character_actors.actor_id=actors.id');
 				$this->db->join('animes', 'animes.id=character_actors.anime_id');
 				$this->db->join('characters', 'characters.id=character_actors.character_id');
@@ -57,20 +47,133 @@ Class Characters_model extends CI_Model {
 				$this->db->where('animes.id', $characters['animes'][$i]['id']);
 				$actors = $this->db->get('actors');
 				$characters['animes'][$i]['actors'] = $actors->result_array();
+				
+				for($j = 0; $j < count($characters['animes'][$i]['actors']); $j++) {
+					$actor_slug = "";
+					if($characters['animes'][$i]['actors'][$j]['first_name'] != "") {
+						$actor_slug.=$characters['animes'][$i]['actors'][$j]['first_name'];
+					}
+					if($characters['animes'][$i]['actors'][$j]['last_name'] != "") {
+						if($actor_slug != "")
+							$actor_slug.="-";
+							$actor_slug.=$characters['animes'][$i]['actors'][$j]['last_name'];
+					}
+					$characters['animes'][$i]['actors'][$j]['actor_slug'] = $actor_slug;
+				}
 			}
 		}
 		return $characters;
 	}
 	
+	function add_character_user_status($characters, $many_characters=FALSE) {
+		$user_id = $this->session->userdata('id');
+		if($many_characters) {
+			for($i = 0; $i < count($characters); $i++) {	
+				$this->db->select('status');
+				$this->db->where('character_id', $characters[$i]['id']);
+				$this->db->where('user_id', $user_id);
+				$status = $this->db->get('characters_users_status');
+				if($status->num_rows() == 1)  {
+					$characters[$i]['character_user_status'] = $status->row_array()['status'];
+				}
+			}
+		} else {
+			$this->db->select('status');
+			$this->db->where('character_id', $characters['id']);
+			$this->db->where('user_id', $user_id);
+			$status = $this->db->get('characters_users_status');
+			if($status->num_rows() == 1)  {
+				$characters['character_user_status'] = $status->row_array()['status'];
+			}
+		}
+		
+		return $characters;
+	}
+	
 	function add_character_related_animes($row_array) {
-		$animes = $this->db->query("SELECT a.id as id, a.slug as slug, a.titles as titles, ca.role FROM animes as a JOIN character_animes as ca ON ca.anime_id = a.id
-				JOIN characters as c ON c.id = ca.character_id WHERE c.id = {$row_array['id']} ");	
+		$this->db->select('a.id as id, a.slug as slug, a.titles as titles, ca.role');
+		$this->db->join('character_animes as ca', 'ca.anime_id = a.id');
+		$this->db->join('characters as c', 'c.id = ca.character_id');
+		$this->db->where("c.id = {$row_array['id']}");
+		$animes = $this->db->get('animes as a');
+		
 		$animes = $animes->result_array();	
 		for($i = 0; $i < count($animes); $i++) {
 			$animes[$i]['slug'] = str_replace(" ", "-", $animes[$i]['slug']);
 		}
 		$row_array['animes'] = $animes;		
 		return $row_array;
+	}
+	
+	function add_character_user_statuses($row_array) {
+		$this->db->select('u.username');
+		$this->db->join('users as u', 'u.id=cus.user_id');
+		$this->db->where("cus.character_id = {$row_array['id']}");
+		$this->db->where("cus.status = 1");
+		$loved = $this->db->get('characters_users_status as cus');
+		
+		$row_array['character_love'] = $loved->result_array();
+		$row_array['character_love_count'] = $loved->num_rows();
+		
+		$this->db->select('u.username');
+		$this->db->join('users as u', 'u.id=cus.user_id');
+		$this->db->where("cus.character_id = {$row_array['id']}");
+		$this->db->where("cus.status = 0");
+		$hated = $this->db->get('characters_users_status as cus');
+		
+		$row_array['character_hate'] = $hated->result_array();
+		$row_array['character_hate_count'] = $hated->num_rows();
+		
+		return $row_array;		
+	}
+	
+	function get_all_character_users_statuses($character_id, $status, $limit, $offset) {
+		$this->db->select('u.username');
+		$this->db->join('users as u', 'u.id=cus.user_id');
+		$this->db->where("cus.character_id = {$character_id}");
+		$this->db->where("cus.status = {$status}");
+		$this->db->limit($limit, $offset);
+		$query = $this->db->get('characters_users_status as cus');
+		
+		return $query->result_array();
+	}
+	
+	function update_character($character_array) {
+		$this->db->where('id', $character_array['id']);
+		$this->db->update('characters', $character_array);
+	}
+	
+	function get_character($character_id) {
+		$query = $this->db->get_where('characters', array('id' => $character_id));
+	
+		if($query->num_rows() == 1) {
+			$row_array = $query->row_array();
+			$row_array = $this->add_character_related_animes($row_array);
+			$row_array = $this->add_character_actors($row_array, FALSE);
+			$row_array = $this->add_character_user_statuses($row_array);
+			if($this->session->userdata('is_logged_in')) {
+				$row_array = $this->add_character_user_status($row_array, FALSE);
+			}
+			return $row_array;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_characters_actors($anime_id, $limit, $offset) {
+		$this->db->select('characters.id,characters.first_name,characters.last_name,characters.alt_name,character_animes.role,characters.image_file_name,character_animes.anime_id');
+		$this->db->join('character_animes', 'character_animes.character_id=characters.id');
+		$this->db->join('animes', 'animes.id=character_animes.anime_id');
+		$this->db->where('character_animes.anime_id', $anime_id);
+		$this->db->order_by('character_animes.role', 'asc');
+		$this->db->order_by('characters.first_name', 'asc');
+		$characters = $this->db->get('characters', $limit, $offset);
+	
+		$result = $this->add_character_actors($characters->result_array(), TRUE);
+		if($this->session->userdata('is_logged_in')) {
+			$result = $this->add_character_user_status($result, TRUE);
+		}
+		return $result;
 	}
 	
 	function get_characters_count($anime_id) {
@@ -81,36 +184,84 @@ Class Characters_model extends CI_Model {
 		return $characters->row_array();
 	}
 	
-	function add_character($character_array) {
-		$this->db->insert('characters', $character_array);
+	function get_characters_json_data() {
+		$this->db->select('id,first_name,last_name,alt_name,japanese_name,image_file_name');
+		$query = $this->db->get('characters');
+		return $query->result_array();
 	}
 	
-	function update_character($character_array) {
-		$this->db->where('id', $character_array['id']);
-		$this->db->update('characters', $character_array);
+	function get_user_characters($user_id, $status=null, $limit="", $offset="", $details=FALSE) {
+		$data = array(
+			'characters_users_status.user_id' => $user_id
+		);	
+		
+		if($status !== null) {
+			$data['characters_users_status.status'] = $status;
+		}
+		
+		$this->db->select('characters.id,characters.first_name, characters.last_name, characters.alt_name, characters.image_file_name');
+		$this->db->join('characters', 'characters.id=characters_users_status.character_id');
+		$this->db->order_by('characters.first_name, characters.last_name');
+		$query = $this->db->get_where('characters_users_status', $data, $limit, $offset);			
+		$characters = $query->result_array();
+		
+		if($details) {		
+			for($i = 0; $i < count($characters); $i++) {
+				$characters[$i] = $this->add_character_related_animes($characters[$i]);
+			}
+			
+			$characters = $this->add_character_user_status($characters, TRUE);
+		}
+
+		return $characters;
 	}
 	
-	function add_actor($actor_array) {
-		$this->db->insert('actors', $actor_array);
+	function get_user_characters_count($user_id, $status=null) {
+		$data = array(
+				'characters_users_status.user_id' => $user_id
+		);
+		
+		if($status !== null) {
+			$data['characters_users_status.status'] = $status;
+		}
+		
+		$this->db->select('COUNT(1) as count');
+		$query = $this->db->get_where('characters_users_status', $data);
+		
+		return $query->row_array()['count'];
 	}
 	
-	function update_actor($actor_array) {
-		$this->db->where('id', $actor_array['id']);
-		$this->db->update('actors', $actor_array);
+	function change_character_user_status($character_id, $status) {
+		$user_id = $this->session->userdata('id');
+		$query = $this->db->get_where('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id));
+		if($query->num_rows() == 0) {
+			$query = $this->db->insert('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id, 'status' => $status));
+			return $query;
+		} else {
+			if($query->row_array()['status'] == $status) {
+				$query = $this->db->delete('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id));
+				return $query;
+			} else {
+				$this->db->where('character_id', $character_id);
+				$this->db->where('user_id', $user_id);
+				$query = $this->db->update('characters_users_status', array('status' => $status));
+				return $query;
+			}
+		}
 	}
 	
 	function make_character_actor_relation($character_id, $actor_id, $anime_id) {
 		$data = array(
-			'character_id' => $character_id,
-			'actor_id' => $actor_id,
-			'anime_id' => $anime_id
+				'character_id' => $character_id,
+				'actor_id' => $actor_id,
+				'anime_id' => $anime_id
 		);
-		
+	
 		$exists = $this->db->get_where('character_actors', array('character_id' => $character_id, 'actor_id' => $actor_id, 'anime_id' => $anime_id));
-		
-		if($exists->num_rows() <= 0) {		
+	
+		if($exists->num_rows() <= 0) {
 			$this->db->insert('character_actors', $data);
-		} 
+		}
 	}
 	
 	function make_character_anime_relation($anime_id, $character_id, $role) {
@@ -119,41 +270,25 @@ Class Characters_model extends CI_Model {
 				'character_id' => $character_id,
 				'role' => $role
 		);
-		
+	
 		$exists = $this->db->get_where('character_animes', array('anime_id' => $anime_id, 'character_id' => $character_id));
-		
+	
 		if($exists->num_rows() <= 0) {
 			$this->db->insert('character_animes', $data);
 		} else {
 			$data = array(
-				'role' => $role	
+					'role' => $role
 			);
 			$this->db->where('anime_id', $anime_id);
-			$this->db->where('character_id', $character_id);			
+			$this->db->where('character_id', $character_id);
 			$this->db->update('character_animes', $data);
 		}
-		
-	}
 	
-	function get_characters_json_data() {
-		$this->db->select('id,first_name,last_name,alt_name,japanese_name,image_file_name');
-		$query = $this->db->get('characters');
-		return $query->result_array();
 	}
 	
 	function check_if_character_exists($character_array) {
 		$this->db->where('id', $character_array['id']);
 		$query = $this->db->get('characters');
-		if($query->num_rows() == 1) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
-	
-	function check_if_actor_exists($actor_array) {
-		$this->db->where('id', $actor_array['id']);
-		$query = $this->db->get('actors');
 		if($query->num_rows() == 1) {
 			return TRUE;
 		} else {

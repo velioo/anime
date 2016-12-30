@@ -4,8 +4,8 @@ $(document).ready(function() {
 	var wall_owner = getWallOwner();
 	var is_you = getIsYou();
 	var is_logged = getIsLogged();
-	var update = false;
-	var comment_id;
+	var comment_id = null;
+	var edited_post_id = null;
 	var total_records = 0;
 	var loading = false;
 	
@@ -91,10 +91,10 @@ $(document).ready(function() {
 					        <div class='user_name'>\
 					        	<a href='" + user_url + "' class='disable-link-decoration'>" + username + "</a>\
 					        </div>" + modify_div + 
-					        "<div class='post_time'>" + date +
+					        "<div class='post_time'>" + date + "<a href='site_url('posts/post/'" + post_id + "')' class='disable-link-decoration gray-text'> &middot; Permalink</a>" +
 					        "</div>\
 						</div>\
-						<div class='post_body'>" + content +
+						<div class='post_body'>" + content + 
 						"</div>\
 						<div class='comments'>\
 						</div>\
@@ -104,7 +104,7 @@ $(document).ready(function() {
 					</div>");
 					$('#new_post_area').val('');
 					$('#post_options').hide();
-				}
+				}				
 	    	}
 	    });
 	
@@ -112,48 +112,50 @@ $(document).ready(function() {
 	
 	$('#timeline_div').on("keypress", ".submit_comment", function(e) {
 		 if (e.which == 13) {
-			 if(update == false) {
+			 if($(this).parent().parent().data('id') != edited_post_id) {
 				 var content = $(this).val();
-				 var post_id = $(this).parent().parent().data('id');
-				 var user_url = getUserUrl();
-				 var username = getUserName();
-				 var user_image = getUserImage();			 
-				 var url = getAddCommentUrl();
-				 var self = $(this);
-			     var date = Date().toString();
-				 date = date.split(' ');
-				 date = date[2] + " " + date[1] + " " + date[3];	
-				 
-				$.ajax({
-			        method: "POST",
-			        url: url,
-			        data: { post_id: post_id, content: content }
-			      })
-			    .done(function(msg) {
-			    	if(msg == "Success") {
-			    		
-						var modify_div = "<div class='post_settings_div'>\
-							        	<span class='fa fa-angle-down open_post_settings'></span>\
-							        	<div class='post_settings'>\
-							        		<div class='post_option edit_comment'>Edit Comment</div>\
-							        		<div class='post_option delete_comment'>Delete Comment</div>\
-							        	</div>\
-							        </div>";
-						 
-						self.parent().prev().append("<div class='comment'>\
-									<div class='user_image_div'>\
-							      		<a href='" + user_url + "'><img class='user_image' src='" + user_image + "'></a>\
-							        </div>\
-							         <div class='comment_text more'><span class='user_name'><a href='" + user_url + "'class='disable-link-decoration'>" + username + "&nbsp</a></span><span class='content'>" + content + "</span></div>" + modify_div + 		        					       
-							       "<div class='post_time'>" + date +
-							       "</div>\
-								</div>");
-						 self.val("");
-						 self.blur();
-	
-						 add_fix_comments();			    		
-			    	}
-			    });
+				 if(content != "") {
+					 var post_id = $(this).parent().parent().data('id');
+					 var user_url = getUserUrl();
+					 var username = getUserName();
+					 var user_image = getUserImage();			 
+					 var url = getAddCommentUrl();
+					 var self = $(this);
+				     var date = Date().toString();
+					 date = date.split(' ');
+					 date = date[2] + " " + date[1] + " " + date[3];	
+					 
+					$.ajax({
+				        method: "POST",
+				        url: url,
+				        data: { post_id: post_id, content: content }
+				      })
+				    .done(function(msg) {
+				    	if(msg == "Success") {
+				    		
+							var modify_div = "<div class='post_settings_div'>\
+								        	<span class='fa fa-angle-down open_post_settings'></span>\
+								        	<div class='post_settings'>\
+								        		<div class='post_option edit_comment'>Edit Comment</div>\
+								        		<div class='post_option delete_comment'>Delete Comment</div>\
+								        	</div>\
+								        </div>";
+							 
+							self.parent().prev().append("<div class='comment'>\
+										<div class='user_image_div'>\
+								      		<a href='" + user_url + "'><img class='user_image' src='" + user_image + "'></a>\
+								        </div>\
+								         <div class='comment_text more'><span class='user_name'><a href='" + user_url + "'class='disable-link-decoration'>" + username + "&nbsp</a></span><span class='content'>" + content + "</span></div>" + modify_div + 		        					       
+								       "<div class='post_time'>" + date +
+								       "</div>\
+									</div>");
+							 self.val("");
+							 self.blur();
+		
+							 add_fix_comments();			    		
+				    	}
+				    });
+				}
 			 } else {
 				 var content = $(this).val();
 				 var url = getEditCommentUrl();
@@ -168,8 +170,9 @@ $(document).ready(function() {
 				    	if(msg == "Success") {
 				    		$('.comment').each(function() {
 				    			if($(this).data('id') == comment_id) {
-				    				$(this).find('.comment_text').find('.content').text(content);		
+				    				$(this).find('.comment_text').find('.content').text(content);			
 				    				$(this).css('border', "none");
+				    				$(this).css('border-bottom', "1px solid #DEDEDE");
 				    			}
 				    		});
 				    		
@@ -181,10 +184,9 @@ $(document).ready(function() {
 				    		window.alert("Failed to update comment")
 				    	}
 						 comment_id = null;
+						 edited_post_id = null;
 				    });
 			 }
-			 
-			 update = false;
 		 }
 	});
 	
@@ -201,41 +203,15 @@ $(document).ready(function() {
 	$('#timeline_div').on("click", ".post_option", function() {		
 		var self = $(this);
 		
-		if($(this).hasClass('edit_post')) {						
+		if($(this).hasClass('edit_post')) {
+			$('.wrap_edit_post_area_div').remove();
+			$('.post_body').show();
 			var post_text = $(this).parent().parent().parent().next().text();
 			$(this).parent().parent().parent().next().after("<div class='wrap_edit_post_area_div'><textarea class='edit_post_area' placeholder='Edit your post...'></textarea><label class='save_edit_post button-blue'>Save</label></div>");		
 			$('.edit_post_area').val($(this).parent().parent().parent().next().text());
 			$(this).parent().parent().parent().next().hide();		
 			
-			$('.edit_post_area').autogrow({vertical: true, horizontal: false, flickering: false});		
-			
-			$('.save_edit_post').click(function() {
-				var content = $('.edit_post_area').val();
-				var div = document.createElement('div');
-				div.innerHTML = content;
-				var content = div.textContent || div.innerText || '';
-				var post_id = $(this).parent().parent().data('id');
-				var self = $(this);
-				var url = getEditPostUrl();
-				
-				$.ajax({
-			        method: "POST",
-			        url: url,
-			        data: { post_id: post_id, content: content }
-			      })
-			    .done(function(msg) {
-			    	if(msg == "Success") {	
-			    		var post_body = self.parent().prev();
-			    		post_body.text(content);
-			    		self.parent().remove();		
-			    		post_body.show();		    		
-			    	} else {
-			    		window.alert("Failed to update post");
-			    	}
-			    });
-				
-			});
-			
+			$('.edit_post_area').autogrow({vertical: true, horizontal: false, flickering: false});				
 		} else if(self.hasClass('delete_post')) {
 		    var id = self.parent().parent().parent().parent().data('id');	     	    
 		    $('#confirm_delete_modal').data('id', id);
@@ -248,6 +224,8 @@ $(document).ready(function() {
 		    $('body').css("padding-right", "0");			
 		} else if(self.hasClass('edit_comment')) {
 			
+			$('.comment').css('border', "none");
+			$('.comment').css('border-bottom', "1px solid #DEDEDE");
 			self.parent().parent().parent().css('border', "1px solid #223777");
 			
 			if(self.parent().parent().prev().find('.content').has('.morelink').length > 0) {
@@ -258,9 +236,9 @@ $(document).ready(function() {
 						self.parent().parent().prev().find('.content').text()
 				);
 			}
-			update = true;
 			comment_id = self.parent().parent().parent().data('id');
-			$('.submit_comment').focus();
+			edited_post_id = self.parent().parent().parent().parent().parent().data('id');
+			self.parent().parent().parent().parent().next().find('.submit_comment').focus();
 						
 		} else if(self.hasClass('delete_comment')){
 		    var id = self.parent().parent().parent().data('id');	     	    
@@ -273,6 +251,32 @@ $(document).ready(function() {
 		    });
 		    $('body').css("padding-right", "0");
 		}		
+	});
+	
+	$('.save_edit_post').click(function() {
+		var content = $(this).prev().val();
+		var div = document.createElement('div');
+		div.innerHTML = content;
+		var content = div.textContent || div.innerText || '';
+		var post_id = $(this).parent().parent().data('id');
+		var self = $(this);
+		var url = getEditPostUrl();
+		
+		$.ajax({
+	        method: "POST",
+	        url: url,
+	        data: { post_id: post_id, content: content }
+	      })
+	    .done(function(msg) {
+	    	if(msg == "Success") {	
+	    		var post_body = self.parent().prev();
+	    		post_body.text(content);
+	    		self.parent().remove();		
+	    		post_body.show();		    		
+	    	} else {
+	    		window.alert("Failed to update post");
+	    	}
+	    });					
 	});
 	
 	var id;
@@ -315,8 +319,6 @@ function show_hide_text(element) {
 	var lesstext = "Show less";
 	
     var content = element.find('.content').html();
-    
-    console.log(content.length);
     
     if(content.length > showChar) {
 

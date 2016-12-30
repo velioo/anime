@@ -1,6 +1,5 @@
 <?php include 'head.php';?>
 
-<script src="<?php echo asset_url() . "js/browse_animes.js";?>"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
 <script src="<?php echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>
 
@@ -13,12 +12,21 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		addListeners();
-		var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
-		var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
-
-		$('.rating-bg').css('background', 'url(' + star_empty_url_small + ') repeat-x top left');
-		$('.rating').css('background', 'url(' + star_fill_url_small + ') repeat-x top left');
+		<?php if(isset($animes_matched)) {?>
+			$('head').append('<script src="<?php echo asset_url() . "js/browse_animes.js";?>">');	
+			addListeners();
+			var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
+			var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
+	
+			$('.rating-bg').css('background', 'url(' + star_empty_url_small + ') repeat-x top left');
+			$('.rating').css('background', 'url(' + star_fill_url_small + ') repeat-x top left');
+		<?php } else if(isset($characters_matched)) {?>
+			$('head').append('<script src="<?php echo asset_url() . "js/character_user_status.js";?>">');	
+		<?php } else if(isset($users_matched)) {?>
+			$("#users_table").tablesorter();
+		<?php } else if(isset($actors_matched)) {?>
+			$('head').append('<script src="<?php echo asset_url() . "js/actor_user_status.js";?>">');	
+		<?php }?>
 	});
 
 	function getStatusUrl() {
@@ -30,14 +38,24 @@
 		var url = "<?php echo site_url("watchlists/update_score");?>";
 		return url;
 	}
+
+	function getCharacterUserStatusUrl() {
+		var character_status_url = "<?php echo site_url("characters/change_character_user_status");?>";
+		return character_status_url;
+	}
+
+	function getActorUserStatusUrl() {
+		var actor_status_url = "<?php echo site_url("actors/change_actor_user_status");?>";
+		return actor_status_url;
+	}
 </script>
 
 <?php include 'navigation.php';?>
 
 <div id="wrap">
-	<div class="container-fluid scrollable content" style="padding: 0px;">
-		<h1><?php echo $header;?></h1>
-		<?php if(isset($animes_matched)) {  $counter = 0;?>
+	<div class="container-fluid scrollable content">
+		<h1 class="main_header"><?php echo $header;?></h1>
+		<?php if(isset($animes_matched)) {  $counter = 0;?>			
 			<div id="search_navigation">
 				<form action="<?php echo site_url("SearchC/search_anime")?>" method="get" accept-charset="utf-8">
 					<select name="sort_selected" onchange="this.form.submit()" style="width: 150px; font-family: cursive;">
@@ -58,7 +76,7 @@
 		 				 $temp = $anime['titles'];	 				 
 		 				 $titles = convert_titles_to_hash($temp);	
 		 				 echo '<div class="col-sm-4">';
-		 				 echo "<p class='title_paragraph'><a href = '" . site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug'])) . "' class = 'anime_title'>"  . $titles['main'] . "</a></p>";
+		 				 echo "<p class='title_paragraph'><a href = '" . site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug'])) . "' class = 'anime_title disable-link-decoration blue-text'>"  . $titles['main'] . "</a></p>";
 		 				 if($anime['episode_count'] > 0) {
 		 				 	$episode_count = $anime['episode_count'];
 		 				 } else {
@@ -80,6 +98,29 @@
 	 								}
 		 				 		}
 						echo "</p></div>";
+						
+						if(isset($anime['user_status'])) {
+							switch($anime['user_status']) {
+								case 1:
+									$status = "blue";
+									break;
+								case 2:
+									$status = "green";
+									break;
+								case 3:
+									$status = "yellow";
+									break;								
+								case 4:
+									$status = "orange";
+									break;								
+								case 5:
+									$status = "red";
+									break;
+								default:	
+									break;
+							}
+						}
+						
 	 				 ?>				 
 	 				 <?php $random_num = time();?>
 	 				 <div class="anime_body">
@@ -94,7 +135,7 @@
 	 				 	<p class="anime_rating_paragraph"><i title="<?php echo number_format($anime['average_rating']/2, 2) . " out of " . "5 from " . $anime['total_votes'] . " votes";?>" class="fa fa-star-o" aria-hidden="true"></i> <?php echo number_format($anime['average_rating']/2, 2);?></p>
 	 				 	<?php if($logged) {?>
 	 				 		<a class="disable-link-decoration anime_user_status_paragraph" data-id="<?php echo $anime['id'];?>"><?php if(isset($anime['user_status'])) 
-	 				 						echo "<span class='user_status' data-id=" . $anime['user_status'] .">" . get_watchlist_status_name($anime['user_status']) . "</span>&nbsp;" . 
+	 				 						echo "<span class='user_status' data-id=" . $anime['user_status'] ."><span class='status-square " . $status . "'></span>" . get_watchlist_status_name($anime['user_status']) . "</span>&nbsp;" . 
 	 				 							 "<img src='" . asset_url() . "imgs/search_star_icon2.png" ."' style='margin-top: -10px;'>" . 
 	 				 								"<span class='user_score' data-id='" . $anime['user_score'] ."'>" . $anime['user_score']/2 . "</span>"; 
 	 				 					    else echo  				 						
@@ -102,7 +143,10 @@
 	 				 								"<img src='" . asset_url() . "imgs/search_star_icon2.png" ."' style='margin-top: -10px; display: none;'>" .
 	 				 								"<span class='user_score' data-id='0'></span>";?>
 	 				 		</a>
+	 				 	<?php } else { ?>
+	 						<span class="not_logged_add_paragraph log_in_modal">Add</span> 				 	
 	 				 	<?php }?>
+
 	 				 </div>
 	 				 </div>		
 	 				 <?php $counter++;?>
@@ -111,7 +155,7 @@
 			<div class="text-center">
 				<?php if(isset($animes_matched)) echo $pagination?>
 			</div>
-		  <?php } else if(isset($users_matched)) { ?>
+		  <?php } else if(isset($users_matched)) { ?>		  
 		  <div class="table-responsive">
 			   <table id="users_table" class="table tablesorter">
 			    <thead>
@@ -154,9 +198,11 @@
 			      <?php foreach ($characters_matched as $character) { ?>			      
 			      <?php $character_slug = "";					
 					if($character['first_name'] != "") {
-						$character_slug.=$character['first_name'] . "-";
+						$character_slug.=$character['first_name'];
 					} 
 					if($character['last_name'] != "") {
+						if($character_slug != "")
+							$character_slug.="-";
 						$character_slug.=$character['last_name'];
 					}
 				   ?>
@@ -181,11 +227,15 @@
 			        	<?php }?>
 			        </td>
 			        <td class="character_user_status">
-		    			<div class="wrap_user_status">
-				    		<span title="I love this character" class="fa-stack fa-2x love">
+		    			<div class="wrap_user_status" data-id="<?php echo $character['id'];?>">
+		    				<?php if(isset($character['character_user_status'])) { 
+		    					if($character['character_user_status'] == 1){ $character_user_status = 1; }
+		    					else if($character['character_user_status'] == 0) {$character_user_status = 0;} } else {$character_user_status = 2;}		    				
+		    				?>
+				    		<span title="I love this character" class="fa-stack fa-2x love <?php if($character_user_status == 1) echo "love_on";?>" data-value="1">
 				    			<i class="fa fa-heart"></i>
 				    		</span>
-			    			<span title="I hate this character" class="fa-stack fa-2x hate">
+			    			<span title="I hate this character" class="fa-stack fa-2x hate <?php if($character_user_status == 0) echo "hate_on";?>" data-value="0">
 							    <i class="fa fa-heart fa-stack-1x"></i>
 							    <i class="fa fa-bolt fa-stack-1x fa-inverse"></i>
 							</span>
@@ -199,8 +249,56 @@
 			  <div class="text-center">
 			  	<?php if(isset($characters_matched)) echo $pagination?>
 			  </div>
-		  <?php } else if(isset($lists_matched)) { ?>
-		  
+		  <?php } else if(isset($actors_matched)) { ?>
+		  		<div class="table-responsive">
+			   <table class="table">
+			    <thead>
+			    	<tr>
+				    	<th>NAME</th>
+				        <th></th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			      <?php foreach ($actors_matched as $actor) { ?>			      
+			      <tr class="user_row">
+			        <td class="actor_name_image">
+				        <a href="<?php echo site_url("actors/actor/{$actor['id']}/{$actor['actor_slug']}");?>" class="disable-link-decoration red-text">
+				        	<img src="<?php echo asset_url() . "actor_images/{$actor['image_file_name']}";?>" class="actor_image">				        	
+				        </a>				        
+				        <div class="wrap_actor_name_div">
+					    	<a href="<?php echo site_url("actors/actor/{$actor['id']}/{$actor['actor_slug']}");?>" class="disable-link-decoration red-text">
+					    		<?php echo trim(stripslashes($actor['first_name'])) . " " . trim(stripslashes($actor['last_name']));?>
+					    	</a>
+					    	<p class="language">
+					    		<span class="language_text">
+					    		<img src="<?php echo asset_url() . "imgs/{$actor['language']}.png";?>" class="actor_flag_image"><?php echo " " . stripslashes($actor['language']);?>
+					    		</span>
+					    	</p>
+					    </div>
+			        </td>
+			        <td class="actor_user_status">
+		    			<div class="wrap_user_status" data-id="<?php echo $actor['id'];?>">
+		    				<?php if(isset($actor['actor_user_status'])) { 
+		    					if($actor['actor_user_status'] == 1){ $actor_user_status = 1; }
+		    					else if($actor['actor_user_status'] == 0) {$actor_user_status = 0;} } else {$actor_user_status = 2;}		    				
+		    				?>
+				    		<span title="I love this actor" class="fa-stack fa-2x love <?php if($actor_user_status == 1) echo "love_on";?>" data-value="1">
+				    			<i class="fa fa-heart"></i>
+				    		</span>
+			    			<span title="I hate this actor" class="fa-stack fa-2x hate <?php if($actor_user_status == 0) echo "hate_on";?>" data-value="0">
+							    <i class="fa fa-heart fa-stack-1x"></i>
+							    <i class="fa fa-bolt fa-stack-1x fa-inverse"></i>
+							</span>
+						</div>
+		    		</td>
+			      </tr>
+			      <?php }?>
+			    </tbody>
+			  </table>
+			  </div>
+			  <div class="text-center">
+			  	<?php if(isset($actors_matched)) echo $pagination?>
+			  </div>
 		  <?php } else { ?>
 		  		<h3>No results found</h3>
 		 <?php }?>
@@ -282,3 +380,5 @@
     </div>
     </div>
 </div>
+
+<?php if(!$logged) { include 'login_modal.php'; }?>

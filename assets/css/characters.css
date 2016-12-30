@@ -145,8 +145,17 @@ tr:nth-child(even) {
 	color: #808182;
 }
 
-.fa-stack.love:hover {
+.fa-stack.love.love_on {
 	color:#E4287C;
+}
+
+.fa-stack.love.love_on:hover {
+	color:#E4287C;
+}
+
+.fa-stack.love:hover {
+	color: black;
+	opacity: 1;
 }
 
 .fa-stack.hate {
@@ -154,8 +163,13 @@ tr:nth-child(even) {
 	color: #808182;
 }
 
+.fa-stack.hate.hate_on {
+	color: black;
+}
+
 .fa-stack.hate:hover {
 	color: black;
+	opacity: 1;
 }
 
 .fa-bolt {
@@ -198,7 +212,7 @@ tr:nth-child(even) {
 .loader_image {
 	width: 100px;
 	height: 100px;
-	margin-top: -50px;
+	margin-top: 0px;
 }
 
 @media (max-width: 970px) {

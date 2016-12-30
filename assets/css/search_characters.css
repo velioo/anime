@@ -1,13 +1,25 @@
 @CHARSET "UTF-8";
 @import url("home.css");
 
-h1 {
+h1.main_header {
 	font-size: 30px;
 	text-align: center;
 	color: #3C50D2;
 	padding: 14px 15px 20px 15px;
 	border-bottom: 1px solid #D0D0D0;
 	margin-bottom: 0px;
+}
+
+.main_title {
+	background-color: white;
+}
+
+#characters_content {
+	position: relative;
+	z-index: 5;
+	padding: 0px;
+	background-color: #E9E9E9;
+	border: none;
 }
 
 tr:nth-child(even) {
@@ -98,18 +110,34 @@ tr:nth-child(even) {
 .fa-stack.love {
 	padding-left: 11px;
 	background-color: #F2F1EC;
+	color: #808182;
+}
+
+.love.love_on {
+	color: #E4287C;
+}
+
+.fa-stack.love.love_on:hover {
+	color:#E4287C;
 }
 
 .fa-stack.love:hover {
-	color:#E4287C;
+	color: black;
+	opacity: 1;
 }
 
 .fa-stack.hate {
 	background-color: white;
+	color: #808182;
+}
+
+.hate.hate_on {
+	color: black;
 }
 
 .fa-stack.hate:hover {
 	color: black;
+	opacity: 1;
 }
 
 .fa-bolt {
@@ -130,6 +158,52 @@ tr:nth-child(even) {
 	color:white;
 	background-color:#2F343B;
 	border-color: #2F343B;
+}
+
+#loves_menu {
+	position: relative;
+	height: 70px;
+	width: 100%;
+	background-color: white;
+	border-bottom: 1px solid #DEDEDE;
+	margin-top: 20px;
+}
+
+#loves_submenu {
+	margin-top: 16px;
+	margin-right: 15px;
+	float: right;
+}
+
+.btn.btn-primary.filter {
+	padding: 8px 13px 8px 13px;
+	background-color: white;
+	color: black;
+	border: 1px solid #bfbfbf;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.filter.btn.btn-primary:hover {
+	opacity: 1 !important;
+	background-color: #DEDEDE !important;
+}
+
+.filter.btn.btn-primary:active {
+	opacity: 1;
+	background-color: #DEDEDE;
+	color: black;
+	border: 1px solid #bfbfbf;
+	outline:none;
+}
+
+.filter.btn.btn-primary:focus {
+	background-color: white;
+	border: 1px solid #bfbfbf;
+	outline:none;
+}
+
+.filter.btn.btn-primary:focus:hover {
+	background-color: #DEDEDE;
 }
 
 @media (max-width: 970px) {

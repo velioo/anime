@@ -5,23 +5,31 @@
 <script src="<?php echo asset_url() . "js/watchlist.js";?>"></script>
 
 <?php
-	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) 
+	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) {
 		$is_you = TRUE;
-	else 
+		$logged = TRUE;
+	} else {
 		$is_you = FALSE;
+		if(isset($this->session->userdata['is_logged_in']))
+			$logged = TRUE;
+		else
+			$logged = FALSE;
+	}
 ?>
 
 <script type="text/javascript">
-	var user_id = <?php echo $user['id'];?>;
 	var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
 	var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
 	
 	$(document).ready(function() {
-		$('#animes').css("opacity", "1");			
+		$('#animes').css("opacity", "1");	
+		<?php if(!$is_you) {?>
+			$('head').append('<script src="<?php echo asset_url() . "js/follow.js";?>">');	
+		<?php }?>		
 	});	
 
 	function getUserId() {
-		return user_id;
+		return <?php echo $user['id'];?>;
 	}
 
 	function getIsYou() {
@@ -70,6 +78,16 @@
 	function getUpdateEpsUrl() {
 		var update_eps_url = "<?php echo site_url("watchlists/update_eps");?>";
 		return update_eps_url;
+	}
+
+	function getFollowUrl() {
+		var follow_url = "<?php echo site_url("follow/follow_user")?>";
+		return follow_url;
+	}
+
+	function getUnfollowUrl() {
+		var unfollow_url = "<?php echo site_url("follow/unfollow_user")?>";
+		return unfollow_url;
 	}
 	
 	<?php if($is_you) { ?>

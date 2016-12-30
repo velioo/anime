@@ -6,6 +6,7 @@ $(document).ready(function() {
 	var anime_url = get_anime_url();
 	var character_url = get_character_url();
 	var user_url = get_user_url();
+	var actor_url = get_actor_url();
 	var search_value = "";
 	var url = "";
 	
@@ -26,7 +27,8 @@ $(document).ready(function() {
 				$("#search_box").val(search_value);
 			}
 		},		
-		highlightPhrase: true,		
+		highlightPhrase: true,	
+		requestDelay: 200,
 		template: {
 			type: "custom",
 			method: function(value, item) {
@@ -57,7 +59,8 @@ $(document).ready(function() {
 					$("#search_box").val(search_value);
 				}
 			},			
-			highlightPhrase: true,			
+			highlightPhrase: true,	
+			requestDelay: 200,
 			template: {
 				type: "custom",
 				method: function(value, item) {
@@ -85,7 +88,8 @@ $(document).ready(function() {
 					$("#search_box").val(search_value);
 				}
 			},			
-			highlightPhrase: true,			
+			highlightPhrase: true,	
+			requestDelay: 200,
 			template: {
 				type: "custom",
 				method: function(value, item) {
@@ -95,6 +99,38 @@ $(document).ready(function() {
 					}
 					return "<a title='" + title + "' href=" + character_url + item.id + "/" + item.slug + "> " +
 							"<img class='auto_image' src='" + asset_url + "character_images/" + item.image + "' onerror=\"this.src='" + asset_url + "character_images/Default.jpg'\" />" + "<div class='auto_div'>" + item.name + "</div>";
+				}
+			}
+	}
+	
+	var actor_options = {
+			url: asset_url + "json/autocomplete_actors.json?nocache=" + (new Date()).getTime(),			
+			theme: "plate-dark",			
+			getValue: "all_names",			
+			list: {
+				maxNumberOfElements: 7,
+				match: {
+					enabled: true
+				},				
+				onKeyEnterEvent: function() {
+					$('#search_box').val(search_value);
+					window.location = $('#eac-container-search_box').find("li.selected").find("div.eac-item").find("a").attr("href");
+				},				
+				onChooseEvent: function() {
+					$("#search_box").val(search_value);
+				}
+			},			
+			highlightPhrase: true,	
+			requestDelay: 200,
+			template: {
+				type: "custom",
+				method: function(value, item) {
+					var title = item.name;
+					if(item.name.length > 70) {
+						item.name = item.name.substr(0, 70) + "...";
+					}
+					return "<a title='" + title + "' href=" + actor_url + item.id + "/" + item.slug + "> " +
+							"<img class='auto_image' src='" + asset_url + "actor_images/" + item.image + "' onerror=\"this.src='" + asset_url + "actor_images/Default.jpg'\" />" + "<div class='auto_div'>" + item.name + "</div>";
 				}
 			}
 	}
@@ -117,6 +153,9 @@ $(document).ready(function() {
 		} else if(value == "characters") {
 			$("#search_box").easyAutocomplete(character_options);
 			document.getElementById('resize_autocomplete').disabled = true;
+		} else if(value == "people"){
+			$("#search_box").easyAutocomplete(actor_options);
+			document.getElementById('resize_autocomplete').disabled = true;
 		}
 	});
 	
@@ -130,6 +169,9 @@ $(document).ready(function() {
 			document.getElementById('resize_autocomplete').disabled = false;
 		} else if(value == "characters") {
 			$("#search_box").easyAutocomplete(character_options);
+			document.getElementById('resize_autocomplete').disabled = true;
+		} else if(value == "people"){
+			$("#search_box").easyAutocomplete(actor_options);
 			document.getElementById('resize_autocomplete').disabled = true;
 		}
 	});

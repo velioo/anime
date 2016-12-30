@@ -33,6 +33,15 @@ Class Watchlist_model extends CI_Model {
 		}
 	}
 	
+	function get_all_watchlist_statuses($user_id) {
+		$this->db->select('watchlists.status, watchlists.score, watchlists.eps_watched, animes.episode_length');
+		$this->db->join('animes', 'animes.id=watchlists.anime_id');
+		$this->db->where('watchlists.user_id', $user_id);
+		$query = $this->db->get('watchlists');
+		
+		return $query->result_array();
+	}
+	
 	function get_watchlist_status_score($anime_id) {		
 		$user_id = $this->session->userdata('id');
 		$query = $this->db->query("SELECT watchlists.status, watchlists.score FROM watchlists JOIN animes ON animes.id=watchlists.anime_id 

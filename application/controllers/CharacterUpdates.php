@@ -16,6 +16,7 @@ class CharacterUpdates extends CI_Controller {
 		if($verification_token === VERIFICATION_TOKEN) {
 			
 			$this->load->model('characters_model');
+			$this->load->model('actors_model');
 			$this->load->model('animes_model');
 			
 			$file_to_write_counter = 'assets/txt/character_anime_counter.txt';
@@ -29,7 +30,7 @@ class CharacterUpdates extends CI_Controller {
 			$anime_id = 0;			
 			$counter = 0;
 			
-			$anime_counter-=500;
+			$anime_counter-=5000;
 			
 			while($failed_request < 100) {
 				
@@ -179,12 +180,12 @@ class CharacterUpdates extends CI_Controller {
 									
 									var_dump($actor_array);
 									
-									$actor_exists = $this->characters_model->check_if_actor_exists($actor_array);
+									$actor_exists = $this->actors_model->check_if_actor_exists($actor_array);
 									
 									if($actor_exists) {
-										$this->characters_model->update_actor($actor_array);
+										$this->actors_model->update_actor($actor_array);
 									} else {
-										$this->characters_model->add_actor($actor_array);
+										$this->actors_model->add_actor($actor_array);
 									}
 									
 									$this->characters_model->make_character_actor_relation($character->id, $actor->id, $anime_id);
@@ -208,6 +209,9 @@ class CharacterUpdates extends CI_Controller {
 				file_put_contents($file_to_write_counter, $anime_counter);
 				
 			}
+			
+			$this->write_characters_json(VERIFICATION_TOKEN);
+			$this->write_actors_json(VERIFICATION_TOKEN);
 			
 		} else {
 			$this->helpers_model->unauthorized();
@@ -238,9 +242,11 @@ class CharacterUpdates extends CI_Controller {
 					$character_slug = "";
 					
 					if($character['first_name'] != "") {
-						$character_slug.=$character['first_name'] . "-";
+						$character_slug.=$character['first_name'];
 					}
 					if($character['last_name'] != "") {
+						if($character_slug != "")
+							$character_slug.="-";
 						$character_slug.=$character['last_name'];
 					}
 		
@@ -253,8 +259,54 @@ class CharacterUpdates extends CI_Controller {
 		
 				if($character_id != "") {
 					redirect("characters/character/{$character_id}");
-				} else {
-					redirect("Home");
+				}
+			}
+		} else {
+			$this->helpers_model->unauthorized();
+		}
+	}
+	
+	function write_actors_json($verification_token=null, $actor_id=null) {
+	
+		if($verification_token === VERIFICATION_TOKEN) {
+	
+			$this->load->model('actors_model');
+	
+			$result_array = $this->actors_model->get_actors_json_data();
+	
+			if($result_array) {
+	
+				$all_names = "";
+					
+				foreach ($result_array as $actor) {
+						
+					$all_names = "";
+						
+					$id = $actor['id'];
+					$name = $actor['first_name'] . " " . $actor['last_name'];
+					$image = $actor['image_file_name'];
+					$all_names.=$actor['first_name']. " " . $actor['last_name']. " " . $actor['first_name_japanese']. " " . $actor['last_name_japanese'];
+						
+					$actor_slug = "";
+						
+					if($actor['first_name'] != "") {
+						$actor_slug.=$actor['first_name'];
+					}
+					if($actor['last_name'] != "") {
+						if($actor_slug != "")
+							$actor_slug.="-";
+							$actor_slug.=$actor['last_name'];
+					}
+	
+					$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $actor_slug, 'id' => $id, 'image'=> $image);
+				}
+	
+				$fp = fopen('assets/json/autocomplete_actors.json', 'w');
+				fwrite($fp, json_encode($result));
+				fclose($fp);
+	
+				if($actor_id != "") {
+					redirect("actors/actor/{$actor_id}/{$actor_slug}");
 				}
 			}
 		} else {

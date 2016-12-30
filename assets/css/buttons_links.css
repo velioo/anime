@@ -114,7 +114,6 @@
 }
 
 .btn.btn-primary.button-red:focus {
-	background-color: #cb3434;
 }
 
 .button-red {
@@ -164,4 +163,14 @@
 
 .red-text:hover {
 	color: #651a1a;
+}
+
+.gray-text {
+	color: #808080;
+	-webkit-transition: .3s ease-in-out;		
+	transition: .3s ease-in-out;
+}
+
+.gray-text:hover {
+	color: #4d4d4d;
 }

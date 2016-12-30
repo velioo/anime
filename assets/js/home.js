@@ -86,23 +86,9 @@ function putCaret() {
 }
 
 $(document).ready(function() {
-/*	$('.search_form').each(function(){
-		$(this).submit(function () {		
-			if($(this).attr('name') == "search_form_name") {
-				var text = $.trim($('#search_box').val());
-			} else {
-				var text = $.trim($('#small_search_box').val());
-			}		
-		    if (text  === '') {
-		        return false;
-		    }		
-
-		});
-	});*/	
 	if($('.text-over-img').length > 0) {
 		$('.text-over-img').each(function() {
 			var text = $(this).text();
-			console.log(text + " " + text.length);
 			if(text.length > 26) {
 				if(text.length <= 50) {
 					$(this).css("margin-top", "-52px");

@@ -10,6 +10,7 @@ function initScroll(total_groups, url, id) {
 	this.id = id;
 
 	loading = true;
+	$('#loader_image_div').show();
     $.post(url + id,{'group_number': total_records},
         function(data){ 
             if (data != "") {              
@@ -19,6 +20,7 @@ function initScroll(total_groups, url, id) {
           	  total_records++;
             }
             loading = false;
+            $('#loader_image_div').hide(); 
      });  	
 
 	

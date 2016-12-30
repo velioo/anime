@@ -5,10 +5,16 @@
 <script src="<?php echo asset_url() . "js/reviews.js";?>"></script>
 
 <?php
-	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) 
+	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) {
 		$is_you = TRUE;
-	else 
+		$logged = TRUE;
+	} else {
 		$is_you = FALSE;
+		if(isset($this->session->userdata['is_logged_in']))
+			$logged = TRUE;
+		else
+			$logged = FALSE;
+	}
 ?>
 
 <script type="text/javascript">
@@ -18,6 +24,10 @@
 		var site_url = "<?php echo site_url("reviews/load_reviews_user/");?>";
 		
 		initScroll(total_groups, site_url, user_id);
+		
+		<?php if(!$is_you) {?>
+			$('head').append('<script src="<?php echo asset_url() . "js/follow.js";?>">');	
+		<?php }?>
 		
 	});	
 	<?php if($is_you) { ?>
@@ -29,7 +39,7 @@
 	var delete_url = "<?php echo site_url("reviews/delete_review");?>";
 
 	function getUserId() {
-		return user_id;
+		return <?php echo $user['id'];?>;
 	}
 
 	function getDeleteUrl() {
@@ -37,6 +47,16 @@
 	}
 
 	<?php }?>
+
+	function getFollowUrl() {
+		var follow_url = "<?php echo site_url("follow/follow_user")?>";
+		return follow_url;
+	}
+
+	function getUnfollowUrl() {
+		var unfollow_url = "<?php echo site_url("follow/unfollow_user")?>";
+		return unfollow_url;
+	}
 </script>
 
 <?php include 'navigation.php'; ?>
@@ -79,5 +99,3 @@
     </div>
     </div>
 </div>
-
-

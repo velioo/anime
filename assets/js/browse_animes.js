@@ -89,26 +89,29 @@ $(document).ready(function() {
 	    	if(msg == "Success") {
 	        	last_element.find('.user_status').data('id', status);
 	        	last_element.find('img').show();
+	        	if(last_element.find('.user_score').text() == "") {
+	        		last_element.find('.user_score').text(0);
+	        	}
 		    	switch(status) {
 		    	case 1:
 		        	$('#watchlist_button').html('Watched <span id="watchlist_caret" class="fa fa-caret-down"></span>');
-		        	last_element.find('.user_status').text('Watched');
+		        	last_element.find('.user_status').html('<span class="status-square blue"></span>Watched');
 		    		break;
 		    	case 2:
 		    		$('#watchlist_button').html('Watching <span id="watchlist_caret" class="fa fa-caret-down"></span>');
-		    		last_element.find('.user_status').text('Watching');
+		    		last_element.find('.user_status').html('<span class="status-square green"></span>Watching');
 		    		break;
 		    	case 3:
 		    		$('#watchlist_button').html('Want to Watch <span id="watchlist_caret" class="fa fa-caret-down"></span>');
-		    		last_element.find('.user_status').text('Want to Watch');
+		    		last_element.find('.user_status').html('<span class="status-square yellow"></span>Want to Watch');
 		    		break;
 		    	case 4:
 		    		$('#watchlist_button').html('Stalled <span id="watchlist_caret" class="fa fa-caret-down"></span>');
-		    		last_element.find('.user_status').text('Stalled');
+		    		last_element.find('.user_status').html('<span class="status-square orange"></span>Stalled');
 		    		break;
 		    	case 5:
 		    		$('#watchlist_button').html('Dropped <span id="watchlist_caret" class="fa fa-caret-down"></span>');
-		    		last_element.find('.user_status').text('Dropped');
+		    		last_element.find('.user_status').html('<span class="status-square red"></span>Dropped');
 		    		break;
 		    	case 6:
 		    		$('#watchlist_button').html('Add to Watchlist <span id="watchlist_caret" class="fa fa-caret-down"></span>');
@@ -155,7 +158,5 @@ $(document).ready(function() {
 		    }); 
 		
 	});
-	
-	$("#users_table").tablesorter(); 
 	
 });

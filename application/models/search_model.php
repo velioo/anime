@@ -192,15 +192,35 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function get_characters_count($character, $limit, $offset) {	
+	function get_characters_count($character, $limit, $offset) {
 		$result_array = $this->query_characters_search($character, $limit, $offset, TRUE);
-		
+	
 		if($result_array != FALSE) {
 			return count($result_array);
 		} else {
 			return FALSE;
 		}
-	}		
+	}
+	
+	function search_actors($actor, $limit, $offset) {
+		$result_array = $this->query_actors_search($actor, $limit, $offset, FALSE);
+		
+		if($result_array != FALSE) {
+			return $result_array;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function get_actors_count($actor, $limit, $offset) {
+		$result_array = $this->query_actors_search($actor, $limit, $offset, TRUE);
+	
+		if($result_array != FALSE) {
+			return count($result_array);
+		} else {
+			return FALSE;
+		}
+	}
 	
 	function query_characters_search($character, $limit, $offset, $all) {
 		$character = trim($character);
@@ -225,6 +245,9 @@ Class Search_model extends CI_Model {
 			
 			if($all != TRUE) {			
 				$result_array = $this->add_characters_related_animes($result_array);
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_character_user_status($result_array);
+				}
 			}
 				
 		} else {
@@ -235,6 +258,9 @@ Class Search_model extends CI_Model {
 				$query = $this->db->query("SELECT id,first_name,last_name,alt_name,image_file_name,created_at FROM characters {$limit_offset}");
 				$result_array = $query->result_array();
 				$result_array = $this->add_characters_related_animes($result_array);
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_character_user_status($result_array);
+				}
 			}			
 		}
 	
@@ -248,6 +274,9 @@ Class Search_model extends CI_Model {
 			
 			if($all != TRUE) {
 				$result_array = $this->add_characters_related_animes($result_array);
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_character_user_status($result_array);
+				}
 			}
 			
 			return $result_array;
@@ -255,6 +284,107 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
+	function query_actors_search($actor, $limit, $offset, $all) {
+		$actor = trim($actor);
+		$actor = addslashes($actor);
+	
+		if($all == TRUE) {
+			$limit_offset = "";
+		} else {
+			$limit_offset = "LIMIT ". $limit .  " OFFSET " . $offset;
+		}
+	
+		if($actor != "") {
+	
+			$query = array();
+	
+			$query = $this->db->query("SELECT id,first_name,last_name,image_file_name,language,created_at
+					FROM actors
+					WHERE MATCH(first_name,last_name, first_name_japanese, last_name_japanese)
+					AGAINST('{$actor}' IN BOOLEAN MODE) {$limit_offset}");
+	
+			$result_array = $query->result_array();
+	
+			for($i = 0; $i < count($result_array); $i++) {
+				$actor_slug = "";
+				if($result_array[$i]['first_name'] != "") {
+					$actor_slug.=$result_array[$i]['first_name'];
+				}
+				if($result_array[$i]['last_name'] != "") {
+					if($actor_slug != "")
+						$actor_slug.="-";
+						$actor_slug.=$result_array[$i]['last_name'];
+				}
+					
+				$result_array[$i]['actor_slug'] = $actor_slug;
+			}
+			
+			if($all != TRUE) {
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_actor_user_status($result_array);
+				}
+			}
+	
+		} else {
+			if($all) {
+				$query = $this->db->get('actors');
+				$result_array = $query->result_array();
+			} else {
+				$query = $this->db->query("SELECT id,first_name,last_name,image_file_name,language,created_at FROM actors {$limit_offset}");
+				$result_array = $query->result_array();
+				
+				for($i = 0; $i < count($result_array); $i++) {
+					$actor_slug = "";
+					if($result_array[$i]['first_name'] != "") {
+						$actor_slug.=$result_array[$i]['first_name'];
+					}
+					if($result_array[$i]['last_name'] != "") {
+						if($actor_slug != "")
+							$actor_slug.="-";
+							$actor_slug.=$result_array[$i]['last_name'];
+					}
+						
+					$result_array[$i]['actor_slug'] = $actor_slug;
+				}
+				
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_actor_user_status($result_array);
+				}
+			}
+		}
+	
+		if(count($result_array) > 0) {
+			return $result_array;
+		} else {
+			$query = $this->db->query("SELECT id,first_name,last_name,image_file_name,language,created_at FROM actors
+					WHERE first_name LIKE '%{$actor}%' or last_name LIKE '%{$actor}%' {$limit_offset}");
+	
+			$result_array = $query->result_array();
+	
+			for($i = 0; $i < count($result_array); $i++) {
+				$actor_slug = "";
+				if($result_array[$i]['first_name'] != "") {
+					$actor_slug.=$result_array[$i]['first_name'];
+				}
+				if($result_array[$i]['last_name'] != "") {
+					if($actor_slug != "")
+						$actor_slug.="-";
+						$actor_slug.=$result_array[$i]['last_name'];
+				}
+					
+				$result_array[$i]['actor_slug'] = $actor_slug;
+			}
+			
+			if($all != TRUE) {
+				if($this->session->userdata('is_logged_in')) {
+					$result_array = $this->add_actor_user_status($result_array);
+				}
+			}
+	
+			return $result_array;
+	
+		}
+	}
 	
 	function add_characters_related_animes($result_array) {
 		$character_ids = array();
@@ -281,6 +411,33 @@ Class Search_model extends CI_Model {
 		return $result_array;		
 	}
 	
+	function add_character_user_status($characters) {
+		$user_id = $this->session->userdata('id');
+		for($i = 0; $i < count($characters); $i++) {
+			$this->db->select('status');
+			$this->db->where('character_id', $characters[$i]['id']);
+			$this->db->where('user_id', $user_id);
+			$status = $this->db->get('characters_users_status');
+			if($status->num_rows() == 1)  {
+				$characters[$i]['character_user_status'] = $status->row_array()['status'];
+			}
+		}
+		return $characters;
+	}
+	
+	function add_actor_user_status($actors) {
+		$user_id = $this->session->userdata('id');
+		for($i = 0; $i < count($actors); $i++) {
+			$this->db->select('status');
+			$this->db->where('actor_id', $actors[$i]['id']);
+			$this->db->where('user_id', $user_id);
+			$status = $this->db->get('actors_users_status');
+			if($status->num_rows() == 1)  {
+				$actors[$i]['actor_user_status'] = $status->row_array()['status'];
+			}
+		}
+		return $actors;
+	}
 	
 	function search_lists($list) {
 		$query = $this->db->query("SELECT name, type FROM user_lists WHERE name LIKE '%{$list}%'");

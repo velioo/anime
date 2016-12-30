@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+.main_title {
+	background-color: white;
+}
+
+.user_image_div {
+	display: inline-block;
+	width: 110px;
+	height: 110px;
+	margin-bottom: 30px;
+	margin-left: 8px;
+}
+
+.user_image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.user_name {
+	display: block;
+	margin-top: 5px;
+	text-align: center;
+	font-weight: bold;
+	font-family: "Segoe UI",Arial,sans-serif;
+}

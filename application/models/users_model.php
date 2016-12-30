@@ -83,7 +83,7 @@ Class Users_model extends CI_Model {
 	}
 	
 	function connect_facebook($user_id, $email, $fb_user_id, $access_token) {
-		$query = $this->db->query("INSERT INTO facebook_accounts(user_id, fb_user_id, email, access_token) VALUES ({$user_id}, '{$fb_user_id}', '{$email}', '{$access_token}')");
+		$query = $this->db->query("INSERT INTO facebook_accounts(user_id, fb_user_id, email, access_token, changed_pass) VALUES ({$user_id}, '{$fb_user_id}', '{$email}', '{$access_token}', 1)");
 	
 		if($query) {
 			$this->db->query("UPDATE users SET email = '{$email}' WHERE id = {$user_id}");
@@ -265,9 +265,21 @@ Class Users_model extends CI_Model {
 		$query = $this->db->query("SELECT u.id,u.username,u.joined_on,u.country,u.profile_image,u.cover_image,u.top_offset,u.gender,u.bio,u.life_anime,u.last_online,u.total_episodes,u.birthdate,
 				us.show_age,us.default_watchlist_sort,us.default_watchlist_page,us.show_last_online
 				FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE {$where_clause}");
-		
+		 		
 		if ($query->num_rows() == 1) {
-			return $query->row_array();
+			
+			$result_array = $query->row_array();
+			
+			if($this->session->userdata('is_logged_in')) {
+				$query = $this->db->get_where('followers', array('follower_id' => $this->session->userdata('id'), 'following_id' => $result_array['id']));				
+				if($query->num_rows() == 1) {
+					$result_array['follow_status'] = 1;
+				} else {
+					$result_array['follow_status'] = 0;
+				}
+			}
+			
+			return $result_array;
 		} else {
 			return FALSE;
 		}

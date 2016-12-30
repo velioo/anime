@@ -197,7 +197,7 @@ class AnimeUpdates extends CI_Controller {
  						$titles = '"alt"=>"' . $anime_object->data->attributes->alternateTitle . '", "main"=>"' . $anime_object->data->attributes->canonicalTitle . '"';
 						$anime_object->data->attributes->titles = $titles;
 						
-						echo $anime_object->data->attributes->titles . "<br/>";
+						echo "Id: " . $anime_id_counter . " " . $anime_object->data->attributes->titles . "<br/>";
 		
 						$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->data->id);
 						if(!$anime_exists) {

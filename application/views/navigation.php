@@ -19,10 +19,29 @@
 		return userUrl;
 	}
 
+	function get_actor_url() {
+		var actorUrl = "<?php echo site_url("actors/actor/");?>"
+		return actorUrl;
+	}
+
 	function get_data_url() {
 		var dataUrl = "<?php echo base_url() . "searchC/get_search_results/";?>";
 		return dataUrl;
 	}
+
+	function getNotificationsUrl() {
+		var notificationUrl = "<?php echo site_url("notifications/load_notifications");?>";
+		return notificationUrl;
+	}
+
+	function getMarkAsReadUrl() {
+		var markAsReadUrl = "<?php echo site_url("notifications/mark_as_read");?>";
+		return markAsReadUrl;
+	}
+
+	<?php if($this->session->userdata('is_logged_in')) {?>
+		$('head').append('<script src="<?php echo asset_url() . "js/notifications.js";?>">');
+	<?php }?>
 </script>
 
 <nav class="navbar navbar-inverse navbar-fixed-top navigation">
@@ -92,7 +111,7 @@
 				    <option value="animes" selected="selected" class="navigation_small_search_option">Anime</option>
 				    <option value="characters" class="navigation_small_search_option">Characters</option>
 				    <option value="users" class="navigation_small_search_option">Users</option>
-				    <!-- <option value="lists" class="navigation_small_search_option">Lists</option> -->
+				    <option value="people" class="navigation_small_search_option">People</option>
 				</select>
 				<input type="text" name="search" id="small_search_box" placeholder="Search..."> 
 				<button type="submit" name="submit" id="submit_button">
@@ -106,6 +125,7 @@
 		      		<a id="navigation_small_signup" href="<?php echo site_url("SignUp")?>"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
 		      		<a id="navigation_small_login" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a>
 		    <?php } else {?>
+		    	<i class="notifications_icon fa fa-bell" aria-hidden="true"><span class="notifications_number"></span></i>	
 				<div class="dropdown small_profile_menu">
 				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="small_user_button"><?php echo $this->session->userdata['username'];?> 
 				</button>
@@ -125,7 +145,7 @@
 					    <option value="animes" selected="selected">Anime</option>
 					    <option value="characters">Characters</option>
 					    <option value="users">Users</option>
-					    <!-- <option value="lists">Lists</option> -->
+					    <option value="people">People</option>
 					</select>
 					<input type="text" name="search" id="search_box" placeholder="Search...">
 					<button class="btn btn-primary dropdown-toggle" type="submit" name="submit" id="submit_button">
@@ -136,8 +156,9 @@
 			<?php if(!isset($this->session->userdata['is_logged_in'])) {?>
 	      		<li><a id="signup_button" href="<?php echo site_url("SignUp")?>"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 	      		<li><a id="login_button" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      		<?php } else {?>
-      	   	   <li class="dropdown profile_menu">
+      		<?php } else {?>  
+      		   <i class="notifications_icon fa fa-bell" aria-hidden="true"><span class="notifications_number"></span></i>	       		   
+      	   	   <li class="dropdown profile_menu">     	   	   	  
 				  <a id="user_button" href="<?php echo site_url("users/profile/" . $this->session->userdata['username']);?>" style="padding-top:10px;">
 				  <div id="user_image_div_main_menu"><img id="user_image_main_menu" src="<?php echo asset_url(). "user_profile_images/" . $this->session->userdata('user_avatar');?>">
 				  </div><span id="user_username_main_menu"><?php echo $this->session->userdata['username'];?></span></a>
@@ -145,9 +166,14 @@
 				  	<li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>
 			      	<li><a href="<?php echo site_url("Login/logout"); ?>" style="text-align: right;">Logout</a></li>
 				  </ul>
-			  </li>
-			  	    
+			  </li>				  
       		<?php }?>
    		</ul>
+   		<div class="notifications_content">
+		   	<a href="<?php echo site_url("notifications/all_notifications");?>" class="disable-link-decoration"><div class="see_all_notifications gray-text">See all notifications</div></a>
+		   	<div class="notifications">
+		   	
+		   	</div>
+		</div>
   </div>
 </nav>

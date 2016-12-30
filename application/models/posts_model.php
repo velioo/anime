@@ -21,6 +21,19 @@ Class Posts_model extends CI_Model {
 		return $query->result_array();
 	}
 	
+	function get_post($post_id) {
+		$this->db->select('posts.*,users.id as user_id,users.username, users.profile_image');
+		$this->db->join('users', 'users.id=posts.post_owner');
+		$post = $this->db->get_where('posts', array('posts.id' => $post_id))->row_array();
+		if($post) {
+			$post_comments = $this->get_post_comments($post_id);		
+			$post['comments'] = $post_comments;		
+			return $post;
+		} else {
+			return FALSE;
+		}
+	}
+	
 	function get_post_comments($post_id) {
 		$query = $this->db->query("SELECT pc.id, pc.content, pc.created_at, pc.updated_at, u.username, u.profile_image FROM post_comments as pc JOIN posts ON posts.id=pc.post_id
 															JOIN users as u ON u.id=pc.commenter WHERE post_id = {$post_id} ORDER BY created_at ASC");
@@ -59,8 +72,9 @@ Class Posts_model extends CI_Model {
 				'post_id' => $post_id,
 				'content' => $content
 		);		
-		$query = $this->db->insert('post_comments', $data);		
-		return $query;
+		$query = $this->db->insert('post_comments', $data);	
+		
+		return $this->db->insert_id();
 	}
 	
 	function edit_comment($comment_id, $content) {	
@@ -75,6 +89,20 @@ Class Posts_model extends CI_Model {
 		return $query;
 	}
 	
+	function check_if_is_your_post($post_id) {
+		$query = $this->db->get_where('posts', array('id' => $post_id));
+		
+		if($query->row_array()['post_owner'] == $this->session->userdata('id')) {
+			return "your";
+		} else {
+			return $query->row_array()['post_owner'];
+		}	
+	}
+	
+	function get_post_from_comment($comment_id) {
+		$query = $this->db->get_where('post_comments', array('id' => $comment_id));	
+		return $query->row_array()['post_id'];
+	}
 }
 
 ?>
