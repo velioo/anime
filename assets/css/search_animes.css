@@ -13,6 +13,227 @@ h1 {
 	border-bottom: 1px solid #D0D0D0;
 }
 
+#anime_filters {
+	border-bottom: none;
+}
+
+#anime_filters li {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+#anime_filters li.active {
+	font-weight: bold;
+}
+
+#wrap_filters_div {
+	margin-bottom: 30px;
+}
+
+.filter_tab {
+	background-color: white;
+	margin-left: 1px;
+	padding: 15px;
+	color: black;
+	font-size: 16px;
+	min-height: 60px;
+}
+
+input[type=checkbox].css-checkbox {
+							position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+						}
+
+						input[type=checkbox].css-checkbox + label.css-label {
+							padding-left:20px;
+							height:15px; 
+							display:inline-block;
+							line-height:15px;
+							background-repeat:no-repeat;
+							background-position: 0 0;
+							font-size:13px;
+							vertical-align:middle;
+							cursor:pointer;
+
+						}
+
+						input[type=checkbox].css-checkbox:checked + label.css-label {
+							background-position: 0 -15px;
+						}
+						label.css-label {
+				/* background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_0aad05d7af20863960296dafb24c4f30.png); */
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+		}
+
+.genre_div {
+	display: inline-block;
+	width: 150px;
+}
+
+#filter_name {
+	width: 100%;
+}
+
+#name_search {
+	border: 1px solid #DEDEDE;
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+	padding: 10px 5px 10px 5px;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+#slider-range {
+	display: inline-block;
+	width: 80%;
+}
+
+.avg_range {
+	display: inline-block;
+	width: 7.4%;
+	white-space: nowrap;
+}
+
+.range_star {
+	vertical-align: top;
+	margin-top: 2.5px;
+}
+
+.range_text {
+	display: inline-block;
+	margin-left: 3px;
+	font-size: 14px;
+	letter-spacing: -0.5px;
+}
+
+.ui-slider-handle:focus {
+	outline: none;
+	border: none;
+}
+
+.type_div {
+     list-style-type:none;
+     padding:0;
+     cursor: default;
+     margin-bottom: 2px;
+}
+
+.type_div li {
+	display:inline-block;
+	margin-right: 10px;
+    position:relative;
+    cursor:pointer;
+}
+
+.type_div label, .type_div input {
+    display:inline-block;
+    text-align: center;
+    cursor: pointer;
+    color: #23272D;
+}
+
+.type_div input[type="radio"] {
+	position: absolute;
+    opacity:0.001;
+    z-index:100;
+    margin-right: -15px;
+}
+
+.type_div input[type="radio"]:checked + label {
+    background: #03755E;
+    color: white;
+}
+
+.type_div input:hover + label {
+	color: white;
+    background: #03755E;
+}
+
+.type_div label {
+    padding: 10px 20px 10px 20px;
+    border:1px solid #CCC; 
+    cursor:pointer;
+    background-color: #DEDEDE;
+    z-index:90;
+}
+
+.type_div label:hover {
+	color: white;
+    background: #03755E;
+}
+
+.to_text {
+	font-family: "klavika", Helvetica, Arial, sans-serif; 
+	margin-left: 10px; 
+	margin-right: 10px;
+}
+
+#current_filters_div {
+	display: none;
+	width: 100%;
+	height: auto;
+	min-height: 66px;
+	border-top: 1px solid #D3D3D3;
+	background-color: white;
+	margin-left: 1px;
+	padding: 10px;
+}
+
+#apply_filters_button {
+	padding: 7px;
+	border-radius: 2px;
+	vertical-align: top;
+}
+
+#current_filters {
+	display: inline-block;
+	width: 85%;
+	margin-left: 10px;
+	margin-top: 1px;
+}
+
+#clear_filters {
+	display: inline-block;
+	margin-right: 10px;
+	font-size: 14px;
+	margin-top: 4px;
+	cursor: pointer;
+}
+
+.filter {
+	display: inline-block;
+	padding: 5px 8px 5px 8px;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	background-color: #F9F8F4;
+	font-size: 13px;
+	border: 1px solid #D3D3D3;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.filter:hover .delete_filter_span {
+	color: #cb3434;
+}
+
+.clear_filters {
+	display: inline-block;
+	margin-right: 5px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.delete_filter_span {
+	font-size: 11px;
+	font-weight: bold;
+}
+
 .row {
 	margin-left: -15px;
 }
@@ -145,7 +366,6 @@ h1 {
 
 .anime_rating_paragraph {
 	display: inline-block;
-	width:70px;
 }
 
 .anime_user_status_paragraph, .not_logged_add_paragraph {
@@ -418,4 +638,62 @@ label.rb10l:hover ~ .rating
 #loader_image {
 	width: 60px;
 	height: 80px;
+}
+
+@media (max-width: 970px) {		
+	#slider-range {
+		width: 81%;
+	}
+}
+
+@media (max-width: 770px) {		
+	#current_filters {
+		width: 75%;
+	}
+	
+	#slider-range {
+		width: 83%;
+	}
+}
+
+@media (max-width: 650px) { 
+	#slider-range {
+		width: 85%;
+	}
+}
+
+@media (max-width: 490px) {	
+	#current_filters {
+		width: 65%;
+	}
+	
+	.range_star {
+		margin-top: 5px;
+	}
+	
+	.range_text {
+		font-size: 10px;
+	}
+	
+	#slider-range {
+		width: 90%;
+	}
+}
+
+@media (max-width: 390px) {	
+	#current_filters {
+		width: 50%;
+	}
+	
+	.range_star {
+		margin-top: 5px;
+	}
+	
+	.range_text {
+		font-size: 8px;
+	}
+	
+	#slider-range {
+		width: 94%;
+	}
 }

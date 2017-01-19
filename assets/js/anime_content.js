@@ -16,7 +16,7 @@ $('#close_modal').click(function(){
 		 $("#center_div").css("animation-name", "zoom");
 		 $("#center_div").css("-webkit-animation-duration", "0.6s");
 		 $("#center_div").css("animation-duration", "0.6s");
-	}, 250);
+	}, 150);
 });
 
 var video_url = $("#anime_video").attr('src');

@@ -8,61 +8,62 @@ $(document).ready(function() {
 	var star_fill_url_small = getStarFillUrl();
 	var default_watchlist_page = getDefaultPage();
 	var counter = 0;
-	var is_you = getIsYou();
+	var is_you = getIsYou();	
 	
 	switch(default_watchlist_page) {
-		case 0: 
-			$('.watchlist_content').show();		
-			$('#all_tab').css("background-color", "#DEDEDE");
-			break;
-		case 1: 
-			$('#watched_content').show();
-			$('#watched_tab').css("background-color", "#DEDEDE");
-			break;
-		case 2: 			
-			$('#watching_content').show();
-			$('#watching_tab').css("background-color", "#DEDEDE");
-			break;
-		case 3: 			
-			$('#want_watch_content').show();
-			$('#want_watch_tab').css("background-color", "#DEDEDE");
-			break;
-		case 4: 
-			$('#stalled').show();
-			$('#stalled_tab').css("background-color", "#DEDEDE");
-		case 5: 			
-			$('#dropped').show();
-			$('#dropped_tab').css("background-color", "#DEDEDE");
-			break;
-		default: 
-			$('.watchlist_content').show();
-			$('#all_tab').css("background-color", "#DEDEDE");
-			break;
+	case 0: 
+		$('.watchlist_content').show();		
+		$('#all_tab').css("background-color", "#DEDEDE");
+		break;
+	case 1: 
+		$('#watched_content').show();
+		$('#watched_tab').css("background-color", "#DEDEDE");
+		break;
+	case 2: 			
+		$('#watching_content').show();
+		$('#watching_tab').css("background-color", "#DEDEDE");
+		break;
+	case 3: 			
+		$('#want_watch_content').show();
+		$('#want_watch_tab').css("background-color", "#DEDEDE");
+		break;
+	case 4: 
+		$('#stalled').show();
+		$('#stalled_tab').css("background-color", "#DEDEDE");
+	case 5: 			
+		$('#dropped').show();
+		$('#dropped_tab').css("background-color", "#DEDEDE");
+		break;
+	default: 
+		$('.watchlist_content').show();
+		$('#all_tab').css("background-color", "#DEDEDE");
+		break;
 	}
 	
-	
 	$('#loader_watchlist_image_div').show();
+	setTimeout(function() {
     $.post(url, {'user_id': user_id},
     function(data){ 
         if (data != "") {  
+          var counter = 0;
           $(data).each(function(index, element) {
-       	  
+       	        	
         	  counter++;
         	  var status = $(element).data("id");
         	  var score_value = $(element).find('.star-rating').data("id");
-        	 
+        	  
         	  switch(status) {
         	  case 1:
         		  $('#watched_content .table-responsive .table tbody').append(element);
         		  break;
         	  case 2:
-        		  $('#watching_content .table-responsive .table tbody').append(element);
+        		 $('#watching_content .table-responsive .table tbody').append(element);
         		  break;
         	  case 3:
-        		  $('#want_watch_content .table-responsive .table tbody').append(element);
+        		 $('#want_watch_content .table-responsive .table tbody').append(element);
         		  break;
         	  case 4:
-        		  $('#stalled_content .table-responsive .table tbody').append(element);
+        		 $('#stalled_content .table-responsive .table tbody').append(element);
         		  break;
         	  case 5:
         		  $('#dropped_content .table-responsive .table tbody').append(element);
@@ -71,15 +72,11 @@ $(document).ready(function() {
         		  break;
         	  }
         	  
-        	  if(score_value >= 0 && score_value <=10) {    
-        		  $('input[name=userScore' + counter + '][value=' + parseInt(score_value) + ']').prop('checked',true);
-        	  }
-        	  
-      	  });
-          
-          $('#loader_watchlist_image_div').hide();
-          
-                  
+          	  if(score_value >= 0 && score_value <=10) {    
+          		  $('input[name=userScore' + counter + '][value=' + parseInt(score_value) + ']').prop('checked',true);
+        	  }	  
+      	 });
+                           
       	$('input:radio').change(function() {
     		var value = $(this).val();
     		var url = getScoreUrl();
@@ -157,8 +154,7 @@ $(document).ready(function() {
     	    	} else {
     	    		window.alert("Failed to update watchlist");
     	    	}
-    	    }); 
-    		
+    	    });    		
     	});
           
   		  $('.rating-bg').css('background', 'url(' + star_empty_url_small + ') repeat-x top left');
@@ -173,7 +169,11 @@ $(document).ready(function() {
   			$('.anime_row').css("visibility", "visible");
   		  }
         }
+    	
+        $('#loader_watchlist_image_div').hide();
     }); 
+    
+	}, 0);
 	
 	$('.filter').click(function() {	
 		var filter = $(this).data('id');
@@ -211,20 +211,30 @@ $(document).ready(function() {
 		
 	});
 	
+	var delay = (function(){
+		  var timer = 0;
+		  return function(callback, ms){
+		    clearTimeout (timer);
+		    timer = setTimeout(callback, ms);
+		  };
+		})();
+	
 	$('#watchlist_search').keyup(function() {
 		var value = $(this).val();
-		if(value != "") {
-			$('.watchlist_content .table-responsive .table tbody tr').hide();
-			$('.watchlist_content .table-responsive .table tbody tr').each(function() {
-				var anime_title = $(this).find('.title a span').text();
-				if(anime_title.toUpperCase().indexOf(value.toUpperCase()) != -1){
-				       $(this).show();
-				}
-			});
-		} else {
-			$('.watchlist_content .table-responsive .table tbody tr').show();
-		}
-		count_animes();
+		  delay(function(){
+			if(value != "") {
+				$('.watchlist_content .table-responsive .table tbody tr').hide();
+				$('.watchlist_content .table-responsive .table tbody tr').each(function() {
+					var anime_title = $(this).find('.title a span').text();
+					if(anime_title.toUpperCase().indexOf(value.toUpperCase()) != -1){
+						$(this).show();
+					}
+				});
+			} else {
+				$('.watchlist_content .table-responsive .table tbody tr').show();
+			}
+			count_animes();
+		}, 200);
 	});
 	
 	$('.title_caret').click(function() {
@@ -233,8 +243,6 @@ $(document).ready(function() {
 		var is_you = getIsYou();
 			
 		click_counter++;
-		
-		console.log(click_counter);
 		
 		if(click_counter >= 3) {
 			sort_by = "DEFAULT";

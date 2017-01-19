@@ -289,34 +289,40 @@ function validateDate($date, $format = 'Y-m-d H:i:s') {
 }
 
 function get_alternate_title($canonical, $titles) {
-	$alternate_title;
-	if($titles->en == $canonical) {
-		if($titles->en_jp != null) {
-			$alternate_title = $titles->en_jp;
-		} else if($titles->ja_jp != null) {
-			$alternate_title = $titles->ja_jp;
-		} else {
-			$alternate_title = "";
+	$alternate_title = "";
+	if(isset($titles->en)) {
+		if($titles->en == $canonical) {
+			if(isset($titles->en_jp)) {
+				if($titles->en_jp != null)
+					$alternate_title = $titles->en_jp;
+			} else if(isset($titles->ja_jp)) {
+				if($titles->ja_jp != null)
+					$alternate_title = $titles->ja_jp;
+			}
 		}
 	}
 	
-	if($titles->en_jp == $canonical) {
-		if($titles->en != null) {
-			$alternate_title = $titles->en;
-		} else if($titles->ja_jp != null) {
-			$alternate_title = $titles->ja_jp;
-		} else {
-			$alternate_title = "";
+	if(isset($titles->en_jp)) {
+		if($titles->en_jp == $canonical) {
+			if(isset($titles->en)) {
+				if($titles->en != null)
+					$alternate_title = $titles->en;
+			} else if(isset($titles->ja_jp)) {
+				if($titles->ja_jp != null)
+					$alternate_title = $titles->ja_jp;
+			}
 		}
 	}
 	
-	if($titles->ja_jp == $canonical) {
-		if($titles->en_jp != null) {
-			$alternate_title = $titles->en_jp;
-		} else if($titles->en != null) {
-			$alternate_title = $titles->en;
-		} else {
-			$alternate_title = "";
+	if(isset($titles->ja_jp) ) {
+		if($titles->ja_jp == $canonical) {			
+			if(isset($titles->en_jp)) {
+				if($titles->en_jp != null)
+					$alternate_title = $titles->en_jp;
+			} else if(isset($titles->en)) {
+				if($titles->en != null)
+					$alternate_title = $titles->en;
+			}
 		}
 	}
 	
@@ -472,6 +478,16 @@ function format_info($info_text) {
 	$info_text = nl2br($info_text);
 	
 	return $info_text;
+}
+
+function character_skip($id) {
+	$character_ids = array(88575);
+	
+	if(in_array($id, $character_ids)) {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 function convert_cyrillic_to_latin($name) {

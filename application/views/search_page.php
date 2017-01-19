@@ -2,6 +2,9 @@
 
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
 <script src="<?php echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+
 
 <?php
 	if(isset($this->session->userdata['is_logged_in'])) 
@@ -12,21 +15,57 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		var genres_checkbox = "<?php echo asset_url() . "imgs/genres_checkbox.png";?>";
+		$('label.css-label').css('background-image', 'url(' + genres_checkbox + ')');
 		<?php if(isset($animes_matched)) {?>
 			$('head').append('<script src="<?php echo asset_url() . "js/browse_animes.js";?>">');	
 			addListeners();
-			var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png" ?>";
-			var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png" ?>";
+			var star_empty_url_small = "<?php echo asset_url() . "imgs/star_empty_icon_small.png";?>";
+			var star_fill_url_small = "<?php echo asset_url() . "imgs/star_fill_icon_small.png";?>";
 	
 			$('.rating-bg').css('background', 'url(' + star_empty_url_small + ') repeat-x top left');
 			$('.rating').css('background', 'url(' + star_fill_url_small + ') repeat-x top left');
+
+			<?php foreach($filters['genres'] as $genre) {?>
+			var genre = "<?php echo $genre ?>";
+			$('.genre_div .css-label').each(function() {
+				if($(this).text() == genre) {
+					$(this).prev().prop('checked', true);
+				}
+			});
+			<?php }?>	
+			putGenresFilter();
+			var type = <?php if($filters['type'] !== NULL) echo $filters['type']; else echo -1;?>;
+			if(type != -1) {
+				$("input[name=type][value=" + type + "]").attr('checked', 'checked');
+				putTypeFilter();	
+			}
+			var min_eps = <?php if(isset($filters['episodes']['min'])) echo $filters['episodes']['min']; else echo -1;?>;
+			var max_eps = <?php if(isset($filters['episodes']['max'])) echo $filters['episodes']['max']; else echo -1;?>;
+			if(min_eps != -1) {
+				$('#min_episodes').val(min_eps);
+			}	
+			if(max_eps != -1) {
+				$('#max_episodes').val(max_eps);
+			}			
+			putEpisodesFilter();
+
+			var min_year = <?php if(isset($filters['year']['min'])) echo $filters['year']['min']; else echo -1;?>;
+			var max_year = <?php if(isset($filters['year']['max'])) echo $filters['year']['max']; else echo -1;?>;
+			if(min_year != -1) {
+				$('#min_year').val(min_year);
+			}	
+			if(max_year != -1) {
+				$('#max_year').val(max_year);
+			}			
+			putYearsFilter();
 		<?php } else if(isset($characters_matched)) {?>
 			$('head').append('<script src="<?php echo asset_url() . "js/character_user_status.js";?>">');	
 		<?php } else if(isset($users_matched)) {?>
 			$("#users_table").tablesorter();
 		<?php } else if(isset($actors_matched)) {?>
 			$('head').append('<script src="<?php echo asset_url() . "js/actor_user_status.js";?>">');	
-		<?php }?>
+		<?php }?>	     
 	});
 
 	function getStatusUrl() {
@@ -48,6 +87,12 @@
 		var actor_status_url = "<?php echo site_url("actors/change_actor_user_status");?>";
 		return actor_status_url;
 	}
+
+	function getAvgFilterValues() {
+		var avg_values = [<?php if(isset($filters['ratings']['greater'])) echo $filters['ratings']['greater']; else echo 0;?>, 
+						  <?php if(isset($filters['ratings']['less'])) echo $filters['ratings']['less']; else echo 5; ?>];
+		return avg_values;
+	}
 </script>
 
 <?php include 'navigation.php';?>
@@ -56,20 +101,148 @@
 	<div class="container-fluid scrollable content">
 		<h1 class="main_header"><?php echo $header;?></h1>
 		<?php if(isset($animes_matched)) {  $counter = 0;?>			
+			<ul id="anime_filters" class="nav nav-tabs">
+			  <li class="active"><a data-toggle="tab" href="#filter_name">Name</a></li>
+			  <li><a data-toggle="tab" href="#filter_rating">Avg Rating</a></li>
+			  <li><a data-toggle="tab" href="#filter_genres">Genres</a></li>
+			  <li><a data-toggle="tab" href="#filter_type">Type</a></li>
+			  <li><a data-toggle="tab" href="#filter_year">Year</a></li>
+			  <li><a data-toggle="tab" href="#filter_episodes">Episodes</a></li>
+			  <li><a data-toggle="tab" href="#filter_mylist">My List</a></li>
+			</ul>				
 			<div id="search_navigation">
-				<form action="<?php echo site_url("SearchC/search_anime")?>" method="get" accept-charset="utf-8">
+				<form id="animes_search_form" action="<?php echo site_url("SearchC/search_anime")?>" method="get" accept-charset="utf-8">
+					<div id="wrap_filters_div">
+						<div class="tab-content">
+					  		<div id="filter_name" class="tab-pane active filter_tab">
+					  			<input type="text" id="name_search" name="last_search" placeholder="Search animes..." value="<?php if(isset($last_search)) echo $last_search; ?>">
+						    </div>
+						  	<div id="filter_rating" class="tab-pane filter_tab" style="text-align: center;">
+						  		<div class="avg_ranges_div">
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">0</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">0.5</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">1</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">1.5</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">2</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">2.5</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">3</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">3.5</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">4</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">4.5</span></div>
+						  			<div class="avg_range"><img src="<?php echo asset_url() . "imgs/search_star_icon2.png";?>" class="range_star"><span class="range_text">5</span></div>
+						  		</div>
+						  		<div id="slider-range"></div>
+						  		<input type="hidden" id="avg_amount1" name="avg_amount1">
+   								<input type="hidden" id="avg_amount2" name="avg_amount2">
+						  	</div>
+						  	<div id="filter_genres" class="tab-pane filter_tab">
+						  		<div class="genre_div"><input id="action_genre" type="checkbox" name="genre[]" value="action" class="css-checkbox"> <label for="action_genre" class="css-label">Action</label></div>
+						  		<div class="genre_div"><input id="adventure_genre" type="checkbox" name="genre[]" value="adventure" class="css-checkbox"> <label for="adventure_genre" class="css-label">Adventure</label></div>
+						  		<div class="genre_div"><input id="anime_influenced_genre" type="checkbox" name="genre[]" value="anime_influenced" class="css-checkbox"> <label for="anime_influenced_genre" class="css-label">Anime Influenced</label></div>
+						  		<div class="genre_div"><input id="comedy_genre" type="checkbox" name="genre[]" value="comedy" class="css-checkbox"> <label for="comedy_genre" class="css-label">Comedy</label></div>
+						  		<div class="genre_div"><input id="dementia_genre" type="checkbox" name="genre[]" value="dementia" class="css-checkbox"> <label for="dementia_genre" class="css-label">Dementia</label></div>
+						  		<div class="genre_div"><input id="demons_genre" type="checkbox" name="genre[]" value="demons" class="css-checkbox"> <label for="demons_genre" class="css-label">Demons</label></div>
+						  		<div class="genre_div"><input id="doujinshi_genre" type="checkbox" name="genre[]" value="doujinshi" class="css-checkbox"> <label for="doujinshi_genre" class="css-label">Doujinshi</label></div>
+						  		<div class="genre_div"><input id="drama_genre" type="checkbox" name="genre[]" value="drama" class="css-checkbox"> <label for="drama_genre" class="css-label">Drama</label></div>
+						  		<div class="genre_div"><input id="ecchi_genre" type="checkbox" name="genre[]" value="ecchi" class="css-checkbox"> <label for="ecchi_genre" class="css-label">Ecchi</label></div>
+						  		<div class="genre_div"><input id="fantasy_genre" type="checkbox" name="genre[]" value="fantasy" class="css-checkbox"> <label for="fantasy_genre" class="css-label">Fantasy</label></div>
+						  		<div class="genre_div"><input id="game_genre" type="checkbox" name="genre[]" value="game" class="css-checkbox"> <label for="game_genre" class="css-label">Game</label></div>
+						  		<div class="genre_div"><input id="gender_bender_genre" type="checkbox" name="genre[]" value="gender_bender" class="css-checkbox"> <label for="gender_bender_genre" class="css-label">Gender Bender</label></div>
+						  		<div class="genre_div"><input id="gore_genre" type="checkbox" name="genre[]" value="gore" class="css-checkbox"> <label for="gore_genre" class="css-label">Gore</label></div>
+						  		<div class="genre_div"><input id="harem_genre" type="checkbox" name="genre[]" value="harem" class="css-checkbox"> <label for="harem_genre" class="css-label">Harem</label></div>
+						  		<div class="genre_div"><input id="historical_genre" type="checkbox" name="genre[]" value="historical" class="css-checkbox"> <label for="historical_genre" class="css-label">Historical</label></div>
+						  		<div class="genre_div"><input id="horror_genre" type="checkbox" name="genre[]" value="horror" class="css-checkbox"> <label for="horror_genre" class="css-label">Horror</label></div>
+						  		<div class="genre_div"><input id="kids_genre" type="checkbox" name="genre[]" value="kids" class="css-checkbox"> <label for="kids_genre" class="css-label">Kids</label></div>
+						  		<div class="genre_div"><input id="magic_genre" type="checkbox" name="genre[]" value="magic" class="css-checkbox"> <label for="magic_genre" class="css-label">Magic</label></div>
+						  		<div class="genre_div"><input id="mahou_shoujo_genre" type="checkbox" name="genre[]" value="mahou_shoujo" class="css-checkbox"> <label for="mahou_shoujo_genre" class="css-label">Mahou Shoujo</label></div>
+						  		<div class="genre_div"><input id="mahou_shounen_genre" type="checkbox" name="genre[]" value="mahou_shounen" class="css-checkbox"> <label for="mahou_shounen_genre" class="css-label">Mahou Shounen</label></div>
+						  		<div class="genre_div"><input id="martial_arts_genre" type="checkbox" name="genre[]" value="martial_arts" class="css-checkbox"> <label for="martial_arts_genre" class="css-label">Martial Arts</label></div>
+						  		<div class="genre_div"><input id="mecha_genre" type="checkbox" name="genre[]" value="mecha" class="css-checkbox"> <label for="mecha_genre" class="css-label">Mecha</label></div>
+						  		<div class="genre_div"><input id="military_genre" type="checkbox" name="genre[]" value="military" class="css-checkbox"> <label for="military_genre" class="css-label">Military</label></div>
+						  		<div class="genre_div"><input id="music_genre" type="checkbox" name="genre[]" value="music" class="css-checkbox"> <label for="music_genre" class="css-label">Music</label></div>
+						  		<div class="genre_div"><input id="mystery_genre" type="checkbox" name="genre[]" value="mystery" class="css-checkbox"> <label for="mystery_genre" class="css-label">Mystery</label></div>
+						  		<div class="genre_div"><input id="parody_genre" type="checkbox" name="genre[]" value="parody" class="css-checkbox"> <label for="parody_genre" class="css-label">Parody</label></div>
+						  		<div class="genre_div"><input id="police_genre" type="checkbox" name="genre[]" value="police" class="css-checkbox"> <label for="police_genre" class="css-label">Police</label></div>
+						  		<div class="genre_div"><input id="psychological_genre" type="checkbox" name="genre[]" value="psychological" class="css-checkbox"> <label for="psychological_genre" class="css-label">Psychological</label></div>
+						  		<div class="genre_div"><input id="racing_genre" type="checkbox" name="genre[]" value="racing" class="css-checkbox"> <label for="racing_genre" class="css-label">Racing</label></div>
+						  		<div class="genre_div"><input id="romance_genre" type="checkbox" name="genre[]" value="romance" class="css-checkbox"> <label for="romance_genre" class="css-label">Romance</label></div>
+						  		<div class="genre_div"><input id="samurai_genre" type="checkbox" name="genre[]" value="samurai" class="css-checkbox"> <label for="samurai_genre" class="css-label">Samurai</label></div>
+						  		<div class="genre_div"><input id="school_genre" type="checkbox" name="genre[]" value="school" class="css-checkbox"> <label for="school_genre" class="css-label">School</label></div>
+						  		<div class="genre_div"><input id="sci-fi_genre" type="checkbox" name="genre[]" value="sci-Fi" class="css-checkbox"> <label for="sci-fi_genre" class="css-label">Sci-Fi</label></div>
+						  		<div class="genre_div"><input id="shoujo_ai_genre" type="checkbox" name="genre[]" value="shoujo_ai" class="css-checkbox"> <label for="shoujo_ai_genre" class="css-label">Shoujo Ai</label></div>
+						  		<div class="genre_div"><input id="shounen_ai_genre" type="checkbox" name="genre[]" value="shounen_ai" class="css-checkbox"> <label for="shounen_ai_genre" class="css-label">Shounen Ai</label></div>
+						  		<div class="genre_div"><input id="slice_of_life_genre" type="checkbox" name="genre[]" value="slice_of_life" class="css-checkbox"> <label for="slice_of_life_genre" class="css-label">Slice of Life</label></div>
+						  		<div class="genre_div"><input id="space_genre" type="checkbox" name="genre[]" value="space" class="css-checkbox"> <label for="space_genre" class="css-label">Space</label></div>
+						  		<div class="genre_div"><input id="sports_genre" type="checkbox" name="genre[]" value="sports" class="css-checkbox"> <label for="sports_genre" class="css-label">Sports</label></div>
+						  		<div class="genre_div"><input id="super_power_genre" type="checkbox" name="genre[]" value="super_power" class="css-checkbox"> <label for="super_power_genre" class="css-label">Super Power</label></div>
+						  		<div class="genre_div"><input id="supernatural_genre" type="checkbox" name="genre[]" value="supernatural" class="css-checkbox"> <label for="supernatural_genre" class="css-label">Supernatural</label></div>
+						  		<div class="genre_div"><input id="thriller_genre" type="checkbox" name="genre[]" value="thriller" class="css-checkbox"> <label for="thriller_genre" class="css-label">Thriller</label></div>
+						  		<div class="genre_div"><input id="vampire_genre" type="checkbox" name="genre[]" value="vampire" class="css-checkbox"> <label for="vampire_genre" class="css-label">Vampire</label></div>
+						  		<div class="genre_div"><input id="yaoi_genre" type="checkbox" name="genre[]" value="yaoi" class="css-checkbox"> <label for="yaoi_genre" class="css-label">Yaoi</label></div>
+						  		<div class="genre_div"><input id="yuri_genre" type="checkbox" name="genre[]" value="yuri" class="css-checkbox"> <label for="yuri_genre" class="css-label">Yuri</label></div>
+						  	</div>
+						  	<div id="filter_type" class="tab-pane filter_tab">
+						  		<ul class="type_div">
+									<li>
+									    <input type="radio" id="type1" name="type" value="5" />
+									    <label for="type1">Movie</label>
+									</li>
+									<li>
+									    <input type="radio" id="type2" name="type" value="6" />
+									    <label for="type2">Music</label>
+									</li>
+									<li>
+									    <input type="radio" id="type3" name="type" value="4" />
+									    <label title="Original Net Animation(Web)" for="type3">ONA</label>
+									</li>
+									<li>
+									    <input type="radio" id="type4" name="type"  value="0" />
+									    <label for="type4">Other</label>
+									</li>
+									<li>
+									    <input type="radio" id="type5" name="type" value="3" />
+									    <label title="Original Video Animation" for="type5">OVA</label>
+									</li>
+									<li>
+									    <input type="radio" id="type6" name="type" value="2" />
+									    <label for="type6">Special</label>
+									</li>
+									<li>
+									    <input type="radio" id="type7" name="type" value="1" />
+									    <label for="type7">TV</label>
+									</li>
+								</ul>
+						  	</div>
+						  	<div id="filter_episodes" class="tab-pane filter_tab">
+						  		<input type="number" id="min_episodes" name="min_episodes" min="1" max="99999" onkeypress="return isNumberKey(event)" /> 
+						  		<span class="to_text">to</span> 
+						  		<input type="number" id="max_episodes" name="max_episodes" min="1" max="99999" onkeypress="return isNumberKey(event)" />
+						  	</div>
+						  	<div id="filter_year" class="tab-pane filter_tab">
+						  		<input type="number" id="min_year" name="min_year" min="1907" max="<?php echo date("Y") + 3;?>" onkeypress="return isNumberKey(event)" /> 
+						  		<span class="to_text">to</span> 
+						  		<input type="number" id="max_year" name="max_year" min="1907" max="<?php echo date("Y") + 3;?>" onkeypress="return isNumberKey(event)" />
+						  	</div>
+						  	<div id="filter_mylist" class="tab-pane filter_tab">
+						  		mylist
+						  	</div>
+						</div>			
+						<div id="current_filters_div">
+							<button id="apply_filters_button" type="submit" class="button-black">Apply filters</button>
+							<div id="current_filters"><span class="clear_filters red-text">clear filters</span></div>
+						</div>
+					</div>
 					<select name="sort_selected" onchange="this.form.submit()" style="width: 150px; font-family: cursive;">
 						<option selected disabled style="display: none" value=""></option>
 						<option value="slug" <?php if($sort_by == 'slug') echo 'selected="selected"'; ?> class="navigation_small_search_option">Name</option>
 					    <option value="start_date" <?php if($sort_by == 'start_date') echo 'selected="selected"'; ?> class="navigation_small_search_option">Newest</option>
 					    <option value="average_rating" <?php if($sort_by == 'average_rating') echo 'selected="selected"'; ?> class="navigation_small_search_option">Highest Rated</option>
 					</select>
-					<input type="hidden" name="last_search" value="<?php if(isset($last_search)) echo $last_search;?>">
 					<input type="hidden" name="sort_order" value="ASC">	
 				</form>
 				<br/><br/>
 			</div>
-					<?php foreach ($animes_matched as $anime) { ?>
+					<?php if($animes_matched !== FALSE) foreach ($animes_matched as $anime) { ?>
 			 		<?php if ($counter == 0) echo '<div class="row">';?>
 			 		<?php if (($counter % 3 == 0) and ($counter != 0)) echo '</div> <br/> <div class="row">';?>
 	 				 <?php
@@ -93,7 +266,9 @@
 		 				 echo "<p class='second_paragraph'>" . $show_type . " | " . $episode_count . " " . $ep . "</p>";
 		 				 echo "<div class='third_paragraph'>" . "<p class='measure_paragraph'>";
 		 				 		if(isset($anime['genres'])) {
-	 								foreach($anime['genres'] as $genre) {
+		 				 			$genres = explode(",", $anime['genres']);
+		 				 			sort($genres);
+	 								foreach($genres as $genre) {
 										echo " <span title='{$genre}'>" . $genre . "</span> ";
 	 								}
 		 				 		}
@@ -150,7 +325,7 @@
 	 				 </div>
 	 				 </div>		
 	 				 <?php $counter++;?>
-			<?php }?>
+			<?php } else echo "<h3>No results found</h3>";?>
 			<?php echo "</div> <br/>"?>
 			<div class="text-center">
 				<?php if(isset($animes_matched)) echo $pagination?>
@@ -170,7 +345,7 @@
 			      <tr class="user_row">
 			        <td>
 				        <a href="<?php echo site_url("users/profile/{$user['username']}");?>" class="disable-link-decoration red-text">
-				        	<div class="user_image_div"><img src="<?php echo asset_url() . "user_profile_images/{$user['profile_image']}";?>" class="user_image">
+				        	<div class="user_image_div"><img src="<?php if($user['profile_image'] != "") echo asset_url() . "user_profile_images/{$user['profile_image']}"; else echo asset_url() . "imgs/Default_Avatar.jpg";?>" class="user_image">
 				        	</div>
 				        	<?php echo $user['username'];?>
 				        </a>

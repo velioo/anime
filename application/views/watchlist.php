@@ -118,7 +118,7 @@
 				</div>
 			</div>
 			<div id="watchlist_search_div">
-				<input  type="text" id="watchlist_search" name="watchlist_search" placeholder="Search watchlist...">
+				<input type="text" id="watchlist_search" name="watchlist_search" placeholder="Search watchlist...">
 			</div>
 			<div id="sort_options_div">			
 				<div class="table-responsive">

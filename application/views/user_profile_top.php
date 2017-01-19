@@ -15,11 +15,11 @@
 	}
 ?>
 
-<div id="user-bar" style="background-image:url('<?php if($user['cover_image'] != "") { echo asset_url() . "user_cover_images/" . $user['cover_image']; } else echo asset_url() . "user_cover_images/Default.jpg"?>'); ">
+<div id="user-bar" style="background-image:url('<?php if($user['cover_image'] != "") { echo asset_url() . "user_cover_images/" . $user['cover_image']; } else echo asset_url() . "imgs/Default_Cover.jpg"?>'); ">
 	<div class="container-fluid top-container">		
 		<a class="thumbnail">
 			<div id="user_image_div">
-				<img src="<?php echo asset_url() . "user_profile_images/" . $user['profile_image'];?>" onerror="this.src='<?php echo asset_url()."user_profile_images/Default.png"?>'"  alt="Image" id="user_image">
+				<img src="<?php echo asset_url() . "user_profile_images/" . $user['profile_image'];?>" onerror="this.src='<?php echo asset_url()."imgs/Default_Avatar.jpg"?>'"  alt="Image" id="user_image">
 				<span id="edit_avatar_span" class="fa fa-camera"></span>
 			</div>
 		</a>

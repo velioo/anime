@@ -30,6 +30,8 @@ $(document).ready(function() {
 	    	    			  if($(element).text() > 0) {
 	    	        			  $('.notifications_number').text($(element).text());
 	    	        			  $('.notifications_number').show();
+	    	    			  } else {
+	    	    				  $('.notifications_number').hide();
 	    	    			  }
 	    	    		  } else {
 	    	        		  $('.notifications').append(element);

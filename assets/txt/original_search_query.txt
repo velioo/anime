@@ -1,0 +1,21 @@
+ 			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM
+			(
+				SELECT 1 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+				WHERE slug LIKE '{$anime}%' 
+				UNION
+				SELECT 2 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+				WHERE titles LIKE '%{$anime}%'	
+				UNION
+				SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at
+					FROM animes WHERE MATCH(slug) AGAINST('{$anime}' IN BOOLEAN MODE)
+				UNION
+				SELECT 4 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
+				WHERE synopsis LIKE '%{$anime}%'
+			
+			) tab
+					ORDER BY {$order_by_rnk} {$sort_by} $order {$limit_offset}");  

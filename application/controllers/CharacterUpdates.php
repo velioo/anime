@@ -69,7 +69,7 @@ class CharacterUpdates extends CI_Controller {
 									(strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_romaji)) || 
 									(strtolower(convert_titles_to_hash($a['titles'])['alt']) == strtolower($anime->title_romaji)) ||
 									(strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_japanese)) ||
- 									(strtolower(convert_titles_to_hash($a['titles'])['alt']) == strtolower($anime->title_japanese))) {
+ 									(strtolower(convert_titles_to_hash($a['titles'])['alt']) == strtolower($anime->title_japanese))) { // problem with japanese duplicate names
  										
  								$temp++;								
  								if($temp > 1) {
@@ -143,7 +143,9 @@ class CharacterUpdates extends CI_Controller {
 								
 								$role = $character->role;
 								
-								$this->characters_model->make_character_anime_relation($anime_id, $character->id, $role); 
+								if(!character_skip($character_array['id'])) {
+									$this->characters_model->make_character_anime_relation($anime_id, $character->id, $role); 
+								}
 								
  								echo "<br>Actors<br>";
 								
@@ -195,7 +197,7 @@ class CharacterUpdates extends CI_Controller {
 							echo "------------------------------------------------------------------------------------------------------";																
 						}
 
-						file_put_contents($file_to_write_counter, $anime_counter);
+						//file_put_contents($file_to_write_counter, $anime_counter);
 						$anime_id = null;
 					}  
 					
@@ -205,10 +207,12 @@ class CharacterUpdates extends CI_Controller {
 					$failed_request++;
 				}
 				
-				//fclose($fp);
-				file_put_contents($file_to_write_counter, $anime_counter);
-				
+				//fclose($fp);							
 			}
+			
+			$anime_counter-=99;		
+			file_put_contents($file_to_write_counter, $anime_counter);									
+			fclose($fp);
 			
 			$this->write_characters_json(VERIFICATION_TOKEN);
 			$this->write_actors_json(VERIFICATION_TOKEN);

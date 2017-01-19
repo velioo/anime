@@ -48,12 +48,13 @@ class SearchC extends CI_Controller {
 		$sortable_columns = $this->get_sortable_columns_anime();
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$anime = $this->input->get('search');					
+			$anime = htmlspecialchars($this->input->get('search'));					
 		} else if($this->input->get('last_search') !== NULL) {
-			$anime = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
+			$anime = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$anime = "";
 		}
+		
 		
 		if($this->input->get('sort_selected') !== NULL) { // check which sort option is selected
 			if(!in_array($this->input->get('sort_selected'), $sortable_columns)) {
@@ -63,16 +64,18 @@ class SearchC extends CI_Controller {
 			}
 		} else {
 			if($anime == "") {
-				$sort_by = 'start_date';
+				$sort_by = 'average_rating';
 			} else {
 				$sort_by = 'slug';
 			}
 		}
 		
 		$user_sorted_results = FALSE;
-				
+		
 		 if($this->input->get('sort_order') !== NULL) {
-		 	$user_sorted_results = TRUE;
+		 	if($this->input->get('sort_selected') != "") {
+		 		$user_sorted_results = TRUE;
+		 	} 
 		 	if($sort_by == 'start_date')
 		 		$order = "DESC";
 		 	else if($sort_by == 'average_rating')
@@ -84,7 +87,6 @@ class SearchC extends CI_Controller {
 				}
 			}
 		} else {
-			$user_sorted_results = FALSE;
 			if($anime == "") {	
 				$order = "DESC";
 			} else {
@@ -92,28 +94,81 @@ class SearchC extends CI_Controller {
 			}	
 		}
 		
+		
 		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
 			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
 		} else {
 			$start = 0;
 		}
-			
-		$temp = $anime;	
+		
+		//filters
+		
+		$ratings_filter = array();
+		
+		if($this->input->get('avg_amount1') != NULL && $this->input->get('avg_amount1') != 0) {
+			$ratings_filter['greater'] = $this->input->get('avg_amount1');
+		} 
+		
+		if($this->input->get('avg_amount2') != NULL && $this->input->get('avg_amount2') != 5) {
+			$ratings_filter['less'] = $this->input->get('avg_amount2');
+		} 
+
+		if($this->input->get('genre[]') != NULL) {
+			$checked_genres = $this->input->get('genre[]');
+			for ($i = 0; $i < count($checked_genres); $i++) {
+				$checked_genres[$i] = str_replace("_", " ", $checked_genres[$i]);
+				$checked_genres[$i] = ucwords($checked_genres[$i]);
+			}
+		} else {
+			$checked_genres = array();
+		}
+		
+		if($this->input->get('type') != NULL) {
+			$type = $this->input->get('type');
+		} else {
+			$type = NULL;
+		}
+		
+		$episodes_filter = array();
+		
+		if($this->input->get('min_episodes') != NULL) {
+			$episodes_filter['min'] = $this->input->get('min_episodes');
+		} 
+		
+		if($this->input->get('max_episodes') != NULL) {
+			$episodes_filter['max'] = $this->input->get('max_episodes');
+		}
+		
+		$year_filter = array();
+		
+		if($this->input->get('min_year') != NULL) {
+			$year_filter['min'] = $this->input->get('min_year');
+		}
+		
+		if($this->input->get('max_year') != NULL) {
+			$year_filter['max'] = $this->input->get('max_year');
+		} 
+		
+		$filters = array('ratings' => $ratings_filter, 'genres' => $checked_genres, 'type' => $type, 'episodes' => $episodes_filter, 'year' => $year_filter);
+		
+		//end filters
+		
+		$temp = $anime;
 		$anime = addslashes($anime);
 		$sort_by = addslashes($sort_by);
 		$order = addslashes($order);
 		
-		$query = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $user_sorted_results);
-		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order);
+		$animes = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $filters, $user_sorted_results);
+		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order, $filters);
 		
 		if($this->session->userdata('is_logged_in') && $config['total_rows'] > 0) {
-			$query = $this->watchlist_model->add_user_statuses($query);
+			$animes = $this->watchlist_model->add_user_statuses($animes);
 		}
 		
 		$anime = $temp;
 		
-		if(($anime != "") and $this->input->get('sort_order') !== NULL) {
-			$query = $this->array_sort($query, $sort_by, $order);
+		if(($anime != "") && ($user_sorted_results == TRUE) && ($animes !== FALSE)) {
+			$animes = $this->array_sort($animes, $sort_by, $order);
 			$data['sort_by'] = $sort_by;
 		} else if($anime == "") {
 			$data['sort_by'] = $sort_by;
@@ -121,12 +176,13 @@ class SearchC extends CI_Controller {
 			$data['sort_by'] = "";
 		}
 
-		if($query) {		
-			$this->pagination->initialize($config);
-			$data['pagination'] = $this->pagination->create_links();		
-			$data['animes_matched'] = $query;			
-		}
+		//if($animes) {		
+		$this->pagination->initialize($config);
+		$data['pagination'] = $this->pagination->create_links();		
+		$data['animes_matched'] = $animes;			
+		//}
 		
+		$data['filters'] = $filters;
 		$data['last_search'] = $anime;	
 		$data['title'] = 'V-Anime';
 		if($anime == "")
@@ -215,9 +271,9 @@ class SearchC extends CI_Controller {
 		$config['per_page'] = 50;
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$character = $this->input->get('search');
+			$character = htmlspecialchars($this->input->get('search'));
 		} else if($this->input->get('last_search') !== NULL) {
-			$character = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
+			$character = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$character = "";
 		}
@@ -256,7 +312,7 @@ class SearchC extends CI_Controller {
 	
 	public function search_users() {
 
-		$user = $this->input->get('search');
+		$user = htmlspecialchars($this->input->get('search'));
 		
 		$query = $this->search_model->search_users($user);
 		
@@ -287,9 +343,9 @@ class SearchC extends CI_Controller {
 		$config['per_page'] = 50;
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$actor = $this->input->get('search');
+			$actor = htmlspecialchars($this->input->get('search'));
 		} else if($this->input->get('last_search') !== NULL) {
-			$actor = $this->input->get('last_search'); //get last search if user sorts results, goes to next page
+			$actor = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$actor = "";
 		}

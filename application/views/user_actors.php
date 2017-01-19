@@ -5,10 +5,16 @@
 <script src="<?php echo asset_url() . "js/follow.js";?>"></script>
    
 <?php
-	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) 
+	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) {
 		$is_you = TRUE;
-	else 
+		$logged = TRUE;
+	} else {
 		$is_you = FALSE;
+		if(isset($this->session->userdata['is_logged_in']))
+			$logged = TRUE;
+		else
+			$logged = FALSE;
+	}
 ?>
 
 <script type="text/javascript">

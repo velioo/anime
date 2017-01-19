@@ -1,0 +1,29 @@
+ 			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,genres FROM
+			(
+				SELECT 1 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+ 					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+				WHERE animes.slug LIKE '{$anime}%' GROUP BY animes.id
+				UNION
+				SELECT 2 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+				WHERE titles LIKE '%{$anime}%' GROUP BY animes.id
+				UNION
+				SELECT 3 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes 
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+					WHERE MATCH(animes.slug) AGAINST('{$anime}' IN BOOLEAN MODE) GROUP BY animes.id
+				UNION
+				SELECT 4 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+				WHERE synopsis LIKE '%{$anime}%' GROUP BY animes.id
+			
+			) tab
+					ORDER BY {$order_by_rnk} {$sort_by} {$order} {$limit_offset}"); 

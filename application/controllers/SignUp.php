@@ -146,7 +146,7 @@ class SignUp extends CI_Controller {
 				foreach ($result_array as $user) {
 	
 					$name = $user['username'];
-					$iamge = $user['profile_image'];
+					$image = $user['profile_image'];
 	
 					$result[] = array('name'=> $name, 'image'=> $image);
 				}

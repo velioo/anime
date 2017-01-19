@@ -224,9 +224,9 @@ class Posts extends CI_Controller {
 					$this->notifications_model->spread_notification($notification_id, $is_yours);
 				}
 				
-				echo "Success";
+				echo $query_comment_id;
 			} else {
-				echo "Fail";
+				echo 0;
 			}
 				
 		} else {
@@ -260,12 +260,11 @@ class Posts extends CI_Controller {
 			$this->load->model('notifications_model');
 			$comment_id = $this->input->post('comment_id');
 				
-			$post_id = $this->posts_model->get_post_from_comment($comment_id);
-			
+			$post_id = $this->posts_model->get_post_from_comment($comment_id);		
 			$query = $this->posts_model->delete_comment($comment_id);
 				
 			$type = "post_comment";
-			$this->notifications_model->delete_notifications($post_id, $type);
+			$this->notifications_model->delete_notifications($post_id, $type, $comment_id);
 			
 			if($query) {
 				echo "Success";

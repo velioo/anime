@@ -56,8 +56,8 @@ Class Notifications_model extends CI_Model {
 		$this->db->insert('notification_users', array('notification_id' => $notification_id, 'user_id' => $user_id));
 	}
 	
-	function delete_notifications($post_id, $type) {
-		$this->db->delete('notifications', array('source_id' => $post_id, 'type' => $type));
+	function delete_notifications($post_id, $type, $additional_info="") {
+		$this->db->delete('notifications', array('source_id' => $post_id, 'type' => $type, 'additional_info' => $additional_info));
 	}
 }
 

@@ -19,24 +19,6 @@ class Home extends CI_Controller {
 		$this->load->view('home_page', $data);
 	}
 	
-	function test_v2() {
-		
-		$header = "X-Client-Id: b5ebe77052b61879c8c5";
-		
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);		
-		curl_setopt($ch, CURLOPT_URL, 'https://hummingbird.me/api/v2/anime/100');
-		$result = curl_exec($ch);
-		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-		
-		$anime_object = json_decode($result);
-		
-		var_dump($anime_object);
-	}
-	
 	function test_v3() {
 		$headers = array( 
 				"Accept: application/vnd.api+json",
@@ -93,6 +75,23 @@ class Home extends CI_Controller {
 		
 		var_dump($character);
 		
+	}
+	
+	function speed_test() {
+		$time_pre = microtime(true);
+		
+		$this->db->select("animes.*, group_concat(g.name) as genres");
+		$this->db->join('anime_genres as ag', 'ag.anime_id=animes.id');
+		$this->db->join('genres as g', 'g.id=ag.genre_id');
+		$this->db->like('animes.slug', 'code');
+		$this->db->group_by('animes.id');
+		$query = $this->db->get('animes');
+		
+		var_dump($query->result_array());
+		
+		$time_post = microtime(true);
+		$exec_time = $time_post - $time_pre;
+		echo $exec_time;
 	}
 
 	

@@ -31,9 +31,9 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function get_animes_count($anime, $limit, $offset, $sort_by, $order) {
+	function get_animes_count($anime, $limit, $offset, $sort_by, $order, $filters) {
 		
-		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, TRUE);
+		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, TRUE, $filters);
 		
 		if($result_array != FALSE) {
 			return count($result_array);
@@ -42,8 +42,8 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function search_animes($anime, $limit, $offset, $sort_by, $order, $user_sorted_results=FALSE) {
-		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, FALSE, $user_sorted_results);
+	function search_animes($anime, $limit, $offset, $sort_by, $order, $filters, $user_sorted_results=FALSE) {
+		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, FALSE, $filters, $user_sorted_results);
 		if($result_array != FALSE) {
 			return $result_array;
 		} else {
@@ -51,7 +51,7 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function query_animes_search($anime, $limit, $offset, $sort_by, $order, $all, $user_sorted_results=FALSE) {
+	function query_animes_search($anime, $limit, $offset, $sort_by, $order, $all, $filters, $user_sorted_results=FALSE) {
 		$anime = trim($anime);			
 		$anime =  addslashes($anime);
 		
@@ -72,54 +72,112 @@ Class Search_model extends CI_Model {
 		
 		$anime = trim($anime);	
 		
+		$having_statement = "";
+		
+		if(count($filters['ratings']) > 0) {
+			$having_statement.="HAVING ";
+			if(isset($filters['ratings']['greater'])) {
+				$having_statement.="(average_rating/2) >= {$filters['ratings']['greater']} AND ";
+			}	
+			if(isset($filters['ratings']['less'])) {
+				$having_statement.="(average_rating/2) <= {$filters['ratings']['less']} AND ";
+			}
+		}
+		
+		if(count($filters['genres']) > 0) {
+			if($having_statement == "") {
+				$having_statement.="HAVING ";
+			}
+			foreach($filters['genres'] as $genre) {
+				$having_statement.="genres LIKE '%{$genre}%' AND ";
+			}
+		}
+		
+		if($filters['type'] !== NULL) {
+			if($having_statement == "") {
+				$having_statement.="HAVING ";
+			}
+			$having_statement.="show_type = {$filters['type']} AND ";
+		}
+		
+		if(count($filters['episodes']) > 0) {
+			if($having_statement == "") {
+				$having_statement.="HAVING ";
+			}
+			if(isset($filters['episodes']['min'])) {
+				$having_statement.="episode_count >= {$filters['episodes']['min']} AND ";
+			}	
+			if(isset($filters['episodes']['max'])) {
+				$having_statement.="episode_count <= {$filters['episodes']['max']} AND ";
+			}
+		}
+		
+		if(count($filters['year']) > 0) {
+			if($having_statement == "") {
+				$having_statement.="HAVING ";
+			}
+			if(isset($filters['year']['min'])) {
+				$having_statement.="YEAR(`start_date`) >= {$filters['year']['min']} AND ";
+			}
+			if(isset($filters['year']['max'])) {
+				$having_statement.="YEAR(`start_date`) <= {$filters['year']['max']} AND ";
+			}
+		}
+		
+		$having_statement = substr($having_statement, 0, (strlen($having_statement) - 4));		
+		
 		if($user_sorted_results) { // if user sorted results sort by $sort_by 
 			$order_by_rnk = "";
 		} else {
 			$order_by_rnk = "rnk ASC,";
 		}
 		
-		
-		if($anime != "") {		
- 			
+		if($anime != "") {			
+			
 			$query = array();
 			
  			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,genres FROM
 			(
-				SELECT 1 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
-				WHERE slug LIKE '{$anime}%' 
+				SELECT 1 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+ 					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+				WHERE animes.slug LIKE '{$anime}%' GROUP BY animes.id {$having_statement}
 				UNION
-				SELECT 2 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
-				WHERE titles LIKE '%{$anime}%'	
+				SELECT 2 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+				WHERE titles LIKE '%{$anime}%' GROUP BY animes.id {$having_statement}
 				UNION
-				SELECT 3 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at
-					FROM animes WHERE MATCH(slug) AGAINST('{$anime}' IN BOOLEAN MODE)
-				UNION
-				SELECT 4 AS rnk, id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at FROM animes
-				WHERE synopsis LIKE '%{$anime}%'
-			
+				SELECT 3 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes 
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+					WHERE MATCH(animes.slug) AGAINST('{$anime}' IN BOOLEAN MODE) GROUP BY animes.id	{$having_statement}		
 			) tab
-					ORDER BY {$order_by_rnk} {$sort_by} $order {$limit_offset}");  
+					ORDER BY {$order_by_rnk} {$sort_by} {$order} {$limit_offset}");  
 
 			
 			$result_array = $query->result_array();
 			
-			if($all != TRUE) {
-				$result_array = $this->add_anime_genres_type($result_array);
-			}
+			//var_dump($genres);
+			//var_dump($result_array);		
+			//die();
 
 		} else {
-			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles FROM animes ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
+			$query = $this->db->query("SELECT animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres
+					FROM animes 
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+					GROUP BY animes.id {$having_statement} ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
 			$result_array = $query->result_array();
-					
-			if($all != TRUE) {
-				$result_array = $this->add_anime_genres_type($result_array);
-			}
+			//var_dump($genres);
+			//var_dump($result_array);
+			//die();
+
 		}
 		
 		if(count($result_array) > 0) {
@@ -127,28 +185,34 @@ Class Search_model extends CI_Model {
 		} else {		
 			$like_statement = "";
 			foreach ($split_anime as $a) {
-				$like_statement.=" or slug LIKE '{$a}%'";
+				$like_statement.=" or animes.slug LIKE '{$a}%'";
 			}
 			$like_statement = trim($like_statement);
 			$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 			
-			$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-						total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
-					FROM animes WHERE {$like_statement} {$limit_offset}");
+			$query = $this->db->query("SELECT animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+						total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres
+					FROM animes 
+					JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 					JOIN genres as g ON g.id = ag.genre_id
+					WHERE {$like_statement} GROUP BY animes.id {$having_statement} {$limit_offset}");
 			
 			if($query->num_rows() > 0) {
 				return $query->result_array();
 			} else {
 				$like_statement = "";
 				foreach ($split_anime as $a) {
-					$like_statement.=" or slug LIKE '%{$a}%'";
+					$like_statement.=" or animes.slug LIKE '%{$a}%'";
 				}
 				$like_statement = trim($like_statement);
 				$like_statement = substr($like_statement, 3, (strlen($like_statement) - 1));
 					
-				$query = $this->db->query("SELECT id,slug,episode_count,episode_length,synopsis,average_rating,
-							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles
-						FROM animes WHERE {$like_statement} {$limit_offset}");
+				$query = $this->db->query("SELECT animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres
+						FROM animes 
+						JOIN anime_genres as ag ON ag.anime_id = animes.id
+ 						JOIN genres as g ON g.id = ag.genre_id
+						WHERE {$like_statement} GROUP BY animes.id {$having_statement} {$limit_offset}");
 				if($query->num_rows() > 0) {
 					return $query->result_array();
 				} else {
@@ -158,7 +222,7 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function add_anime_genres_type($result_array) {
+/* 	function add_anime_genres_type($result_array) {
 		$anime_ids = array();
 		
 		foreach($result_array as $anime) {
@@ -180,7 +244,7 @@ Class Search_model extends CI_Model {
 			}			
 		}			
 		return $result_array;
-	}
+	} */
 	
 	function search_characters($character, $limit, $offset) {
 		$result_array = $this->query_characters_search($character, $limit, $offset, FALSE);
