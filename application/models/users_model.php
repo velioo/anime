@@ -262,7 +262,7 @@ Class Users_model extends CI_Model {
 			$where_clause = "id='{$id}'";
 		}
 		
-		$query = $this->db->query("SELECT u.id,u.username,u.joined_on,u.country,u.profile_image,u.cover_image,u.top_offset,u.gender,u.bio,u.life_anime,u.last_online,u.total_episodes,u.birthdate,
+		$query = $this->db->query("SELECT u.id,u.username,u.joined_on,u.country,u.profile_image,u.cover_image,u.top_offset,u.gender,u.bio,u.last_online,u.birthdate,
 				us.show_age,us.default_watchlist_sort,us.default_watchlist_page,us.show_last_online
 				FROM users as u JOIN user_settings as us ON us.user_id=u.id WHERE {$where_clause}");
 		 		
