@@ -125,7 +125,7 @@
 									<?php if($actor['language'] != "") { ?> 
 										<img src="<?php echo asset_url() . "imgs/{$actor['language']}.png";?>" class="actor_flag_image">
 									<?php }?>					
-									<?php echo $actor['first_name'] . " " . $actor['last_name']?></a>
+									<?php echo stripslashes($actor['first_name']) . " " . stripslashes($actor['last_name'])?></a>
 								<?php }?>
 							</td>
 						</tr>

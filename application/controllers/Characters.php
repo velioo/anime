@@ -14,14 +14,14 @@ class Characters extends CI_Controller {
 		redirect("home");
 	}
 	
-	public function character($character_id=null, $name=null) {	
-		if($character_id != null && is_numeric($character_id)) {
+	public function character($character_id=NULL, $name=NULL) {	
+		if($character_id != NULL && is_numeric($character_id)) {
 				
 			$this->load->model('characters_model');
 				
 			$character = $this->characters_model->get_character($character_id);	
 			
-			if($character) {
+			if($character !== FALSE) {
 				$info_text = stripslashes($character['info']);								
 				$info_text = format_info($info_text);
 
@@ -42,8 +42,8 @@ class Characters extends CI_Controller {
 		}
 	}
 	
-	public function loves($username=null) {
-		if($username != null) {
+	public function loves($username=NULL) {
+		if($username != NULL) {
 			
 			$this->load->model('characters_model');
 			$this->load->model('users_model');		
@@ -53,7 +53,7 @@ class Characters extends CI_Controller {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}				
@@ -74,7 +74,7 @@ class Characters extends CI_Controller {
 			$query = $this->characters_model->get_user_characters($data['user']['id'], $status, $config['per_page'], $start, TRUE);
 			$config['total_rows'] = $this->characters_model->get_user_characters_count($data['user']['id'], $status);
 			
-			if($query) {
+			if($query !== FALSE) {
 				$this->pagination->initialize($config);
 				$data['pagination'] = $this->pagination->create_links();
 				$data['characters'] = $query;
@@ -91,8 +91,8 @@ class Characters extends CI_Controller {
 		}
 	}
 	
-	public function hates($username=null) {
-		if($username != null) {
+	public function hates($username=NULL) {
+		if($username != NULL) {
 			
 			$this->load->model('characters_model');
 			$this->load->model('users_model');
@@ -102,7 +102,7 @@ class Characters extends CI_Controller {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}				
@@ -123,7 +123,7 @@ class Characters extends CI_Controller {
 			$query = $this->characters_model->get_user_characters($data['user']['id'], $status, $config['per_page'], $start, TRUE);
 			$config['total_rows'] = $this->characters_model->get_user_characters_count($data['user']['id'], $status);
 			
-			if($query) {
+			if($query !== FALSE) {
 				$this->pagination->initialize($config);
 				$data['pagination'] = $this->pagination->create_links();
 				$data['characters'] = $query;
@@ -140,8 +140,8 @@ class Characters extends CI_Controller {
 		}
 	}
 	
-	public function load_characters($anime_id=null) {
-		if($anime_id != null and is_numeric($anime_id)) {
+	public function load_characters($anime_id=NULL) {
+		if($anime_id != NULL and is_numeric($anime_id)) {
 			
 			$group_number = $this->input->post('group_number');
 			$characters_per_page = 50;
@@ -170,7 +170,10 @@ class Characters extends CI_Controller {
 					if($character_slug != "")
 						$character_slug.="-";
 					$character_slug.=$character['last_name'];
-				}								
+				}
+				
+				$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+				$character_slug = str_replace(" ", "-", $character_slug);
 				
 				if(isset($character['character_user_status'])) {
 					if($character['character_user_status'] == 1) { 
@@ -256,7 +259,7 @@ class Characters extends CI_Controller {
 	}
 	
 	public function load_character_users_statuses($character_id) {
-		if($character_id != null and is_numeric($character_id)) {
+		if($character_id != NULL and is_numeric($character_id)) {
 				
 			$group_number = $this->input->post('group_number');
 			$status = $this->input->post('status');
@@ -289,11 +292,11 @@ class Characters extends CI_Controller {
 		$status = $this->input->post('status');
 		
 		if($this->session->userdata('is_logged_in')) {									
-			if($character_id != null && $status != null) {			
+			if($character_id != NULL && $status != NULL) {			
 				$this->load->model('characters_model');				
 				$query = $this->characters_model->change_character_user_status($character_id, $status);
 				
-				if($query) {
+				if($query !== FALSE) {
 					echo "Success";
 				} else {
 					echo "Fail";

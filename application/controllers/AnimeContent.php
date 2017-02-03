@@ -7,9 +7,9 @@ class AnimeContent extends CI_Controller {
 		$this->load->model('helpers_model');
 	}
 	
-	public function anime($slug = null) {
+	public function anime($slug=NULL) {
 		
-		if($slug != null) {
+		if($slug != NULL) {
 			
 			$this->load->model('animes_model');
 			$this->load->model('reviews_model');
@@ -18,19 +18,19 @@ class AnimeContent extends CI_Controller {
 			
 			$query = $this->animes_model->get_anime_id($slug);
 			
-			if($query) {
+			if($query !== FALSE) {
 
 				$anime_id = $query['id'];
 					
 				$anime = $this->animes_model->get_anime($anime_id);
 					
-				if($anime) {
+				if($anime !== FALSE) {
 				
 					$data['anime'] = $anime;
 				
 					$reviews = $this->reviews_model->get_anime_reviews($anime_id);
 				
-					if($reviews) {
+					if($reviews !== FALSE) {
 						$data['reviews'] = $reviews;
 					}
 				
@@ -38,13 +38,13 @@ class AnimeContent extends CI_Controller {
 						$this->load->model('watchlist_model');
 						
 						$watchlist = $this->watchlist_model->get_watchlist_status_score($anime_id);
-						if($watchlist) {
+						if($watchlist !== FALSE) {
 							$data['watchlist_status_name'] = get_watchlist_status_name($watchlist['status']);
 							$data['score'] = $watchlist['score'];
 						}					
 						
-						$has_written_review = $this->reviews_model->get_user_review($anime_id);
-						if($has_written_review) {
+						$has_written_review = $this->reviews_model->get_user_review($anime_id, $this->session->userdata('id'));
+						if($has_written_review !== FALSE) {
 							$data['has_written_review'] = TRUE;
 						} else {
 							$data['has_written_review'] = FALSE;
@@ -71,9 +71,9 @@ class AnimeContent extends CI_Controller {
 		
 	}
 	
-	public function reviews($slug = null) {
+	public function reviews($slug=NULL) {
 		
-		if($slug != null) {
+		if($slug != NULL) {
 			
 			$this->load->model('animes_model');
 			$this->load->model('reviews_model');
@@ -82,7 +82,7 @@ class AnimeContent extends CI_Controller {
 			
 			$query = $this->animes_model->get_anime_id($slug);
 				
-			if($query) {
+			if($query !== FALSE) {
 			
 				$anime_id = $query['id'];
 				
@@ -90,17 +90,17 @@ class AnimeContent extends CI_Controller {
 
 				$total_reviews = $this->reviews_model->get_total_reviews_count($anime_id);
 				
-				if($total_reviews) {
+				if($total_reviews !== FALSE) {
 					$reviews_per_page = 10;
-					$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
+					$data['total_groups'] = ceil($total_reviews/$reviews_per_page);
 				} else {
 					$this->helpers_model->server_error();
 				}
 				
 				if($this->session->userdata('is_logged_in') === TRUE) {
-					$user_review = $this->reviews_model->get_user_review($anime_id);
+					$user_review = $this->reviews_model->get_user_review($anime_id, $this->session->userdata('id'));
 					
-					if($user_review) {
+					if($user_review !== FALSE) {
 						$data['button_name'] = "Edit your review";
 					} else {
 						$data['button_name'] = "Write a review";
@@ -121,8 +121,8 @@ class AnimeContent extends CI_Controller {
 		}
 	}
 	
-	public function characters($slug=null) {
-		if($slug != null) {
+	public function characters($slug=NULL) {
+		if($slug != NULL) {
 			$this->load->model('animes_model');
 			$this->load->model('characters_model');
 			
@@ -130,7 +130,7 @@ class AnimeContent extends CI_Controller {
 				
 			$query = $this->animes_model->get_anime_id($slug);
 			
-			if($query) {
+			if($query !== FALSE) {
 					
 				$anime_id = $query['id'];
 				
@@ -138,7 +138,7 @@ class AnimeContent extends CI_Controller {
 				
 				$total_characters = $this->characters_model->get_characters_count($anime_id);
 				
-				if($total_characters) {	
+				if($total_characters !== FALSE) {	
 					$characters_per_page = 50;
 					$data['total_groups'] = ceil($total_characters['count']/$characters_per_page);
 				} else {

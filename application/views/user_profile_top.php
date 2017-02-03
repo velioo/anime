@@ -1,6 +1,5 @@
 <?php $random_num = time(); 
 	$online = false;
-	date_default_timezone_set('Europe/Sofia');
 	$current_time = $date = date('Y-m-d H:i:s'); $current_time = strtotime($current_time);
 	$last_online = strtotime($user['last_online']);	
 	$time_difference = round(abs($current_time - $last_online) / 60) . " minutes ago";
@@ -19,7 +18,7 @@
 	<div class="container-fluid top-container">		
 		<a class="thumbnail">
 			<div id="user_image_div">
-				<img src="<?php echo asset_url() . "user_profile_images/" . $user['profile_image'];?>" onerror="this.src='<?php echo asset_url()."imgs/Default_Avatar.jpg"?>'"  alt="Image" id="user_image">
+				<img src="<?php if($user['profile_image'] != "") { echo asset_url() . "user_profile_images/" . $user['profile_image'];} else { echo asset_url()."imgs/Default_Avatar.jpg";}?>"  alt="Image" id="user_image">
 				<span id="edit_avatar_span" class="fa fa-camera"></span>
 			</div>
 		</a>

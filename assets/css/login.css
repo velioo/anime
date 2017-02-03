@@ -83,6 +83,6 @@ input.submit {
 
 .error {
 	color:red;
-	display:inline;
+	display:inline-block;
 }
 

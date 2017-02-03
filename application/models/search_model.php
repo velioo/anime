@@ -13,19 +13,25 @@ Class Search_model extends CI_Model {
 		return $query->result_array();
 	}
 	
-	function search_users($username) {
+	function search_users($username, $limit, $offset, $sort, $all=FALSE) {
 		$user = addslashes($username);
+		$this->db->select('u.id, u.username, u.joined_on, u.profile_image, COUNT(w.id) as anime_count');
+		$this->db->join('watchlists as w', 'w.user_id=u.id', 'left');
 		$this->db->like('username', $username);
-		$this->db->select('id, username, joined_on, profile_image');
-		$users = $this->db->get('users');
+		$this->db->group_by('u.id');
+		if($all === FALSE) {
+			$this->db->order_by($sort[0], $sort[1]);
+			$this->db->order_by("username", "ASC");
+			$this->db->limit($limit, $offset);
+		}
+		$users = $this->db->get('users as u');
 		
-		if($users->num_rows() > 0) {
-			$users = $users->result_array();
-			for($i = 0; $i < count($users); $i++) {
-				$query = $this->db->get_where('watchlists', array('user_id' => $users[$i]['id']));
-				$users[$i]['anime_count'] = $query->num_rows();
-			}			
-			return $users;
+		if($users) {
+			if($all === FALSE) {	
+				return $users->result_array();
+			} else {
+				return $users->num_rows();
+			}
 		} else {
 			return FALSE;
 		}
@@ -138,34 +144,30 @@ Class Search_model extends CI_Model {
 			
  			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
 					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,genres FROM
-			(
-				SELECT 1 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
- 					JOIN anime_genres as ag ON ag.anime_id = animes.id
- 					JOIN genres as g ON g.id = ag.genre_id
-				WHERE animes.slug LIKE '{$anime}%' GROUP BY animes.id {$having_statement}
-				UNION
-				SELECT 2 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
-					JOIN anime_genres as ag ON ag.anime_id = animes.id
- 					JOIN genres as g ON g.id = ag.genre_id
-				WHERE titles LIKE '%{$anime}%' GROUP BY animes.id {$having_statement}
-				UNION
-				SELECT 3 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes 
-					JOIN anime_genres as ag ON ag.anime_id = animes.id
- 					JOIN genres as g ON g.id = ag.genre_id
-					WHERE MATCH(animes.slug) AGAINST('{$anime}' IN BOOLEAN MODE) GROUP BY animes.id	{$having_statement}		
-			) tab
+					(
+						SELECT 1 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+		 					JOIN anime_genres as ag ON ag.anime_id = animes.id
+		 					JOIN genres as g ON g.id = ag.genre_id
+						WHERE animes.slug LIKE '{$anime}%' GROUP BY animes.id {$having_statement}
+						UNION
+						SELECT 2 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+							JOIN anime_genres as ag ON ag.anime_id = animes.id
+		 					JOIN genres as g ON g.id = ag.genre_id
+						WHERE titles LIKE '%{$anime}%' GROUP BY animes.id {$having_statement}
+						UNION
+						SELECT 3 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes 
+							JOIN anime_genres as ag ON ag.anime_id = animes.id
+		 					JOIN genres as g ON g.id = ag.genre_id
+							WHERE MATCH(animes.slug) AGAINST('{$anime}' IN BOOLEAN MODE) GROUP BY animes.id	{$having_statement}		
+					) tab
 					ORDER BY {$order_by_rnk} {$sort_by} {$order} {$limit_offset}");  
 
 			
 			$result_array = $query->result_array();
-			
-			//var_dump($genres);
-			//var_dump($result_array);		
-			//die();
-
+	
 		} else {
 			$query = $this->db->query("SELECT animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
 					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres
@@ -174,10 +176,7 @@ Class Search_model extends CI_Model {
  					JOIN genres as g ON g.id = ag.genre_id
 					GROUP BY animes.id {$having_statement} ORDER BY {$sort_by} $order, slug ASC {$limit_offset}");
 			$result_array = $query->result_array();
-			//var_dump($genres);
-			//var_dump($result_array);
-			//die();
-
+			
 		}
 		
 		if(count($result_array) > 0) {
@@ -221,30 +220,6 @@ Class Search_model extends CI_Model {
 			}
 		}
 	}
-	
-/* 	function add_anime_genres_type($result_array) {
-		$anime_ids = array();
-		
-		foreach($result_array as $anime) {
-			$anime_ids[] = $anime['id'];
-		}
-		
-		$ids = join("','",$anime_ids);
-		
-		$genres = $this->db->query("SELECT a.id as anime_id, g.name as genre FROM genres g JOIN anime_genres ag ON g.id = ag.genre_id
-				JOIN animes a ON a.id = ag.anime_id WHERE a.id IN ('{$ids}')");
-		
-		$genres = $genres->result_array();		
-		
-		for($i = 0; $i < count($result_array); $i++) { // add genres to the according anime		
-			foreach($genres as $genre) {
-				if($genre['anime_id'] == $result_array[$i]['id']) {
-					$result_array[$i]['genres'][] = $genre['genre'];
-				} 
-			}			
-		}			
-		return $result_array;
-	} */
 	
 	function search_characters($character, $limit, $offset) {
 		$result_array = $this->query_characters_search($character, $limit, $offset, FALSE);
@@ -457,10 +432,11 @@ Class Search_model extends CI_Model {
 			$character_ids[] = $character['id'];
 		}
 		
-		$ids = join("','",$character_ids);
-		
-		$animes = $this->db->query("SELECT c.id as character_id, a.id as id, a.slug as slug, a.titles as titles FROM characters as c JOIN character_animes as ca ON ca.character_id = c.id
-				JOIN animes a ON a.id = ca.anime_id WHERE c.id IN ('{$ids}')");
+		$this->db->select('c.id as character_id, a.id as id, a.slug as slug, a.titles as titles');
+		$this->db->join('character_animes as ca', 'ca.character_id = c.id');
+		$this->db->join('animes as a', 'a.id = ca.anime_id');
+		$this->db->where_in('c.id', $character_ids);
+		$animes = $this->db->get('characters as c');
 		
 		$animes = $animes->result_array();		
 		

@@ -134,6 +134,6 @@ input.submit_privacy {
 
 .error {
 	color:red;
-	display:inline;
+	display:inline-block;
 	margin-left: 135px;
 }

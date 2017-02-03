@@ -66,7 +66,7 @@ $(document).ready(function() {
 				method: function(value, item) {
 					var title = item.name;
 					return "<a title='" + title + "' href=" + user_url + item.name + "> " +
-							"<div class='user_image_div'><img class='user_image' src='" + asset_url + "user_profile_images/" + item.image + "' onerror=\"this.src='" + asset_url + "user_profile_images/Default.png'\" /></div>" + "<div class='auto_div'>" + item.name + "</div>";
+							"<div class='user_image_div'><img class='user_image' src='" + asset_url + "user_profile_images/" + item.image + "' onerror=\"this.src='" + asset_url + "imgs/Default_Avatar.jpg'\" /></div>" + "<div class='auto_div'>" + item.name + "</div>";
 				}
 			}
 	}

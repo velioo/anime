@@ -138,7 +138,7 @@
 								</a>
 								<div class="wrap_character_name_div">
 									<a href="<?php echo site_url("characters/character/{$anime_character['character_id']}/{$anime_character['character_slug']}");?>" class="disable-link-decoration">
-										<span class="character_name red-text"><?php echo $anime_character['first_name'] . " " . $anime_character['last_name'];?></span>
+										<span class="character_name red-text"><?php echo stripslashes($anime_character['first_name']) . " " . stripslashes($anime_character['last_name']);?></span>
 									</a>
 								</div>
 							</td>

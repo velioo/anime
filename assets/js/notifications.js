@@ -3,10 +3,9 @@ $(document).ready(function() {
 	var get_url = getNotificationsUrl();
 	var mark_url = getMarkAsReadUrl();
 	
-    $.post(get_url, {limit: 6},
+    $.post(get_url, {limit: 6, first_load: 1},
     	function(data){ 
         if (data != "") { 
-	    	  $('.notifications').empty();
 	    	  $(data).each(function(index, element) {       		  
 	    		  if(index == 0) {
 	    			  if($(element).text() > 0) {
@@ -23,11 +22,11 @@ $(document).ready(function() {
     setInterval(function(){ 
 	    $.post(get_url, {limit: 6},
 	        	function(data){ 
-	            if (data != "") { 
-	    	    	  $('.notifications').empty();
+	            if (data != "") {     	    	 
 	    	    	  $(data).each(function(index, element) {       		  
 	    	    		  if(index == 0) {
 	    	    			  if($(element).text() > 0) {
+	    	    				  $('.notifications').empty();
 	    	        			  $('.notifications_number').text($(element).text());
 	    	        			  $('.notifications_number').show();
 	    	    			  } else {

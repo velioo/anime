@@ -37,10 +37,10 @@
 		return is_you;
 	}
 	
-	function getWatchlistUrl() {
-		var watchlist_url = "<?php echo site_url("watchlists/load_watchlist");?>";
-		return watchlist_url;
-	}
+	//function getWatchlistUrl() {
+		//var watchlist_url = "<?php echo site_url("watchlists/load_watchlist");?>";
+		//return watchlist_url;
+	//}
 
 	function getUpdateDefaultWatchlistSortUrl() {
 		var update_watchlist_sort_url = "<?php echo site_url("watchlists/update_default_watchlist_sort"); ?>";
@@ -53,7 +53,7 @@
 	}
 
 	function getDefaultPage() {
-		var default_watchlist_page = <?php if($is_you) echo $user['default_watchlist_page']; else echo 0;?>;
+		var default_watchlist_page = <?php echo $page;?>;
 		return default_watchlist_page;
 	}
 
@@ -108,13 +108,25 @@
 		<p class="main_title">Watchlist</p>	
 		<div id="watchlist_content" class="col-sm-12">
 			<div id="watchlist_filter">
-				<div id="filter_group" class="btn-group">
-				  <button type="button" class="btn btn-primary filter" id="all_tab" data-id="0">All</button>
-				  <button type="button" class="btn btn-primary filter" id="watched_tab" data-id="1">Watched</button>
-				  <button type="button" class="btn btn-primary filter" id="watching_tab" data-id="2">Watching</button>
-				  <button type="button" class="btn btn-primary filter" id="want_watch_tab" data-id="3">Want to Watch</button>
-				  <button type="button" class="btn btn-primary filter" id="stalled_tab" data-id="4">Stalled</button>
-				  <button type="button" class="btn btn-primary filter" id="dropped_tab" data-id="5">Dropped</button>
+				<div id="filter_group" class="btn-group" role="group">
+				  <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/all")?>" id="all_tab" class="disable-link-decoration btn btn-primary filter">
+				  	All
+				  </a>
+				   <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watched")?>" id="watched_tab" class="disable-link-decoration btn btn-primary filter">
+				  	Watched
+				  </a>
+				   <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watching")?>" id="watching_tab" class="disable-link-decoration btn btn-primary filter">
+				 	 Watching
+				  </a>
+				   <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/want_to_watch")?>" id="want_watch_tab" class="disable-link-decoration btn btn-primary filter">
+				 	 Want to Watch
+				  </a>
+				   <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/stalled")?>" id="stalled_tab" class="disable-link-decoration btn btn-primary filter">
+				  	Stalled
+				  	</a>
+				  <a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/dropped")?>" id="dropped_tab" class="disable-link-decoration btn btn-primary filter">
+				  	Dropped
+				  </a>
 				</div>
 			</div>
 			<div id="watchlist_search_div">
@@ -137,6 +149,8 @@
 				  </table>
 			  </div>		
 			</div>
+						
+			<?php if($page == 1 || $page == 0) {?>
 			
 			<div id="watched_content" class="watchlist_content">
 				<div id="watched_row" class="title_row">Watched<span class="anime_count"></span></div>			
@@ -144,50 +158,84 @@
 				   <table class="table tablesorter">
 				   <thead></thead> 
 					    <tbody>
+					    	<?php foreach($watched_animes as $anime) {
+					    		  	echo $anime;
+					    		  }
+					    	?>				    	
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
+			
+			<?php } if($page == 2 || $page == 0) {?>
+			
 			<div id="watching_content" class="watchlist_content">
 				<div id="watching_row" class="title_row">Watching<span class="anime_count"></span></div>
 				<div class="table-responsive">
 				   <table class="table tablesorter">
 				   <thead></thead> 
 					    <tbody>
+					    	<?php foreach($watching_animes as $anime) {
+					    			echo $anime;
+					    		  }
+					    	?>	
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
+			
+			<?php } if($page == 3 || $page == 0) {?>
+			
 			<div id="want_watch_content" class="watchlist_content">
 				<div id="want_watch_row" class="title_row">Want to Watch<span class="anime_count"></span></div>
 				<div class="table-responsive">
 				   <table class="table tablesorter">
 				   <thead></thead> 
 					    <tbody>
+					    	<?php foreach($want_to_watch_animes as $anime) {
+					    		  	echo $anime;
+					    		  }
+					    	?>	
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
+			
+			<?php } if($page == 4 || $page == 0) {?>
+			
 			<div id="stalled_content" class="watchlist_content">
 				<div id="stalled_row" class="title_row">Stalled<span class="anime_count"></span></div>
 				<div class="table-responsive">
 				   <table class="table tablesorter">
 				   <thead></thead> 
 					    <tbody>
+					    	<?php foreach($stalled_animes as $anime) {
+					    		  	echo $anime;
+					    		  }
+					    	?>	
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
+			
+			<?php } if($page == 5 || $page == 0) {?>
+			
 			<div id="dropped_content" class="watchlist_content">
 				<div id="dropped_row" class="title_row">Dropped<span class="anime_count"></span></div>
 				<div class="table-responsive">
 				   <table class="table tablesorter">
 				   <thead></thead> 
 					    <tbody>
+					    	<?php foreach($dropped_animes as $anime) {
+					    		  	echo $anime;
+					    		  }
+					    	?>	
 					    </tbody>
 				  </table>
 			  </div>
 			</div>
+			
+			<?php }?>
 			<div id="loader_watchlist_image_div">
 				<img src="<?php echo asset_url() . "imgs/loading_records.gif";?>" class="loader_watchlist_image">
 			</div>

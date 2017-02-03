@@ -101,13 +101,13 @@ $(document).ready(function() {
 				var line_text = "", i;
 				var whole_text = "";
 				for (i = 0; i < temp.length; i++) {
-				    if((line_text.length + temp[i].length) >= 26) { 
+				    if((line_text.length + temp[i].length) > 26) { 
 				    	line_text = line_text + "\n";
 				    	whole_text = whole_text + line_text;
 				    	line_text = temp[i];
 				    } else {
 				    	line_text = line_text + " " + temp[i];
-				    	if(line_text.length >= 26) {
+				    	if(line_text.length > 26) {
 				    		line_text = line_text + "\n";
 					    	whole_text = whole_text + line_text;
 					    	line_text = "";

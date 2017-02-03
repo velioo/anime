@@ -283,6 +283,69 @@ function get_watchlist_status_name($status) {
 	return $status_name;
 }
 
+function get_watchlist_status_id($status) {
+	switch($status) {
+		case "all":
+			$status_id = 0;
+			break;
+		case "watched":
+			$status_id = 1;
+			break;
+		case "watching":
+			$status_id = 2;
+			break;
+		case "want_to_watch":
+			$status_id = 3;
+			break;
+		case "stalled":
+			$status_id = 4;
+			break;
+		case "dropped":
+			$status_id = 5;
+			break;
+		default:
+			$status_id = "";
+			break;
+	}
+	
+	return $status_id;
+}
+
+function get_users_sort($sort_by) {
+	$sort = array();
+	switch($sort_by) {
+		case "name_asc":
+			$sort[] = "username";
+			$sort[] = "ASC";
+			break;
+		case "name_desc":
+			$sort[] = "username";
+			$sort[] = "DESC";
+			break;
+		case "join_asc":
+			$sort[] = "joined_on";
+			$sort[] = "ASC";
+			break;
+		case "join_desc":
+			$sort[] = "joined_on";
+			$sort[] = "DESC";
+			break;
+		case "animes_asc":
+			$sort[] = "anime_count";
+			$sort[] = "ASC";
+			break;
+		case "animes_desc":
+			$sort[] = "anime_count";
+			$sort[] = "DESC";
+			break;
+		default:
+			$sort[] = "username";
+			$sort[] = "ASC";
+	}
+	
+	return $sort;
+}
+
 function validateDate($date, $format = 'Y-m-d H:i:s') {
 	$d = DateTime::createFromFormat($format, $date);
 	return $d && $d->format($format) == $date;

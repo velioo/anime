@@ -6,11 +6,12 @@ class UserUpdates extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('helpers_model');
+		$this->load->library('form_validation');
+		$this->load->model('users_model');
 	}
 	
 	function update_user_pictures() {
 		
-		$this->load->model('users_model');
 		$this->load->library('upload');
 		
 		if($this->session->userdata('is_logged_in')) {
@@ -38,7 +39,7 @@ class UserUpdates extends CI_Controller {
 	        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
 	        	unlink("./assets/user_cover_images/{$cover_image}");
 	        	$query = $this->users_model->update_cover_image($config['file_name']);
-	        	if(!$query) {
+	        	if($query === FALSE) {
 	        		$this->helpers_model->server_error();
 	        	}
 	         }             
@@ -58,7 +59,7 @@ class UserUpdates extends CI_Controller {
 	         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
 	         	unlink("./assets/user_profile_images/{$avatar_image}");
 	         	$query = $this->users_model->update_avatar_image($config['file_name']);
-	         	if(!$query) {
+	         	if($query === FALSE) {
 	         		$this->helpers_model->server_error();
 	         	} else {
 	         		$this->session->set_userdata('user_avatar', $config['file_name']);
@@ -72,8 +73,7 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function update_user_info() {
-		$this->load->model('users_model');		
+	public function update_user_info() {	
 		
 		if($this->session->userdata('is_logged_in')) {
 		
@@ -82,19 +82,19 @@ class UserUpdates extends CI_Controller {
 			$gender = $_POST['gender'];
 			$location = $_POST['location'];
 			
-			if($bio == null) {		
+			if($bio == NULL) {		
 				$bio = "";
 			}
 			
-			if($birthdate == null) {
+			if($birthdate == NULL) {
 				$birthdate = "";
 			}
 			
-			if($gender == null) {
+			if($gender == NULL) {
 				$gender = "unknown";
 			}
 			
-			if($location == null) {
+			if($location == NULL) {
 				$location = "";
 			}
 			
@@ -104,8 +104,7 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function update_user_privacy_notifications() {
-		$this->load->model('users_model');		
+	public function update_user_privacy_notifications() {	
 		$age_visibility = $this->input->post('age_visibility');
 		
 		if($age_visibility != null && $this->session->userdata('is_logged_in')) {	
@@ -117,9 +116,7 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function update_user_preferences() {
-		$this->load->model('users_model');
-		
+	public function update_user_preferences() {		
 		$default_watchlist_page = $this->input->post('default_watchlist_page');
 
 	 	if($default_watchlist_page != null && $this->session->userdata('is_logged_in')) {
@@ -131,41 +128,42 @@ class UserUpdates extends CI_Controller {
 		} 
 	}
 	
-	public function update_user_account_info() {		
-		$this->load->library('form_validation');
+	public function update_user_account_info() {				
+		$data = array();
 		
 		$username = $this->session->userdata('username');
 		$email = $this->session->userdata('email');
 		$password = "";
-		if($username != null && $email != null && $this->session->userdata('is_logged_in')) {
+		
+		if($this->session->userdata('is_logged_in')) {
 			
 			if($this->input->post('username') != $username) {
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');
-				$username = $this->input->post('username');
+				$data['username'] = $this->input->post('username');
 			}
 			
 			if($this->input->post('email') != $email) {
 				$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
-				$email = $this->input->post('email');
+				$data['email'] = $this->input->post('email');
 			}
 			
 			if($this->input->post('password') != "") {
 				$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
 				$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
-				$password = $this->input->post('password');
+				$data['password'] = hash('sha256', $this->input->post('password'));
 			}		
 			
 			if($this->form_validation->run() == FALSE) {
 				$this->user_settings();
-			} else {
-				$this->load->model('users_model');
-					
-				if(($username != $this->session->userdata['username']) or ($email != $this->session->userdata['email']) or $password != "") {
-					if($password != "")
-						$password = hash('sha256', $password);
-						$result = $this->users_model->update_user_acc_info($username, $email, $password);
+			} else {					
+				if(count($data) > 0) {					
+					$result = $this->users_model->update_user_acc_info($data);
+				
+					if($result !== FALSE) {
 						
-					if ($result) {
+						if(isset($data['username']))
+							$this->write_users_json(VERIFICATION_TOKEN);
+						
 						$data = array(
 								'id' => $result['id'],
 								'username' => $result['username'],
@@ -175,18 +173,21 @@ class UserUpdates extends CI_Controller {
 						
 						$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
 							
-						if($is_admin) {
+						if($is_admin !== FALSE) {
 							$data['admin'] = TRUE;
 						}
 							
 						$this->session->set_userdata($data);
-						
-						$this->write_users_json(VERIFICATION_TOKEN);
+						$message = "Successfully updated your account !";
+						$this->session->set_flashdata('message', $message);
+					} else {
+						$message = "There was an error updating while updating your account !";
+						$this->session->set_flashdata('message', $message);
 					}
-				} 
-	
+				}
+				
 				$this->nocache();
-				redirect("users/profile/{$this->session->userdata['username']}");
+				$this->user_settings();
 			}
 		} else {
 			$this->helpers_model->bad_request();
@@ -194,19 +195,28 @@ class UserUpdates extends CI_Controller {
 		
 	}
 	
-	public function user_settings($fb_message = "") {
-		$this->load->model('users_model');
+	public function user_settings() {
 		if($this->session->userdata('is_logged_in')) {
+			
 			$user = $this->users_model->get_user_info_logged($this->session->userdata['username']);
 			$is_facebook_connected = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
-			if($user) {
+			
+			if($user !== FALSE) {
+				
 				if($is_facebook_connected) {
 					$data['is_fb_connected'] = "Disconnect Facebook";
 				} else {
 					$data['is_fb_connected'] = "Connect Facebook";
 				}
+				
 				$data['user'] = $user;
-				$data['fb_message'] = $fb_message;
+				
+				if($this->session->flashdata('message')) {
+					$data['message'] = $this->session->flashdata('message');
+				} else {
+					$data['message'] = "";
+				}
+				
 				$data['title'] = 'Settings';
 				$data['css'] = 'user_settings.css';
 				$data['header'] = "Settings";
@@ -220,9 +230,8 @@ class UserUpdates extends CI_Controller {
 	}
 	
 	public function reset_password($temp_pass){
-		$this->load->model('users_model');
 		$query = $this->users_model->is_temp_pass_valid($temp_pass);
-		if($query){
+		if($query !== FALSE){
 			$data['user_id'] = $query['user_id'];
 			$data['title'] = 'V-Anime';
 			$data['css'] = 'login.css';
@@ -235,11 +244,8 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function update_forgotten_password($user_id=null) {
-		$this->load->library('form_validation');
-		$this->load->model('users_model');
-	
-		if($user_id != null and is_numeric($user_id)) {
+	public function update_forgotten_password($user_id=NULL) {
+		if($user_id != NULL and is_numeric($user_id)) {
 			
 			$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
 			$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
@@ -253,7 +259,7 @@ class UserUpdates extends CI_Controller {
 			} else {
 				$password = hash('sha256', $this->input->post('password'));
 				$query = $this->users_model->update_user_password($user_id, $password);
-				if($query) {
+				if($query !== FALSE) {
 					$this->users_model->delete_temp_pass($user_id);
 					$data['header'] = "You successfully changed your password";
 					$this->login_page($data);
@@ -264,18 +270,16 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	function facebook_connect() {
-		$this->load->model('users_model');
-		
+	function facebook_connect() {		
 		if($this->session->userdata('is_logged_in')) {
 		
 			$query = $this->users_model->check_if_user_connected_to_fb($this->session->userdata['id']);
 		
-			if($query) {
+			if($query !== FALSE) {
 					
 				$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);
 					
-				if($query) {
+				if($query !== FALSE) {
 					redirect("userUpdates/user_settings");
 				} else {
 					$error = "Please add a password to your account before disconnecting Facebook";
@@ -290,16 +294,14 @@ class UserUpdates extends CI_Controller {
 		}
 	}
 	
-	public function check_if_username_exists($requested_username) {
-		$this->load->model('users_model');
-		
+	public function check_if_username_exists($requested_username) {		
 		if(strtolower($this->session->userdata('username')) == strtolower($requested_username)) {
 			return TRUE;
 		}
 	
 		$username_available = $this->users_model->check_if_username_exists($requested_username);
 	
-		if($username_available) {
+		if($username_available !== FALSE) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -307,12 +309,10 @@ class UserUpdates extends CI_Controller {
 	}
 	
 	
-	public function check_if_email_exists($requested_email) {
-		$this->load->model('users_model');
-	
+	public function check_if_email_exists($requested_email) {	
 		$email_available = $this->users_model->check_if_email_exists($requested_email);
 	
-		if($email_available) {
+		if($email_available !== FALSE) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -323,11 +323,9 @@ class UserUpdates extends CI_Controller {
 	function write_users_json($verification_token=null) {
 		if($verification_token === VERIFICATION_TOKEN) {
 	
-			$this->load->model('users_model');
-	
 			$result_array = $this->users_model->get_users_json_data();
 	
-			if($result_array) {
+			if($result_array !== FALSE) {
 	
 				$all_names = "";
 					
@@ -340,7 +338,9 @@ class UserUpdates extends CI_Controller {
 				}
 	
 				$fp = fopen('assets/json/autocomplete_users.json', 'w');
+				flock($fp, LOCK_EX);
 				fwrite($fp, json_encode($result));
+				flock($fp, LOCK_UN);
 				fclose($fp);
 			}
 		} else {

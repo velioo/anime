@@ -499,16 +499,6 @@ input[type=checkbox].css-checkbox {
     position:relative;  
 }
 
-.container-fluid.scrollable .pagination li a {
-	color: #2F343B;
-}
-
-.container-fluid.scrollable .pagination li.active a {
-	color:white;
-	background-color:#2F343B;
-	border-color: #2F343B;
-}
-
 .star-rating {
 	margin-left: 10px;
 	padding-top: 6px;

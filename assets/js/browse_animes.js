@@ -84,20 +84,20 @@ $(document).ready(function() {
 		putTypeFilter();
 	});
 	
-	$('#min_episodes').keyup(function() {
+	$('#min_episodes').bind('keyup mouseup', function () {
 		putEpisodesFilter();
 	});
 	
-	$('#max_episodes').keyup(function() {
+	$('#max_episodes').bind('keyup mouseup', function () {
 		putEpisodesFilter();
 	});
 	
-	$('#min_year').keyup(function() {
-		putYearsFilter();
+	$('#min_year').bind('keyup mouseup', function () {
+		putYearsFilter();           
 	});
 	
-	$('#max_year').keyup(function() {
-		putYearsFilter();
+	$('#max_year').bind('keyup mouseup', function () {
+		putYearsFilter();           
 	});
 	
 	$('#current_filters').on('click', '.filter', function() {

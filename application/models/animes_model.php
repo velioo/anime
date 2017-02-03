@@ -30,7 +30,10 @@ Class Animes_model extends CI_Model {
 		
 		if($query) {
 			foreach($anime_object->data->genres as $genre) {	
-				$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));	
+				$query = $this->db->get_where('genres', array('id' => $genre));
+				if($query->num_rows() == 1) {
+					$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));	
+				}
 			}
 	
 			return TRUE;
@@ -54,14 +57,20 @@ Class Animes_model extends CI_Model {
 		 		'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,
 		 		'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
 		); 
-		
-		$query = $this->db->query("SELECT poster_image_file_name, cover_image_file_name FROM animes WHERE id = {$anime_object->data->id}");
+	
+		$this->db->select('poster_image_file_name, cover_image_file_name');
+		$this->db->where('id', $anime_object->data->id);
+		$query = $this->db->get('animes');
 		if($query->num_rows() == 1) {
 			if((strpos($query->row_array()['poster_image_file_name'], 'manual_') === false)) {
 				$update_anime_data['poster_image_file_name'] = $anime_object->data->attributes->posterImage;
+				$date = date('Y-m-d H:i:s');
+				$update_anime_data['poster_image_updated_at'] = $date;
 			}
 			if((strpos($query->row_array()['cover_image_file_name'], 'manual_') === false)) {
 				$update_anime_data['cover_image_file_name'] = $anime_object->data->attributes->coverImage;
+				$date = date('Y-m-d H:i:s');
+				$update_anime_data['cover_image_updated_at'] = $date;
 			}
 		}
 
@@ -69,9 +78,12 @@ Class Animes_model extends CI_Model {
 		$query = $this->db->update('animes', $update_anime_data);
 		
 		if($query) {
-			 $this->db->query("DELETE FROM anime_genres WHERE anime_id = {$anime_object->data->id}");
+			 $this->db->delete('anime_genres', array('anime_id' => $anime_object->data->id));
 			 foreach($anime_object->data->genres as $genre) {
-			 	$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
+			 	$query = $this->db->get_where('genres', array('id' => $genre));
+			 	if($query->num_rows() == 1) {
+			 		$this->db->insert('anime_genres', array('anime_id' => $anime_object->data->id, 'genre_id' => $genre));
+			 	}
 			}	  
 			return TRUE;
 		} else {
@@ -80,7 +92,7 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime($id) {
-		$query = $this->db->query("SELECT * FROM animes WHERE id = {$id}");
+		$query = $this->db->get_where('animes', array('id' => $id));
 		
 		if($query->num_rows() == 1) {
 			$row_array = $this->add_anime_genre($id, $query->row_array());
@@ -91,7 +103,10 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime_id($slug) {
-		$query = $this->db->query("SELECT id FROM animes WHERE slug = '{$slug}' ");
+		$this->db->select('id');
+		$this->db->where('slug', $slug);
+		$query = $this->db->get('animes');
+
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -100,7 +115,10 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime_slug($id) {
-		$query = $this->db->query("SELECT slug FROM animes WHERE id = '{$id}' ");
+		$this->db->select('slug');
+		$this->db->where('id', $id);
+		$query = $this->db->get('animes');
+		
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -121,8 +139,11 @@ Class Animes_model extends CI_Model {
 		}
 	}
 	
-	function get_anime_cover_image($anime_id) {
-		$query = $this->db->query("SELECT cover_image_file_name FROM animes WHERE id = {$anime_id}");
+	function get_anime_cover_image($id) {
+		$this->db->select('cover_image_file_name');
+		$this->db->where('id', $id);
+		$query = $this->db->get('animes');
+
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -130,8 +151,11 @@ Class Animes_model extends CI_Model {
 		}
 	}
 	
-	function get_anime_poster_image($anime_id) {
-		$query = $this->db->query("SELECT poster_image_file_name FROM animes WHERE id = {$anime_id}");
+	function get_anime_poster_image($id) {
+		$this->db->select('poster_image_file_name');
+		$this->db->where('id', $id);
+		$query = $this->db->get('animes');
+
 		if($query->num_rows() == 1) {
 			return $query->row_array();
 		} else {
@@ -140,7 +164,9 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function update_cover_offset($id, $offset) {
-		$query = $this->db->query("UPDATE animes SET cover_image_top_offset = '{$offset}' WHERE id = {$id}");	
+		$this->db->where('id', $id);
+		$query = $this->db->update('animes', array('cover_image_top_offset' => $offset));
+
 		if($query) {
 			return TRUE;
 		} else {
@@ -149,7 +175,10 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function update_cover_image($id, $image) {
-		$query = $this->db->query("UPDATE animes SET cover_image_file_name = '{$image}' WHERE id = {$id}");	
+		$date = date('Y-m-d H:i:s');
+		$this->db->where('id', $id);
+		$query = $this->db->update('animes', array('cover_image_file_name' => $image, 'cover_image_updated_at' => $date));
+
 		if($query) {
 			return TRUE;
 		} else {
@@ -158,7 +187,10 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function update_poster_image($id, $image) {
-		$query = $this->db->query("UPDATE animes SET poster_image_file_name = '{$image}' WHERE id = {$id}");
+		$date = date('Y-m-d H:i:s');
+		$this->db->where('id', $id);
+		$query = $this->db->update('animes', array('poster_image_file_name' => $image, 'poster_image_updated_at' => $date));
+
 		if($query) {
 			return TRUE;
 		} else {
@@ -178,12 +210,14 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime_json_data() {
-		$query = $this->db->query("SELECT id, slug, titles, poster_image_file_name FROM animes");
+		$this->db->select('id, slug, titles, poster_image_file_name');
+		$query = $this->db->get('animes');
 		return $query->result_array();
 	}
 	
-	function check_if_anime_exists($id) {
-		$query = $this->db->query("SELECT id FROM animes WHERE id = {$id}");
+	function check_if_anime_exists($id) {		
+		$query = $this->db->get_where('animes', array('id' => $id));
+		
 		if($query->num_rows() == 1) {
 			return TRUE;
 		} else {

@@ -6,6 +6,7 @@ class SearchC extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('helpers_model');
+		$this->load->model('search_model');
 	}
 	
 	public function index() {
@@ -14,7 +15,6 @@ class SearchC extends CI_Controller {
 	
 	public function search() {
 		$this->allow_get_array = TRUE;
-		$this->load->model('search_model');
 		
 		switch ($this->input->get('search_select')) {
 			case 'animes':
@@ -36,7 +36,6 @@ class SearchC extends CI_Controller {
 	}
 	
 	public function search_anime() {			
-		$this->load->model('search_model');
 		$this->load->model('watchlist_model');
 		$this->load->library('pagination');
 
@@ -48,14 +47,13 @@ class SearchC extends CI_Controller {
 		$sortable_columns = $this->get_sortable_columns_anime();
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$anime = htmlspecialchars($this->input->get('search'));					
+			$anime = strip_tags($this->input->get('search'));					
 		} else if($this->input->get('last_search') !== NULL) {
-			$anime = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
+			$anime = strip_tags($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$anime = "";
 		}
-		
-		
+			
 		if($this->input->get('sort_selected') !== NULL) { // check which sort option is selected
 			if(!in_array($this->input->get('sort_selected'), $sortable_columns)) {
 				$sort_by = 'slug';
@@ -176,19 +174,20 @@ class SearchC extends CI_Controller {
 			$data['sort_by'] = "";
 		}
 
-		//if($animes) {		
 		$this->pagination->initialize($config);
 		$data['pagination'] = $this->pagination->create_links();		
 		$data['animes_matched'] = $animes;			
-		//}
 		
 		$data['filters'] = $filters;
 		$data['last_search'] = $anime;	
 		$data['title'] = 'V-Anime';
-		if($anime == "")
+		
+		if($anime == "") {
 			$data['header'] = "Browse Anime";
-		else
+		} else {
 			$data['header'] = 'Results for ' . "\"" . $anime . "\"";
+		}
+		
 		$data['css'] = 'search_animes.css';
 		$data['javascript'] = 'home.js';
 		$this->load->view('search_page', $data);
@@ -261,7 +260,6 @@ class SearchC extends CI_Controller {
 	
 	public function search_character() {
 		
-		$this->load->model('search_model');
 		$this->load->model('characters_model');
 		$this->load->library('pagination');
 		
@@ -271,9 +269,9 @@ class SearchC extends CI_Controller {
 		$config['per_page'] = 50;
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$character = htmlspecialchars($this->input->get('search'));
+			$character = strip_tags($this->input->get('search'));
 		} else if($this->input->get('last_search') !== NULL) {
-			$character = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
+			$character = strip_tags($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$character = "";
 		}
@@ -292,7 +290,7 @@ class SearchC extends CI_Controller {
 		
 		$character = $temp;
 		
-		if($query) {
+		if($query !== FALSE) {
 			$this->pagination->initialize($config);
 			$data['pagination'] = $this->pagination->create_links();
 			$data['characters_matched'] = $query;
@@ -312,20 +310,53 @@ class SearchC extends CI_Controller {
 	
 	public function search_users() {
 
-		$user = htmlspecialchars($this->input->get('search'));
+		$this->load->library('pagination');
 		
-		$query = $this->search_model->search_users($user);
+		$config = $this->configure_pagination();
+		$config['base_url'] = site_url("SearchC/search_users");
+		$config['per_page'] = 50;
+			
+		if($this->input->get('search') !== NULL) { //get user search
+			$user = strip_tags($this->input->get('search'));
+		} else if($this->input->get('last_search') !== NULL) {
+			$user = strip_tags($this->input->get('last_search'));
+		} else {
+			$user = "";
+		}		
 		
-		if($query) {
+		if($this->input->get('sort_selected') !== NULL) { // check which sort option is selected	
+			$sort_by = $this->input->get('sort_selected');
+			$sort = get_users_sort($sort_by);
+		} else {
+			$sort_by = "name_asc";
+			$sort = get_users_sort($sort_by);
+		}
+		
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { 
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+		} else {
+			$start = 0;
+		}
+		
+		$query = $this->search_model->search_users($user, $config['per_page'], $start, $sort);
+		$config['total_rows'] =$this->search_model->search_users($user, $config['per_page'], $start, $sort, TRUE);
+		
+		if($query !== FALSE) {
+			
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();
 			$data['users_matched'] = $query;
+			
 			if($user == '')
 				$data['header'] = 'All users';
 			else
 				$data['header'] = 'Results for "' . $user . '"';
 		} else {
-			$data['header'] = 'Browse Users';
+			$this->helpers_model->server_error();
 		}
 		
+		$data['sort_by'] = $sort_by;
+		$data['last_search'] = $user;
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'search_users.css';
 		$this->load->view('search_page', $data);
@@ -333,7 +364,6 @@ class SearchC extends CI_Controller {
 	}
 	
 	public function search_people() {
-		$this->load->model('search_model');
 		$this->load->model('actors_model');
 		$this->load->library('pagination');
 		
@@ -343,9 +373,9 @@ class SearchC extends CI_Controller {
 		$config['per_page'] = 50;
 		
 		if($this->input->get('search') !== NULL) { //get user search
-			$actor = htmlspecialchars($this->input->get('search'));
+			$actor = strip_tags($this->input->get('search'));
 		} else if($this->input->get('last_search') !== NULL) {
-			$actor = htmlspecialchars($this->input->get('last_search')); //get last search if user sorts results, goes to next page
+			$actor = strip_tags($this->input->get('last_search')); //get last search if user sorts results, goes to next page
 		} else {
 			$actor = "";
 		}
@@ -364,7 +394,7 @@ class SearchC extends CI_Controller {
 		
 		$actor = $temp;
 		
-		if($query) {
+		if($query !== FALSE) {
 			$this->pagination->initialize($config);
 			$data['pagination'] = $this->pagination->create_links();
 			$data['actors_matched'] = $query;
@@ -372,14 +402,16 @@ class SearchC extends CI_Controller {
 		
 		$data['last_search'] = $actor;
 		$data['title'] = 'V-Anime';
-		if($actor == "")
-			$data['header'] = "Browse Actors";
-			else
-				$data['header'] = 'Results for ' . "\"" . $actor . "\"";
 		
-				$data['css'] = 'search_actors.css';
-				$data['javascript'] = 'home.js';
-				$this->load->view('search_page', $data);
+		if($actor == "") {
+			$data['header'] = "Browse Actors";
+		} else {
+			$data['header'] = 'Results for ' . "\"" . $actor . "\"";
+		}
+		
+		$data['css'] = 'search_actors.css';
+		$data['javascript'] = 'home.js';
+		$this->load->view('search_page', $data);
 	}
 	
 	public function search_lists() {
@@ -388,7 +420,7 @@ class SearchC extends CI_Controller {
 		
 		$query = $this->search_model->search_lists($list);
 		
-		if($query) {
+		if($query !== FALSE) {
 			$data['lists_matched'] = $query;
 			if($list == '')
 				$data['header'] = 'All lists';

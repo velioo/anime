@@ -13,14 +13,14 @@ class Actors extends CI_Controller {
 		redirect("home");
 	}
 	
-	public function actor($actor_id=null, $name=null) {		
-		if($actor_id != null && is_numeric($actor_id)) {
+	public function actor($actor_id=NULL, $name=NULL) {		
+		if($actor_id != NULL && is_numeric($actor_id)) {
 		
 			$this->load->model('actors_model');
 		
 			$actor = $this->actors_model->get_actor($actor_id);
 			
-			if($actor) {
+			if($actor !== FALSE) {
 				$info_text = stripslashes($actor['info']);
 				$info_text = format_info($info_text);
 		
@@ -41,8 +41,8 @@ class Actors extends CI_Controller {
 		}		
 	}
 	
-	public function loves($username=null) {
-		if($username != null) {
+	public function loves($username=NULL) {
+		if($username != NULL) {
 				
 			$this->load->model('actors_model');
 			$this->load->model('users_model');
@@ -52,7 +52,7 @@ class Actors extends CI_Controller {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
@@ -73,7 +73,7 @@ class Actors extends CI_Controller {
 			$query = $this->actors_model->get_user_actors($data['user']['id'], $status, $config['per_page'], $start);
 			$config['total_rows'] = $this->actors_model->get_user_actors_count($data['user']['id'], $status);
 				
-			if($query) {
+			if($query !== FALSE) {
 				$this->pagination->initialize($config);
 				$data['pagination'] = $this->pagination->create_links();
 				$data['actors'] = $query;
@@ -90,8 +90,8 @@ class Actors extends CI_Controller {
 		}
 	}
 	
-	public function hates($username=null) {
-		if($username != null) {
+	public function hates($username=NULL) {
+		if($username != NULL) {
 				
 			$this->load->model('actors_model');
 			$this->load->model('users_model');
@@ -101,7 +101,7 @@ class Actors extends CI_Controller {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
@@ -122,7 +122,7 @@ class Actors extends CI_Controller {
 			$query = $this->actors_model->get_user_actors($data['user']['id'], $status, $config['per_page'], $start);
 			$config['total_rows'] = $this->actors_model->get_user_actors_count($data['user']['id'], $status);
 				
-			if($query) {
+			if($query !== FALSE) {
 				$this->pagination->initialize($config);
 				$data['pagination'] = $this->pagination->create_links();
 				$data['actors'] = $query;
@@ -139,12 +139,11 @@ class Actors extends CI_Controller {
 		}
 	}
 	
-	public function load_actors() {
-		
+	public function load_actors() {		
 	}
 	
 	public function load_actor_users_statuses($actor_id) {
-		if($actor_id != null and is_numeric($actor_id)) {
+		if($actor_id != NULL and is_numeric($actor_id)) {
 		
 			$group_number = $this->input->post('group_number');
 			$status = $this->input->post('status');
@@ -176,11 +175,11 @@ class Actors extends CI_Controller {
 		$status = $this->input->post('status');
 		
 		if($this->session->userdata('is_logged_in')) {
-			if($actor_id != null && $status != null) {
+			if($actor_id != NULL && $status != NULL) {
 				$this->load->model('actors_model');
 				$query = $this->actors_model->change_actor_user_status($actor_id, $status);
 		
-				if($query) {
+				if($query !== FALSE) {
 					echo "Success";
 				} else {
 					echo "Fail";

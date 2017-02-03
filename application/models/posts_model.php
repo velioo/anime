@@ -15,9 +15,13 @@ Class Posts_model extends CI_Model {
 	}
 	
 	function get_posts($wall_owner, $limit, $offset = 0) {
-		$query = $this->db->query("SELECT p.id, p.post_owner, p.content, p.created_at, p.updated_at, up.username, up.profile_image FROM posts as p 
-										JOIN users as u ON u.id=p.wall_owner 
-										JOIN users as up ON up.id=p.post_owner WHERE wall_owner = {$wall_owner} ORDER BY created_at DESC LIMIT {$limit} OFFSET {$offset}");
+		$this->db->select('p.id, p.post_owner, p.content, p.created_at, p.updated_at, up.username, up.profile_image');
+		$this->db->join('users as u', 'u.id=p.wall_owner');
+		$this->db->join('users as up', 'up.id=p.post_owner');
+		$this->db->where('wall_owner', $wall_owner);
+		$this->db->order_by('created_at', 'DESC');
+		$this->db->limit($limit, $offset);
+		$query = $this->db->get('posts as p');
 		return $query->result_array();
 	}
 	
@@ -35,8 +39,12 @@ Class Posts_model extends CI_Model {
 	}
 	
 	function get_post_comments($post_id) {
-		$query = $this->db->query("SELECT pc.id, pc.content, pc.created_at, pc.updated_at, u.username, u.profile_image FROM post_comments as pc JOIN posts ON posts.id=pc.post_id
-															JOIN users as u ON u.id=pc.commenter WHERE post_id = {$post_id} ORDER BY created_at ASC");
+		$this->db->select('pc.id, pc.content, pc.created_at, pc.updated_at, u.username, u.profile_image');
+		$this->db->join('posts', 'posts.id=pc.post_id');
+		$this->db->join('users as u', 'u.id=pc.commenter');
+		$this->db->where('post_id', $post_id);
+		$this->db->order_by('created_at', 'ASC');
+		$query = $this->db->get('post_comments as pc');
 		return $query->result_array();
 	}
 	
@@ -89,14 +97,9 @@ Class Posts_model extends CI_Model {
 		return $query;
 	}
 	
-	function check_if_is_your_post($post_id) {
-		$query = $this->db->get_where('posts', array('id' => $post_id));
-		
-		if($query->row_array()['post_owner'] == $this->session->userdata('id')) {
-			return "your";
-		} else {
-			return $query->row_array()['post_owner'];
-		}	
+	function get_post_owner($post_id) {
+		$query = $this->db->get_where('posts', array('id' => $post_id));		
+		return $query->row_array()['post_owner'];	
 	}
 	
 	function get_post_from_comment($comment_id) {

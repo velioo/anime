@@ -150,16 +150,6 @@ tr:nth-child(even) {
 	padding: 8px 8px 15px 8px;
 }
 
-.container-fluid.scrollable .pagination li a {
-	color: #2F343B;
-}
-
-.container-fluid.scrollable .pagination li.active a {
-	color:white;
-	background-color:#2F343B;
-	border-color: #2F343B;
-}
-
 #loves_menu {
 	position: relative;
 	height: 70px;

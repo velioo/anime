@@ -29,8 +29,8 @@ class Login extends CI_Controller {
 		
 		$this->load->library('form_validation');
 		
-		$this->form_validation->set_rules('username', 'Username', 'trim|required');
-		$this->form_validation->set_rules('password', 'Password', 'trim|required');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|alpha_dash');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
 		
 		if ($this->form_validation->run() == FALSE) {
 			if(isset($this->session->userdata['is_logged_in'])) {
@@ -39,26 +39,25 @@ class Login extends CI_Controller {
 				$data['incorrect'] = "Username or password is incorrect !";
 				$this->login_page($data);
 			}
-		} else {
-		
+		} else {		
 			$this->load->model('users_model');
 			$query = $this->users_model->validate();
-			if($query) {				
+			if($query !== FALSE) {				
 				$username = $this->input->post('username');
 				$result = $this->users_model->get_user_info_logged($username);
-				if ($result) {
+				if ($result !== FALSE) {
 					
 					$data = array(
 							'id' => $result['id'],
 							'username' => $result['username'],
 							'email' => $result['email'],
 							'user_avatar' => $result['profile_image'],
-							'is_logged_in' => true
+							'is_logged_in' => TRUE
 					);
 					
 					$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
 					
-					if($is_admin) {
+					if($is_admin !== FALSE) {
 						$data['admin'] = TRUE;
 					}
 					
@@ -82,19 +81,19 @@ class Login extends CI_Controller {
 		if($query) {
 			$username = $this->input->post('username');
 			$result = $this->users_model->get_user_info_logged($username);
-			if($result) {
+			if($result !== FALSE) {
 					
 				$data = array(
 						'id' => $result['id'],
 						'username' => $result['username'],
 						'email' => $result['email'],
 						'user_avatar' => $result['profile_image'],
-						'is_logged_in' => true
+						'is_logged_in' => TRUE
 				);
 					
 				$is_admin = $this->users_model->check_if_user_is_admin($result['id']);
 					
-				if($is_admin) {
+				if($is_admin !== FALSE) {
 					$data['admin'] = TRUE;
 				}
 					
@@ -160,10 +159,10 @@ class Login extends CI_Controller {
 		  'app_id' => APP_ID,
 		  'app_secret' => APP_SECRET,
 		  'default_graph_version' => 'v2.5',
-		]);
+		]);		
 		
 		$helper = $fb->getRedirectLoginHelper();
-
+		
 		try {
 		  $accessToken = $helper->getAccessToken();
 		  $response = $fb->get('/me?fields=id,name,email', $accessToken);
@@ -189,10 +188,8 @@ class Login extends CI_Controller {
 		  die();
 		}
 		
-		$oAuth2Client = $fb->getOAuth2Client();
-		
-		$tokenMetadata = $oAuth2Client->debugToken($accessToken);
-		
+		$oAuth2Client = $fb->getOAuth2Client();	
+		$tokenMetadata = $oAuth2Client->debugToken($accessToken);		
 		$tokenMetadata->validateAppId(APP_ID); 
 		$tokenMetadata->validateExpiration();
 		
@@ -203,8 +200,6 @@ class Login extends CI_Controller {
 		    echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
 		    die();
 		  }
-		  echo '<h3>Long-lived</h3>';
-		  //var_dump($accessToken->getValue());
 		}
 		
 		$user = $response->getGraphUser();
@@ -216,7 +211,7 @@ class Login extends CI_Controller {
 		$user = $this->users_model->check_if_fb_acc_exist_and_return_user($fb_user_id);
 		
 		if($connect_existing_account != "connect") {
-			if($user) {			
+			if($user !== FALSE) {			
 					$data = array(
 							'id' => $user['id'],
 							'username' => $user['username'],
@@ -228,7 +223,7 @@ class Login extends CI_Controller {
 					
 					$is_admin = $this->users_model->check_if_user_is_admin($user['id']);
 					
-					if($is_admin) {
+					if($is_admin !== FALSE) {
 						$data['admin'] = TRUE;
 					}
 					
@@ -241,11 +236,10 @@ class Login extends CI_Controller {
 						redirect("users/profile/{$user['username']}");
 					}					
 					
-			} else {
-				
+			} else {				
 				$email_available = $this->users_model->check_if_email_exists($email);		
 				
-				if(!$email_available) {
+				if($email_available === FALSE) {
 					$data['message'] = "Choose your Username and Email";
 					$email = FALSE;
 				} else {
@@ -261,28 +255,29 @@ class Login extends CI_Controller {
 				$this->load->view('fb_user_signup', $data);				
 			}
 		} else {
-			if($user) {
+			if($user !== FALSE) {
 				$message = "This Facebook account is already connected with another account.";
-				redirect("userUpdates/user_settings/{$message}");
+				$this->session->set_flashdata('message', $message);
+				redirect("userUpdates/user_settings");
 			} else {
 				if($this->session->userdata('is_logged_in')) {				
 					if(($email != $this->session->userdata['email'])) {
 						$email_available = $this->users_model->check_if_email_exists($email);
-						if(!$email_available) {
+						if($email_available === FALSE) {
 							$email = $this->session->userdata['email'];
 						} 
 					} else {
 						$email_available = TRUE;
 					}
 								
-					if($email_available)
+					if($email_available !== FALSE)
 						$message = "";
 					else 
 						$message = "The email associated with your Facebook account was taken but you were still connected.";
 					
 					$query = $this->users_model->connect_facebook($this->session->userdata['id'], $email, $fb_user_id, $accessToken);
 						
-					if($query) {
+					if($query !== FALSE) {
 						$data = array(
 								'id' => $this->session->userdata['id'],
 								'username' => $this->session->userdata['username'],
@@ -295,8 +290,9 @@ class Login extends CI_Controller {
 						$this->session->set_userdata($data);					
 					} else {
 						$message = "There was an error connecting your account.";
+						$this->session->set_flashdata('message', $message);						
 					}
-					redirect("userUpdates/user_settings/{$message}");
+					redirect("userUpdates/user_settings");
 				} else {
 					$this->helpers_model->unauthorized();
 				}

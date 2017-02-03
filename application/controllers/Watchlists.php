@@ -8,7 +8,7 @@ class Watchlists extends CI_Controller {
 		$this->load->model('helpers_model');
 	}
 	
-	public function user_watchlist($username=null) {		
+	public function user_watchlist($username=NULL, $page=NULL) {		
 		$this->load->model('watchlist_model');
 		$this->load->model('users_model');
 		
@@ -18,12 +18,24 @@ class Watchlists extends CI_Controller {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
 			
 			$data['user'] = $query;
+			
+			if($page !== NULL) {
+				$data['page'] = get_watchlist_status_id($page);
+			} else {
+				if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
+					$data['page'] = $data['user']['default_watchlist_page'];
+				} else {
+					$data['page'] = 0;
+				}
+			}		
+			
+			$data = $this->load_watchlist($data);
 			
 			$data['title'] = $username . '\'s profile';
 			$data['css'] = 'watchlist.css';
@@ -42,9 +54,22 @@ class Watchlists extends CI_Controller {
 			$anime_id = $this->input->post('anime_id');
 			$status = $this->input->post('status');
 	
-			$query = $this->watchlist_model->update_status($anime_id, $status);			
+			$exists = $this->watchlist_model->get_watchlist_status_score($anime_id);
+				
+			if($exists !== FALSE) { 
+				if($status != 6) {
+					$query = $this->watchlist_model->update_status($anime_id, $status);		
+				} else {
+					$query = $this->watchlist_model->delete_status($anime_id, $status);
+					if($query) {
+						$this->watchlist_model->calculate_anime_score($anime_id);
+					}
+				}
+			} else {
+				$query = $this->watchlist_model->add_status($anime_id, $status);		
+			}		
 	
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -64,7 +89,7 @@ class Watchlists extends CI_Controller {
 		
 			$query = $this->watchlist_model->update_score($anime_id, $value);
 		
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -84,7 +109,7 @@ class Watchlists extends CI_Controller {
 		
 			$query = $this->watchlist_model->update_eps($anime_id, $eps_watched);
 		
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -108,18 +133,23 @@ class Watchlists extends CI_Controller {
 		}
 	}
 	
-	public function load_watchlist() {
+	public function load_watchlist($data) {
 		$this->load->model('watchlist_model');
 		
-		$user_id = $this->input->post('user_id');
+		$user_id = $data['user']['id'];
 		
 		if(isset($user_id)) {
-		
-			$query = $this->watchlist_model->get_watchlist($user_id);
+								
+			$query = $this->watchlist_model->get_watchlist($user_id, $data['page']);
 			
-			if($query) {
+			if($query !== FALSE) {
+								
+				 $watched = array();
+				 $watching = array();
+				 $want_to_watch = array();
+				 $stalled = array();
+				 $dropped = array();
 				
-				 $rows = array();
 				 $row_counter = 0;
 				 $id_counter = 0;
 	
@@ -166,17 +196,50 @@ class Watchlists extends CI_Controller {
 									<span class="hidden_user_score">' . $row['score'] . '</span>
 									<div data-id="' . $row['score'] . '" class="star-rating">
 	
-									    <input id="Ans_' . $id_counter++ .'" class="rb0" name="userScore'. $row_counter .'" type="radio" value="0"/>                       
-									    <input id="Ans_' . $id_counter++ .'" class="rb1" name="userScore'. $row_counter .'" type="radio" value="1"/>
-									    <input id="Ans_' . $id_counter++ .'" class="rb2" name="userScore'. $row_counter .'" type="radio" value="2"/>
-									    <input id="Ans_' . $id_counter++ .'" class="rb3" name="userScore'. $row_counter .'" type="radio" value="3"/>    
-									    <input id="Ans_' . $id_counter++ .'" class="rb4" name="userScore'. $row_counter .'" type="radio" value="4"/>    
-									    <input id="Ans_' . $id_counter++ .'" class="rb5" name="userScore'. $row_counter .'" type="radio" value="5"/>    
-									    <input id="Ans_' . $id_counter++ .'" class="rb6" name="userScore'. $row_counter .'" type="radio" value="6"/>
-									    <input id="Ans_' . $id_counter++ .'" class="rb7" name="userScore'. $row_counter .'" type="radio" value="7"/>    
-									    <input id="Ans_' . $id_counter++ .'" class="rb8" name="userScore'. $row_counter .'" type="radio" value="8"/>
-									    <input id="Ans_' . $id_counter++ .'" class="rb9" name="userScore'. $row_counter .'" type="radio" value="9"/>
-									    <input id="Ans_' . $id_counter++ .'" class="rb10" name="userScore'. $row_counter .'" type="radio" value="10"/>';
+									    <input id="Ans_' . $id_counter++ .'" class="rb0" name="userScore'. $row_counter .'" type="radio" value="0" ';
+									    	if($row['score'] == 0)
+									    		$element.='checked="checked"';
+									    $element.='/>                       
+									    <input id="Ans_' . $id_counter++ .'" class="rb1" name="userScore'. $row_counter .'" type="radio" value="1" ';								    		
+									    	if($row['score'] == 1)
+									    		$element.='checked="checked"';
+									    $element.='/>   
+									    <input id="Ans_' . $id_counter++ .'" class="rb2" name="userScore'. $row_counter .'" type="radio" value="2" ';
+									    if($row['score'] == 2)
+									    	$element.='checked="checked"';
+									    $element.='/>			
+									    <input id="Ans_' . $id_counter++ .'" class="rb3" name="userScore'. $row_counter .'" type="radio" value="3" ';
+									    if($row['score'] == 3)
+									    	$element.='checked="checked"';
+									    $element.='/>    
+									    <input id="Ans_' . $id_counter++ .'" class="rb4" name="userScore'. $row_counter .'" type="radio" value="4" ';
+									    if($row['score'] == 4)
+									    	$element.='checked="checked"';
+									    $element.='/>  
+									    <input id="Ans_' . $id_counter++ .'" class="rb5" name="userScore'. $row_counter .'" type="radio" value="5" ';
+									    if($row['score'] == 5)
+									    	$element.='checked="checked"';
+									    $element.='/>  
+									    <input id="Ans_' . $id_counter++ .'" class="rb6" name="userScore'. $row_counter .'" type="radio" value="6" ';
+									    if($row['score'] == 6)
+									    	$element.='checked="checked"';
+									    $element.='/>
+									    <input id="Ans_' . $id_counter++ .'" class="rb7" name="userScore'. $row_counter .'" type="radio" value="7" ';								    
+									    if($row['score'] == 7)
+									    	$element.='checked="checked"';
+									    $element.='/>    
+									    <input id="Ans_' . $id_counter++ .'" class="rb8" name="userScore'. $row_counter .'" type="radio" value="8" ';
+									    if($row['score'] == 8)
+									    	$element.='checked="checked"';
+									    $element.='/>
+									    <input id="Ans_' . $id_counter++ .'" class="rb9" name="userScore'. $row_counter .'" type="radio" value="9" ';									    
+									    if($row['score'] == 9)
+									    	$element.='checked="checked"';
+									    $element.='/> 
+									    <input id="Ans_' . $id_counter++ .'" class="rb10" name="userScore'. $row_counter .'" type="radio" value="10" ';
+									    if($row['score'] == 10)
+									    	$element.='checked="checked"';
+									    $element.='/>';
 							
 									   $id_counter-=11; 
 									   
@@ -234,18 +297,36 @@ class Watchlists extends CI_Controller {
 						}
 						
 						$element.='</tr>';
-							
-						$rows[] = $element;
+						
+						switch($status) {
+							case 1: 
+								$watched[] = $element;
+								break;
+							case 2:
+								$watching[] = $element;
+								break;
+							case 3: 
+								$want_to_watch[] = $element;
+								break;
+							case 4:
+								$stalled[] = $element;
+								break;
+							case 5: 
+								$dropped[] = $element;
+								break;
+						}						
+						
 				  }  			  
 				  
-				  foreach($rows as $element) {
-				     echo $element;
-				  }
-			}
-		} else {
-			$this->helpers_model->bad_request();
-		}
+				  $data['watched_animes'] = $watched;
+				  $data['watching_animes'] = $watching;
+				  $data['want_to_watch_animes'] = $want_to_watch;
+				  $data['stalled_animes'] = $stalled;
+				  $data['dropped_animes'] = $dropped;  
+			} 
+		}	
 		
+		return $data;	
 	}
 	
 	function get_default_watchlist_sort() {

@@ -61,7 +61,7 @@ class CharacterUpdates extends CI_Controller {
 					
 					//$anime_query = $this->animes_model->get_anime(4854);
 					
-					if($anime_query) {
+					if($anime_query !== FALSE) {
 						$temp = 0;
  	 	 			 	foreach($anime_query as $a) {
 							if(    (strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_english)) || 
@@ -90,7 +90,7 @@ class CharacterUpdates extends CI_Controller {
 						
 						//$anime_id = $anime_query['id'];
 						
-				 		if($anime_id != null) {
+				 		if($anime_id != NULL) {
 						
 				 			$counter++;
 				 			
@@ -135,7 +135,7 @@ class CharacterUpdates extends CI_Controller {
 														
 								$character_exists = $this->characters_model->check_if_character_exists($character_array);
 									
-								if($character_exists) {
+								if($character_exists !== FALSE) {
 									$this->characters_model->update_character($character_array);
 								} else {
 									$this->characters_model->add_character($character_array);
@@ -184,7 +184,7 @@ class CharacterUpdates extends CI_Controller {
 									
 									$actor_exists = $this->actors_model->check_if_actor_exists($actor_array);
 									
-									if($actor_exists) {
+									if($actor_exists !== FALSE) {
 										$this->actors_model->update_actor($actor_array);
 									} else {
 										$this->actors_model->add_actor($actor_array);
@@ -230,7 +230,7 @@ class CharacterUpdates extends CI_Controller {
 		
 			$result_array = $this->characters_model->get_characters_json_data();
 		
-			if($result_array) {
+			if($result_array !== FALSE) {
 				
 				$all_names = "";
 					
@@ -240,25 +240,33 @@ class CharacterUpdates extends CI_Controller {
 					
 					$id = $character['id'];
 					$name = $character['first_name'] . " " . $character['last_name'];
-					$image = $character['image_file_name'];									
-					$all_names.=$character['first_name']. " " . $character['last_name']. " " . $character['alt_name']. " " . $character['japanese_name'];
+					$image = $character['image_file_name'];		
 					
 					$character_slug = "";
-					
+						
 					if($character['first_name'] != "") {
 						$character_slug.=$character['first_name'];
 					}
 					if($character['last_name'] != "") {
 						if($character_slug != "")
 							$character_slug.="-";
-						$character_slug.=$character['last_name'];
+							$character_slug.=$character['last_name'];
 					}
+						
+					$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+					
+					$all_names.=$character['first_name']. " " . $character['last_name']. " " . $character['alt_name']. " " . 
+						$character['japanese_name'] . " " . $character_slug;	
+					
+					$character_slug = str_replace(" ", "-", $character_slug);
 		
 					$result[] = array('name'=> $name, 'all_names' => $all_names, 'slug' => $character_slug, 'id' => $id, 'image'=> $image);
 				}
 		
 				$fp = fopen('assets/json/autocomplete_characters.json', 'w');
+				flock($fp, LOCK_EX);
 				fwrite($fp, json_encode($result));
+				flock($fp, LOCK_UN);
 				fclose($fp);
 		
 				if($character_id != "") {
@@ -278,7 +286,7 @@ class CharacterUpdates extends CI_Controller {
 	
 			$result_array = $this->actors_model->get_actors_json_data();
 	
-			if($result_array) {
+			if($result_array !== FALSE) {
 	
 				$all_names = "";
 					
@@ -306,7 +314,9 @@ class CharacterUpdates extends CI_Controller {
 				}
 	
 				$fp = fopen('assets/json/autocomplete_actors.json', 'w');
+				flock($fp, LOCK_EX);
 				fwrite($fp, json_encode($result));
+				flock($fp, LOCK_UN);
 				fclose($fp);
 	
 				if($actor_id != "") {

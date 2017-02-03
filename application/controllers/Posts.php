@@ -20,7 +20,7 @@ class Posts extends CI_Controller {
 	public function post($post_id=null) {		
 		if($post_id != null && is_numeric($post_id)) {
 		$post = $this->posts_model->get_post($post_id);	
-		if($post) {
+		if($post !== FALSE) {
 			$data['post'] = $post;		
 			$data['css'] = 'user.css';
 			$data['title'] = 'V-Anime';
@@ -46,7 +46,7 @@ class Posts extends CI_Controller {
 		
 		$posts = $this->posts_model->get_posts($wall_owner, $posts_per_page, $offset);
 		
-		if($posts) {
+		if($posts !== FALSE) {
 			
 			$elements_array = array();
 			
@@ -137,16 +137,25 @@ class Posts extends CI_Controller {
 			$wall_owner = $this->input->post('wall_owner');
 			$content = $this->input->post('content');
 			
-			$content = addslashes(trim($content));
+			$content = addslashes(trim($content)); 
 			
 			$post_id = $this->posts_model->add_post($wall_owner, $content);
-			if($post_id) {
+			if($post_id !== FALSE) {
 				
-				if($wall_owner != $this->session->userdata('id')) {
+				$type = "post";
+				
+				if($wall_owner != $this->session->userdata('id')) {															
 					$description = "posted on your wall";			
-					$type = "post";
 					$notification_id = $this->notifications_model->add_notification($post_id, $description, $type);	
 					$this->notifications_model->spread_notification($notification_id, $wall_owner);
+				} else {
+					$this->load->model('follows_model');
+					$description = "posted on his wall";
+					$followers = $this->follows_model->get_followers($this->session->userdata('id'));
+					$notification_id = $this->notifications_model->add_notification($post_id, $description, $type);
+					foreach($followers as $follower) {						
+						$this->notifications_model->spread_notification($notification_id, $follower['id']);
+					}
 				}
 				
 				echo $post_id;
@@ -169,7 +178,7 @@ class Posts extends CI_Controller {
 			
 			$query = $this->posts_model->edit_post($post_id, $content);	
 			
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -191,7 +200,7 @@ class Posts extends CI_Controller {
 			$type = 'post';		
 			$this->notifications_model->delete_notifications($post_id, $type);
 			
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -210,21 +219,21 @@ class Posts extends CI_Controller {
 				
 			$content = addslashes(trim($content));
 				
-			$query_comment_id = $this->posts_model->add_comment($post_id, $content);			
+			$comment_id = $this->posts_model->add_comment($post_id, $content);			
 			
-			if($query_comment_id) {
+			if($comment_id !== FALSE) {
 				
-				$is_yours = $this->posts_model->check_if_is_your_post($post_id);
+				$post_owner = $this->posts_model->get_post_owner($post_id);
 				
-				if($is_yours != "your") {
+				if($post_owner != $this->session->userdata('id')) {
 					$description = "commented on your post.";
-					$additional_info = $query_comment_id;
+					$additional_info = $comment_id;
 					$type = "post_comment";
 					$notification_id = $this->notifications_model->add_notification($post_id, $description, $type, $additional_info);
-					$this->notifications_model->spread_notification($notification_id, $is_yours);
+					$this->notifications_model->spread_notification($notification_id, $post_owner);
 				}
 				
-				echo $query_comment_id;
+				echo $comment_id;
 			} else {
 				echo 0;
 			}
@@ -244,7 +253,7 @@ class Posts extends CI_Controller {
 			
 			$query = $this->posts_model->edit_comment($comment_id, $content);
 				
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";
@@ -266,7 +275,7 @@ class Posts extends CI_Controller {
 			$type = "post_comment";
 			$this->notifications_model->delete_notifications($post_id, $type, $comment_id);
 			
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";

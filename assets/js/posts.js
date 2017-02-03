@@ -54,66 +54,74 @@ $(document).ready(function() {
 	    }
 	});
 	
-	$('#submit_post').click(function() {
-		var content = $('#new_post_area').val();
-		var div = document.createElement('div');
-		div.innerHTML = content;
-		var content = div.textContent || div.innerText || '';
-		var user_url = getUserUrl();
-		var username = getUserName();
-		var user_image = getUserImage();
-		var url = getAddPostUrl();
-		var date = Date().toString();
-		date = date.split(' ');
-		date = date[2] + " " + date[1] + " " + date[3];
-		
-		$.ajax({
-	        method: "POST",
-	        url: url,
-	        data: { wall_owner: wall_owner, content: content }
-	      })
-	    .done(function(post_id) {
-	    	if(post_id) {			
-				var modify_div = "<div class='post_settings_div'>\
-				        	<span class='fa fa-angle-down open_post_settings'></span>\
-				        	<div class='post_settings'>\
-				        		<div class='post_option edit_post'>Edit Post</div>\
-				        		<div class='post_option delete_post'>Delete Post</div>\
-				        	</div>\
-				        </div>";
-				
-				if(content != '') {
-					$('#timeline_div').prepend("<div class='post' data-id='" + post_id + "'>\
-						<div class='post_header'>\
-							<div class='user_image_div'>\
-					      		<a href='" + user_url + "'><img class='user_image' src='" + user_image + "'></a>\
-					        </div>\
-					        <div class='user_name'>\
-					        	<a href='" + user_url + "' class='disable-link-decoration'>" + username + "</a>\
-					        </div>" + modify_div + 
-					        "<div class='post_time'>" + date + "<a href='site_url('posts/post/'" + post_id + "')' class='disable-link-decoration gray-text'> &middot; Permalink</a>" +
-					        "</div>\
-						</div>\
-						<div class='post_body'>" + content + 
-						"</div>\
-						<div class='comments'>\
-						</div>\
-						<div class='post_footer'>\
-							<input type='text' class='submit_comment' placeholder='Leave a Comment...'>\
-						</div>\
-					</div>");
-					$('#new_post_area').val('');
-					$('#post_options').hide();
-				}				
-	    	}
-	    });
+	function strip_tags(str){
+		return str.replace(/<\/?[^>]+>/gi, '');
+	}
+
 	
+	$('#submit_post').click(function() {
+		var content = strip_tags($('#new_post_area').val());
+		
+		if(content != '') {
+			
+			var div = document.createElement('div');
+			div.innerHTML = content;
+			var content = div.textContent || div.innerText || '';
+			var user_url = getUserUrl();
+			var username = getUserName();
+			var user_image = getUserImage();
+			var url = getAddPostUrl();
+			var date = Date().toString();
+			date = date.split(' ');
+			date = date[2] + " " + date[1] + " " + date[3];		
+		
+			$.ajax({
+		        method: "POST",
+		        url: url,
+		        data: { wall_owner: wall_owner, content: content }
+		      })
+		    .done(function(post_id) {
+		    	if(post_id) {			
+					var modify_div = "<div class='post_settings_div'>\
+					        	<span class='fa fa-angle-down open_post_settings'></span>\
+					        	<div class='post_settings'>\
+					        		<div class='post_option edit_post'>Edit Post</div>\
+					        		<div class='post_option delete_post'>Delete Post</div>\
+					        	</div>\
+					        </div>";
+					
+						$('#timeline_div').prepend("<div class='post' data-id='" + post_id + "'>\
+							<div class='post_header'>\
+								<div class='user_image_div'>\
+						      		<a href='" + user_url + "'><img class='user_image' src='" + user_image + "'></a>\
+						        </div>\
+						        <div class='user_name'>\
+						        	<a href='" + user_url + "' class='disable-link-decoration'>" + username + "</a>\
+						        </div>" + modify_div + 
+						        "<div class='post_time'>" + date + "<a href='site_url('posts/post/'" + post_id + "')' class='disable-link-decoration gray-text'> &middot; Permalink</a>" +
+						        "</div>\
+							</div>\
+							<div class='post_body'>" + content + 
+							"</div>\
+							<div class='comments'>\
+							</div>\
+							<div class='post_footer'>\
+								<input type='text' class='submit_comment' placeholder='Leave a Comment...'>\
+							</div>\
+						</div>");
+						$('#new_post_area').val('');
+						$('#post_options').hide();			
+		    	} else {
+		    		window.alert("Failed to create post")
+		    	}
+		    });
+		}
 	});
 	
 	$('#timeline_div').on("keypress", ".submit_comment", function(e) {
 		 if (e.which == 13) {
 			 if($(this).parent().parent().data('id') != edited_post_id) {
-				 var content = $(this).val();
+				 var content = strip_tags($(this).val());
 				 if(content != "") {
 					 var post_id = $(this).parent().parent().data('id');
 					 var user_url = getUserUrl();
@@ -153,11 +161,13 @@ $(document).ready(function() {
 							 self.blur();
 		
 							 add_fix_comments();			    		
+				    	} else {
+				    		window.alert("Failed to create comment")
 				    	}
 				    });
 				}
 			 } else {
-				 var content = $(this).val();
+				 var content = strip_tags($(this).val());
 				 var url = getEditCommentUrl();
 				 var self = $(this);
 				 
@@ -253,8 +263,8 @@ $(document).ready(function() {
 		}		
 	});
 	
-	$('.save_edit_post').click(function() {
-		var content = $(this).prev().val();
+	$('#timeline_div').on("click", ".save_edit_post", function() {
+		var content = strip_tags($(this).prev().val());
 		var div = document.createElement('div');
 		div.innerHTML = content;
 		var content = div.textContent || div.innerText || '';

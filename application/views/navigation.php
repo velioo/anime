@@ -160,7 +160,7 @@
       		   <i class="notifications_icon fa fa-bell" aria-hidden="true"><span class="notifications_number"></span></i>	       		   
       	   	   <li class="dropdown profile_menu">     	   	   	  
 				  <a id="user_button" href="<?php echo site_url("users/profile/" . $this->session->userdata['username']);?>" style="padding-top:10px;">
-				  <div id="user_image_div_main_menu"><img id="user_image_main_menu" src="<?php echo asset_url(). "user_profile_images/" . $this->session->userdata('user_avatar');?>">
+				  <div id="user_image_div_main_menu"><img id="user_image_main_menu" src="<?php if($this->session->userdata('user_avatar') != "") { echo asset_url(). "user_profile_images/" . $this->session->userdata('user_avatar');} else { echo asset_url()."imgs/Default_Avatar.jpg";}?>">
 				  </div><span id="user_username_main_menu"><?php echo $this->session->userdata['username'];?></span></a>
 			      <ul class="dropdown-menu">
 				  	<li><a href="<?php echo site_url("userUpdates/user_settings"); ?>" style="text-align: right;">Settings</a></li>

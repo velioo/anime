@@ -62,7 +62,7 @@
 		<?php } else if(isset($characters_matched)) {?>
 			$('head').append('<script src="<?php echo asset_url() . "js/character_user_status.js";?>">');	
 		<?php } else if(isset($users_matched)) {?>
-			$("#users_table").tablesorter();
+			//$("#users_table").tablesorter();
 		<?php } else if(isset($actors_matched)) {?>
 			$('head').append('<script src="<?php echo asset_url() . "js/actor_user_status.js";?>">');	
 		<?php }?>	     
@@ -330,7 +330,19 @@
 			<div class="text-center">
 				<?php if(isset($animes_matched)) echo $pagination?>
 			</div>
-		  <?php } else if(isset($users_matched)) { ?>		  
+		  <?php } else if(isset($users_matched)) { ?>	
+		  <form id="users_search_form" action="<?php echo site_url("SearchC/search_users")?>" method="get" accept-charset="utf-8">
+			  <select name="sort_selected" onchange="this.form.submit()" style="width: 150px; font-family: cursive;">
+				  <option value="name_asc" <?php if($sort_by == 'name_asc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Name ASC</option>
+			      <option value="name_desc" <?php if($sort_by == 'name_desc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Name DESC</option>
+			      <option value="join_asc" <?php if($sort_by == 'join_asc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Join date ASC</option>
+			      <option value="join_desc" <?php if($sort_by == 'join_desc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Join date DESC</option>
+			      <option value="animes_asc" <?php if($sort_by == 'animes_asc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Animes ASC</option>
+			      <option value="animes_desc" <?php if($sort_by == 'animes_desc') echo 'selected="selected"'; ?> class="navigation_small_search_option">Animes DESC</option>
+			  </select>	  
+			  <input type="hidden" id="last_search" name="last_search" value="<?php if(isset($last_search)) echo $last_search; ?>">
+		  </form>
+		  <br/>
 		  <div class="table-responsive">
 			   <table id="users_table" class="table tablesorter">
 			    <thead>
@@ -359,6 +371,9 @@
 			    </tbody>
 			  </table>
 			  </div>
+			 <div class="text-center">
+				<?php if(isset($users_matched)) echo $pagination?>
+			</div>
 		  <?php } else if(isset($characters_matched)) { ?>
 		    <div class="table-responsive">
 			   <table class="table">
@@ -380,6 +395,9 @@
 							$character_slug.="-";
 						$character_slug.=$character['last_name'];
 					}
+					
+					$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+					$character_slug = str_replace(" ", "-", $character_slug);
 				   ?>
 			      <tr class="user_row">
 			        <td class="character_name_image">

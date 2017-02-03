@@ -225,6 +225,8 @@
 	.user_image_div.notify {
 		width: 30px;
 		height: 30px;
+		margin-bottom: 0px;
+		margin-left: 0px;
 	}
 	
 	.easy-autocomplete-container ul li div.user_image_div {
@@ -716,6 +718,16 @@
 		width: 100px;
 		height: 100px;
 		margin-top: 0px;
+	}
+	
+	.container-fluid.scrollable .pagination li a {
+		color: #2F343B;
+	}
+	
+	.container-fluid.scrollable .pagination li.active a {
+		color:white;
+		background-color:#2F343B;
+		border-color: #2F343B;
 	}
 	
 	@media (max-width: 1150px) {

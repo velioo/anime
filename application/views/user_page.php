@@ -161,7 +161,7 @@
 				</p>			
 			</div>
 			<div class="div_content col-sm-12" id="show_content_div">
-				<p id="user_description"><?php echo htmlspecialchars($user['bio']);?></p>
+				<p id="user_description"><?php echo stripslashes(htmlspecialchars($user['bio']));?></p>
 				<p class="personal_info">Joined on: <?php echo convert_date($user['joined_on']);?></p>
 				<?php if($user['show_age'] == 1) {?>
 					<p class="personal_info" id="age">Age: <?php if($user['birthdate'] != "0000-00-00"){ echo date_diff(date_create($user['birthdate']), date_create('today'))->y;} else echo "?";?></p>
@@ -175,14 +175,14 @@
 					<p class="personal_info" id="gender">Gender: <i class="fa fa-genderless"></i></p>
 				<?php }}?>
 				<?php if($user['country'] != "") {?>
-					<p class="personal_info" id="country"><i class="fa fa-home"></i> Lives in: <?php echo "<strong>" . $user['country'] . "</strong>";?></p>	
+					<p class="personal_info" id="country"><i class="fa fa-home"></i> Lives in: <?php echo "<strong>" . stripslashes($user['country']) . "</strong>";?></p>	
 				<?php }?>			
 			</div>
 			<?php if($is_you) {?>
 				<div class="div_content col-sm-12" id="edit_content_div">
 					<label for="user_bio" style="margin-right:10px;">Description </label><label for="user_bio" id="user_description_area_char_count">Left <?php ?></label>
 					<input type="hidden" value="">
-					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo trim($user['bio']);?></textarea>
+					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo stripslashes(htmlspecialchars(trim($user['bio'])));?></textarea>
 					<br><br>
 					<label style="margin-right:10px;">Birthdate:</label>
 					<select name="day_edit" class="edit_birth" id="day_edit">
@@ -246,7 +246,7 @@
 					</select>
 					<br><br>
 					<label for="location_edit"><i class="fa fa-home"></i>Location </label>
-					<input type="text"  name="location_edit" id="location_edit" value="<?php echo $user['country'];?>">
+					<input type="text"  name="location_edit" id="location_edit" value="<?php echo stripslashes($user['country']);?>">
 				</div>
 			<?php }?>
 			<div id="user_left_side_panel">
@@ -300,6 +300,9 @@
 									$character_slug.="-";
 									$character_slug.=$random_loved_characters[$i]['last_name'];
 							}
+							
+							$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+							$character_slug = str_replace(" ", "-", $character_slug);
 					?>			
 						<div class="tooltip_m">			
 							<a href="<?php echo site_url("characters/character/{$random_loved_characters[$i]['id']}/{$character_slug}")?>" class="disable-link-decoration">						

@@ -50,6 +50,9 @@ Class Actors_model extends CI_Model {
 					$character_slug.=$query[$i]['last_name'];
 			}
 			
+			$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+			$character_slug = str_replace(" ", "-", $character_slug);
+			
 			$query[$i]['character_slug'] = $character_slug;
 		}
 		

@@ -25,15 +25,15 @@ class SignUp extends CI_Controller {
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');
 		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[4]|max_length[32]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');
+		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'trim|required|matches[password]');	
 		
 		if($this->form_validation->run() == FALSE) {
 			$this->signup_page();
-		} else {
+		} else {			
 			$this->load->model('users_model');
-			$query = $this->users_model->create_user();
+			$query = $this->users_model->create_user();		
 			
-			if($query) {
+			if($query !== FALSE) {
 				$this->write_users_json(VERIFICATION_TOKEN);
 				$data['account_created'] = "Your account has been created.<br/><br/> You may now log in";
 				$data['title'] = 'Login';
@@ -84,7 +84,7 @@ class SignUp extends CI_Controller {
 			
 			if(isset($result->id)) {				
 				$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);					
-				if($query) {
+				if($query !== FALSE) {
 					$this->write_users_json(VERIFICATION_TOKEN);
 					$data = array(
 							'id' => $query['id'],
@@ -125,7 +125,7 @@ class SignUp extends CI_Controller {
 		
 		$email_available = $this->users_model->check_if_email_exists($requested_email);
 		
-		if($email_available) {
+		if($email_available !== FALSE) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -133,26 +133,25 @@ class SignUp extends CI_Controller {
 	}	
 	
 	function write_users_json($verification_token=null) {
-		if($verification_token === VERIFICATION_TOKEN) {
-	
-			$this->load->model('users_model');
-	
+		if($verification_token === VERIFICATION_TOKEN) {	
+			
+			$this->load->model('users_model');	
+			
 			$result_array = $this->users_model->get_users_json_data();
-	
-			if($result_array) {
-	
-				$all_names = "";
-					
+			
+			if($result_array !== FALSE) {	
+				$all_names = "";	
+				
 				foreach ($result_array as $user) {
-	
 					$name = $user['username'];
-					$image = $user['profile_image'];
-	
+					$image = $user['profile_image'];	
 					$result[] = array('name'=> $name, 'image'=> $image);
-				}
-	
+				}	
+				
 				$fp = fopen('assets/json/autocomplete_users.json', 'w');
+				flock($fp, LOCK_EX);
 				fwrite($fp, json_encode($result));
+				flock($fp, LOCK_UN);
 				fclose($fp);
 			}
 		} else {

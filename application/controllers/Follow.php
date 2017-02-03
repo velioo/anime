@@ -10,14 +10,14 @@ class Follow extends CI_Controller {
 		$this->load->model('follows_model');
 	}
 	
-	public function followers($username=null) {		
-		if($username != null) {
+	public function followers($username=NULL) {		
+		if($username != NULL) {
 			$this->load->model('users_model');
 			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
@@ -37,14 +37,14 @@ class Follow extends CI_Controller {
 		}
 	}
 	
-	public function following($username=null) {		
-		if($username != null) {
+	public function following($username=NULL) {		
+		if($username != NULL) {
 			$this->load->model('users_model');
 			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
@@ -68,12 +68,13 @@ class Follow extends CI_Controller {
 		if($this->session->userdata('is_logged_in')) {
 			$following_id = $this->input->post('following_id');
 			$query = $this->follows_model->follow($following_id);
-			
-			if($query) {
+
+			if($query !== FALSE) {
 				
 				$this->load->model('notifications_model');
+				$type = "user";
 				$description = "followed you.";
-				$notification_id = $this->notifications_model->add_notification($this->session->userdata('id'), $description, 'user');
+				$notification_id = $this->notifications_model->add_notification($this->session->userdata('id'), $description, $type);
 				$this->notifications_model->spread_notification($notification_id, $following_id);
 				
 				echo "Success";
@@ -88,11 +89,12 @@ class Follow extends CI_Controller {
 			$following_id = $this->input->post('following_id');
 			$query = $this->follows_model->unfollow($following_id);
 				
-			if($query) {
+			if($query !== FALSE) {
 				
 				$this->load->model('notifications_model');
+				$type = "user";
 				$description = "unfollowed you.";
-				$notification_id = $this->notifications_model->add_notification($this->session->userdata('id'), $description, 'user');
+				$notification_id = $this->notifications_model->add_notification($this->session->userdata('id'), $description, $type);
 				$this->notifications_model->spread_notification($notification_id, $following_id);			
 				
 				echo "Success";

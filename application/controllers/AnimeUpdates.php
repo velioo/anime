@@ -42,7 +42,7 @@ class AnimeUpdates extends CI_Controller {
 						unlink("./assets/anime_cover_images/{$cover_image}");
 					}
 					$query = $this->animes_model->update_cover_image($anime_id,  $config['file_name']);
-					if(!$query) {
+					if($query === FALSE) {
 						$this->helpers_model->server_error();
 					} 
 				}
@@ -68,7 +68,7 @@ class AnimeUpdates extends CI_Controller {
 						unlink("./assets/poster_images/{$poster_image}");
 					}
 					$query = $this->animes_model->update_poster_image($anime_id,  $config['file_name']);
-					if(!$query) {
+					if($query === FALSE) {
 						$this->helpers_model->server_error();
 					}
 				}
@@ -200,7 +200,7 @@ class AnimeUpdates extends CI_Controller {
 						echo "Id: " . $anime_id_counter . " " . $anime_object->data->attributes->titles . "<br/>";
 		
 						$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->data->id);
-						if(!$anime_exists) {
+						if($anime_exists === FALSE) {
 							$success =  $this->animes_model->add_anime($anime_object);
 						} else {
 							$success = $this->animes_model->update_anime($anime_object);
@@ -230,7 +230,7 @@ class AnimeUpdates extends CI_Controller {
 		
 			$result_array = $this->animes_model->get_anime_json_data();
 		
-			if($result_array) {
+			if($result_array !== FALSE) {
 					
 				$all_names = "";
 					
@@ -257,13 +257,15 @@ class AnimeUpdates extends CI_Controller {
 				}
 	
 				$fp = fopen('assets/json/autocomplete.json', 'w');
+				flock($fp, LOCK_EX);
 				fwrite($fp, json_encode($result));
+				flock($fp, LOCK_UN);
 				fclose($fp);
 				
 				if($slug != "") {
 					redirect("animeContent/anime/{$slug}");
 				} else {
-					redirect("Home");
+					redirect("home");
 				}			
 			}
 		} else {

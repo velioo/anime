@@ -13,11 +13,7 @@ Class Follows_model extends CI_Model {
 		$query = $this->db->get_where('followers', array('follower_id' => $follower_id, 'following_id' => $following_id));
 		if($query->num_rows() == 0) {
 			$query = $this->db->insert('followers', array('follower_id' => $follower_id, 'following_id' => $following_id));		
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+			return $query;
 		} else {
 			return FALSE;
 		}
@@ -26,11 +22,7 @@ Class Follows_model extends CI_Model {
 	function unfollow($following_id) {
 		$follower_id = $this->session->userdata('id');
 		$query = $this->db->delete('followers', array('follower_id' => $follower_id, 'following_id' => $following_id));
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function get_followers($following_id) {

@@ -6,24 +6,24 @@ class Reviews extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('helpers_model');
+		$this->load->model('reviews_model');
 	}
 	
 	public function add_edit_review($slug = null) {
-		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
 		
-		if($slug != null) {
+		if($slug != null && $this->session->userdata('is_logged_in') == TRUE) {
 			
 			$slug = str_replace("-", " ", $slug);
 			
 			$query = $this->animes_model->get_anime_id($slug);
 			
-			if($query) {
+			if($query !== FALSE) {
 					
 				$anime_id = $query['id'];
 			
 				$anime = $this->animes_model->get_anime($anime_id);
-				if($anime) {
+				if($anime !== FALSE) {
 					$temp = $anime['titles'];
 					$titles = convert_titles_to_hash($temp);
 					$data['anime_name'] = $titles['main'];
@@ -31,8 +31,8 @@ class Reviews extends CI_Controller {
 					$data['slug'] = str_replace(" ", "-", $anime['slug']);
 					
 					if($this->session->userdata('is_logged_in') === TRUE) {
-						$user_review = $this->reviews_model->get_user_review($anime_id);
-						if($user_review) {
+						$user_review = $this->reviews_model->get_user_review($anime_id, $this->session->userdata('id'));
+						if($user_review !== FALSE) {
 							$data['review'] = $user_review;
 						}
 					} 
@@ -53,12 +53,11 @@ class Reviews extends CI_Controller {
 	}
 	
 	public function submit_review() {
-		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
 		
 		$anime_id = $this->input->post('anime_id');
 		
-		if($anime_id != null and is_numeric($anime_id) && $this->session->userdata('is_logged_in')) {
+		if($anime_id != NULL && is_numeric($anime_id) && $this->session->userdata('is_logged_in')) {
 
 			$user_review = addslashes($this->input->post('user_review'));
 			
@@ -77,17 +76,16 @@ class Reviews extends CI_Controller {
 			
 			$review_exists = $this->reviews_model->check_if_review_exists($anime_id, $this->session->userdata('id'));
 			
-			if($review_exists) { 
+			if($review_exists !== FALSE) { 
 				$query = $this->reviews_model->update_review($anime_id, $user_review, $user_scores);
 			} else {
 				$query = $this->reviews_model->add_review($anime_id, $user_review, $user_scores);
 			}
 		
-			if($query) {						
+			if($query !== FALSE) {						
 				$result = $this->animes_model->get_anime_slug($anime_id);
 				
-				$slug = str_replace(" ", "-", $result['slug']);
-				
+				$slug = str_replace(" ", "-", $result['slug']);	
 				
 				redirect("reviews/review/{$slug}/{$this->session->userdata('username')}");
 			} else {
@@ -99,7 +97,6 @@ class Reviews extends CI_Controller {
 	}
 	
 	function load_reviews($anime_id = null) {	
-		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
  		
   		if($anime_id != null and is_numeric($anime_id)) {
@@ -110,7 +107,7 @@ class Reviews extends CI_Controller {
 			
 			$result = $this->reviews_model->get_anime_reviews($anime_id, $reviews_per_page, $offset);
 
-			if($result) {
+			if($result !== FALSE) {
 				
 				$counter = 1;
 				$text_array = array();
@@ -168,7 +165,6 @@ class Reviews extends CI_Controller {
 	}
 	
 	public function review($slug = null, $username = null) {
-		$this->load->model('reviews_model');
 		$this->load->model('animes_model');
 		$this->load->model('users_model');
 		
@@ -178,23 +174,23 @@ class Reviews extends CI_Controller {
 			
 			$query = $this->animes_model->get_anime_id($slug);
 			
-			if($query) {
+			if($query !== FALSE) {
 				
 				$anime_id = $query['id'];
 				
 				$query = $this->users_model->get_user_info($username);
 				
-				if($query) {
+				if($query !== FALSE) {
 					
 					$user_id = $query['id'];
 				
 					$anime = $this->animes_model->get_anime($anime_id);
 				
-					if($anime) {			
+					if($anime !== FALSE) {			
 						$data['anime'] = $anime;
 						
 						$user_review = $this->reviews_model->get_user_review($anime_id, $user_id);
-						if($user_review) {
+						if($user_review !== FALSE) {
 							$data['review'] = $user_review;
 						}
 						
@@ -220,14 +216,13 @@ class Reviews extends CI_Controller {
 	
 	public function user_reviews($username=null) {		
 		if($username != null) {			
-			$this->load->model('reviews_model');
 			$this->load->model('users_model');
 			
 			if((isset($this->session->userdata['is_logged_in'])) and ($this->session->userdata['username'] == $username)) {
 				$query = $this->users_model->get_user_info_logged($username);
 			} else {
 				$query = $this->users_model->get_user_info($username);
-				if(!$query) {
+				if($query === FALSE) {
 					$this->helpers_model->page_not_found();
 				}
 			}
@@ -236,9 +231,9 @@ class Reviews extends CI_Controller {
 			
 			$total_reviews = $this->reviews_model->get_total_reviews_count_user($query['id']);
 				
-			if($total_reviews) {
+			if($total_reviews !== FALSE) {
 				$reviews_per_page = 10;
-				$data['total_groups'] = ceil($total_reviews['count']/$reviews_per_page);
+				$data['total_groups'] = ceil($total_reviews/$reviews_per_page);
 			} else {
 				$this->helpers_model->server_error();
 			}
@@ -254,16 +249,15 @@ class Reviews extends CI_Controller {
 	public function load_reviews_user($user_id = null) {			
 		if($user_id != null and is_numeric($user_id)) {
 			
-			$this->load->model('reviews_model');
 			$this->load->model('animes_model');
 		
 			$group_number = $this->input->post('group_number');
 			$reviews_per_page = 10;
 			$offset = ceil($group_number * $reviews_per_page);
 			
-			$result = $this->reviews_model->get_user_review(0, $user_id, $reviews_per_page, $offset);
+			$result = $this->reviews_model->get_user_reviews($user_id, $reviews_per_page, $offset);
 			
- 			if($result) {
+ 			if($result !== FALSE) {
 				if(!$this->contains_array($result)) {
 					$result = array($result);
 				}
@@ -328,8 +322,6 @@ class Reviews extends CI_Controller {
 	}
 	
 	public function delete_review() {
-		$this->load->model('reviews_model');
-		
 		if($this->session->userdata('is_logged_in')) {
 			
 			$anime_id = $this->input->post('anime_id');
@@ -337,7 +329,7 @@ class Reviews extends CI_Controller {
 			
 			$query = $this->reviews_model->delete_review($anime_id, $user_id);
 	
-			if($query) {
+			if($query !== FALSE) {
 				echo "Success";
 			} else {
 				echo "Fail";

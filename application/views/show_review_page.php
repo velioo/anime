@@ -28,7 +28,7 @@
 <?php include 'navigation.php'; ?>
 
 <div id="wrap">
-	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != ""){ echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; } else echo asset_url() . "anime_cover_images/Default.jpg"?>'); ">
+	<div id="anime-bar" style="background-image:url('<?php if($anime['cover_image_file_name'] != ""){ echo asset_url() . "anime_cover_images/" . $anime['cover_image_file_name']; } else echo asset_url() . "imgs/Default_Cover.jpg"?>'); ">
 		<input type="hidden" name="top_offset" id="top_offset" value="<?php echo $anime['cover_image_top_offset'];?>">
 	</div>
 	<div class="container-fluid scrollable" id="review_div">
@@ -37,7 +37,7 @@
 			<div id="user_info_div">
 				<a id="link_to_user" href="<?php echo site_url("users/profile/{$review['username']}")?>" >
 					<div class="user_review_image_div">
-						<img class="user_review_image" src="<?php echo asset_url() . "user_profile_images/{$review['profile_image']}"?>">
+						<img class="user_review_image" src="<?php if($review['profile_image'] != "") { echo asset_url() . "user_profile_images/{$review['profile_image']}"; } else { echo asset_url() . "imgs/Default_Avatar.jpg"; }?>">
 					</div>
 					<span id="user_name" class="blue-text"><?php echo $review['username'];?></span>
 				</a>

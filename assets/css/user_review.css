@@ -103,7 +103,7 @@ body {
 }
 
 #review_content img {
-	max-width: 1150px;
+	max-width: 100%;
     height: auto;
 }
 

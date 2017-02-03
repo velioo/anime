@@ -56,7 +56,7 @@
 			<?php foreach($users as $user_) {?>
 				<div class="user_image_div">
 					<a href="<?php echo site_url("users/profile/{$user_['username']}")?>" class="disable-link-decoration">
-					<img src="<?php echo asset_url(). "user_profile_images/" . $user_['profile_image'];?>" class="user_image">
+					<img src="<?php if($user_['profile_image'] != "") { echo asset_url(). "user_profile_images/" . $user_['profile_image'];} else { echo asset_url() ."imgs/Default_Avatar.jpg";}?>" class="user_image">
 					<span class="user_name red-text"><?php echo $user_['username'];?></span></a>
 				</div>
 			<?php }?>

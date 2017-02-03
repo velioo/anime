@@ -16,11 +16,11 @@ Class Notifications_model extends CI_Model {
 		$this->db->where("nu.user_id = {$user_id}");
 		$this->db->order_by("nu.seen", "asc");
 		$this->db->order_by("n.created_at", "desc");
-		if($limit != null) {
-			if($limit == null) {
-				$this->db->limit($limit);
+		if($limit != NULL) {
+			if($offset != NULL) {
+				$this->db->limit($limit, $offset);				
 			} else {
-				$this->db->limit($limit, $offset);
+				$this->db->limit($limit);
 			}		
 		}
 		$query = $this->db->get('notification_users as nu');
@@ -41,7 +41,9 @@ Class Notifications_model extends CI_Model {
 	
 	function add_notification($source_id, $description, $type, $additional_info="") {		
 		$creator_id = $this->session->userdata('id');		
-		$query = $this->db->insert('notifications', array('creator_id' => $creator_id, 'source_id' => $source_id, 'description' => $description, 'type' => $type, 'additional_info' => $additional_info));		
+		$query = $this->db->insert('notifications', array('creator_id' => $creator_id, 'source_id' => $source_id, 
+														  'description' => $description, 'type' => $type, 
+														  'additional_info' => $additional_info));		
 		return $this->db->insert_id();
 	}
 	
@@ -53,7 +55,8 @@ Class Notifications_model extends CI_Model {
 	}
 
 	function spread_notification($notification_id, $user_id) {
-		$this->db->insert('notification_users', array('notification_id' => $notification_id, 'user_id' => $user_id));
+		$query = $this->db->insert('notification_users', array('notification_id' => $notification_id, 'user_id' => $user_id));
+		return $query;
 	}
 	
 	function delete_notifications($post_id, $type, $additional_info="") {
