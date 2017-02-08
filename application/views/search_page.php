@@ -452,7 +452,19 @@
 			        </tr>
 			    </thead>
 			    <tbody>
-			      <?php foreach ($actors_matched as $actor) { ?>			      
+			      <?php foreach ($actors_matched as $actor) { 
+			      	$actor_slug = "";
+			      	if($actor['first_name'] != "") {
+			      		$actor_slug.=$actor['first_name'];
+			      	}
+			      	if($actor['last_name'] != "") {
+			      		if($actor_slug != "")
+			      			$actor_slug.="-";
+			      		$actor_slug.=$actor['last_name'];
+			      	}
+			      		
+			      	$actor['actor_slug'] = $actor_slug;			      	
+			      ?>			      
 			      <tr class="user_row">
 			        <td class="actor_name_image">
 				        <a href="<?php echo site_url("actors/actor/{$actor['id']}/{$actor['actor_slug']}");?>" class="disable-link-decoration red-text">

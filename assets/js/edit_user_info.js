@@ -69,7 +69,7 @@ function updateDb(baseurl) {
 
 $(document).ready(function() {	
 	$("#user_description_area").keyup(function(){
-		  $("#user_description_area_char_count").text("Left: " + (500 - $(this).val().length));
+		  $("#user_description_area_char_count").text("Left: " + (1000 - $(this).val().length));
 	});
 	
 	$('#edit_cover_button').change(function(){
@@ -139,7 +139,7 @@ function showUserInfoEdit() {
 	$('#edit_user_info').css('display', 'none');
 	$('#save_user_info').css('display', 'inline-block');
 	$('#edit_content_div').css('display', 'block');
-	$("#user_description_area_char_count").text("Left: " + (500 - $('#user_description_area').val().length));
+	$("#user_description_area_char_count").text("Left: " + (1000 - $('#user_description_area').val().length));
 }
 
 function showUpdateUserInfoContent() {

@@ -153,8 +153,6 @@ class SearchC extends CI_Controller {
 		
 		$temp = $anime;
 		$anime = addslashes($anime);
-		$sort_by = addslashes($sort_by);
-		$order = addslashes($order);
 		
 		$animes = $this->search_model->search_animes($anime, $config['per_page'], $start, $sort_by, $order, $filters, $user_sorted_results);
 		$config['total_rows'] = $this->search_model->get_animes_count($anime, $config['per_page'], $start, $sort_by, $order, $filters);
@@ -166,7 +164,7 @@ class SearchC extends CI_Controller {
 		$anime = $temp;
 		
 		if(($anime != "") && ($user_sorted_results == TRUE) && ($animes !== FALSE)) {
-			$animes = $this->array_sort($animes, $sort_by, $order);
+			//$animes = $this->array_sort($animes, $sort_by, $order);
 			$data['sort_by'] = $sort_by;
 		} else if($anime == "") {
 			$data['sort_by'] = $sort_by;
@@ -434,7 +432,6 @@ class SearchC extends CI_Controller {
 		$data['css'] = 'login.css';
 		$this->load->view('search_page', $data);
 	}
-	
 
 }
 

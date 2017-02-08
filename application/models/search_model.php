@@ -37,10 +37,8 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function get_animes_count($anime, $limit, $offset, $sort_by, $order, $filters) {
-		
-		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, TRUE, $filters);
-		
+	function get_animes_count($anime, $limit, $offset, $sort_by, $order, $filters) {		
+		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, $filters, FALSE, TRUE);		
 		if($result_array != FALSE) {
 			return count($result_array);
 		} else {
@@ -49,7 +47,7 @@ Class Search_model extends CI_Model {
 	}
 	
 	function search_animes($anime, $limit, $offset, $sort_by, $order, $filters, $user_sorted_results=FALSE) {
-		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, FALSE, $filters, $user_sorted_results);
+		$result_array = $this->query_animes_search($anime, $limit, $offset, $sort_by, $order, $filters, $user_sorted_results, FALSE);
 		if($result_array != FALSE) {
 			return $result_array;
 		} else {
@@ -57,11 +55,11 @@ Class Search_model extends CI_Model {
 		}
 	}
 	
-	function query_animes_search($anime, $limit, $offset, $sort_by, $order, $all, $filters, $user_sorted_results=FALSE) {
+	function query_animes_search($anime, $limit, $offset, $sort_by, $order, $filters, $user_sorted_results=FALSE, $all) {
 		$anime = trim($anime);			
 		$anime =  addslashes($anime);
 		
-		if($all == TRUE) {
+		if($all === TRUE) {
 			$limit_offset = "";
 		} else {
 			$limit_offset = "LIMIT ". $limit .  " OFFSET " . $offset;
@@ -132,33 +130,35 @@ Class Search_model extends CI_Model {
 		
 		$having_statement = substr($having_statement, 0, (strlen($having_statement) - 4));		
 		
-		if($user_sorted_results) { // if user sorted results sort by $sort_by 
-			$order_by_rnk = "";
-		} else {
-			$order_by_rnk = "rnk ASC,";
-		}
-		
 		if($anime != "") {			
 			
-			$query = array();
+			if($user_sorted_results) { // if user sorted results sort by $sort_by
+				$order_by_rnk = "";
+			} else {
+				$order_by_rnk = "rnk ASC,";
+			}
 			
+			$query = array();			
  			$query = $this->db->query("SELECT DISTINCT id,slug,episode_count,episode_length,synopsis,average_rating,
 					total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,genres FROM
 					(
 						SELECT 1 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at, 
+ 							group_concat(g.name) as genres FROM animes
 		 					JOIN anime_genres as ag ON ag.anime_id = animes.id
 		 					JOIN genres as g ON g.id = ag.genre_id
 						WHERE animes.slug LIKE '{$anime}%' GROUP BY animes.id {$having_statement}
 						UNION
 						SELECT 2 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,
+							group_concat(g.name) as genres FROM animes
 							JOIN anime_genres as ag ON ag.anime_id = animes.id
 		 					JOIN genres as g ON g.id = ag.genre_id
 						WHERE titles LIKE '%{$anime}%' GROUP BY animes.id {$having_statement}
 						UNION
 						SELECT 3 AS rnk, animes.id,animes.slug,episode_count,episode_length,synopsis,average_rating,
-							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,group_concat(g.name) as genres FROM animes 
+							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at,
+							group_concat(g.name) as genres FROM animes 
 							JOIN anime_genres as ag ON ag.anime_id = animes.id
 		 					JOIN genres as g ON g.id = ag.genre_id
 							WHERE MATCH(animes.slug) AGAINST('{$anime}' IN BOOLEAN MODE) GROUP BY animes.id	{$having_statement}		
@@ -223,8 +223,7 @@ Class Search_model extends CI_Model {
 	
 	function search_characters($character, $limit, $offset) {
 		$result_array = $this->query_characters_search($character, $limit, $offset, FALSE);
-
-		if($result_array != FALSE) {
+		if($result_array !== FALSE) {
 			return $result_array;
 		} else {
 			return FALSE;
@@ -232,9 +231,8 @@ Class Search_model extends CI_Model {
 	}
 	
 	function get_characters_count($character, $limit, $offset) {
-		$result_array = $this->query_characters_search($character, $limit, $offset, TRUE);
-	
-		if($result_array != FALSE) {
+		$result_array = $this->query_characters_search($character, $limit, $offset, TRUE);	
+		if($result_array !== FALSE) {
 			return count($result_array);
 		} else {
 			return FALSE;
@@ -242,9 +240,8 @@ Class Search_model extends CI_Model {
 	}
 	
 	function search_actors($actor, $limit, $offset) {
-		$result_array = $this->query_actors_search($actor, $limit, $offset, FALSE);
-		
-		if($result_array != FALSE) {
+		$result_array = $this->query_actors_search($actor, $limit, $offset, FALSE);		
+		if($result_array !== FALSE) {
 			return $result_array;
 		} else {
 			return FALSE;
@@ -252,9 +249,8 @@ Class Search_model extends CI_Model {
 	}
 	
 	function get_actors_count($actor, $limit, $offset) {
-		$result_array = $this->query_actors_search($actor, $limit, $offset, TRUE);
-	
-		if($result_array != FALSE) {
+		$result_array = $this->query_actors_search($actor, $limit, $offset, TRUE);	
+		if($result_array !== FALSE) {
 			return count($result_array);
 		} else {
 			return FALSE;
@@ -265,7 +261,7 @@ Class Search_model extends CI_Model {
 		$character = trim($character);
 		$character = addslashes($character);
 	
-		if($all == TRUE) {
+		if($all === TRUE) {
 			$limit_offset = "";
 		} else {
 			$limit_offset = "LIMIT ". $limit .  " OFFSET " . $offset;
@@ -282,7 +278,7 @@ Class Search_model extends CI_Model {
 						
 			$result_array = $query->result_array();
 			
-			if($all != TRUE) {			
+			if($all !== TRUE) {			
 				$result_array = $this->add_characters_related_animes($result_array);
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_character_user_status($result_array);
@@ -290,7 +286,7 @@ Class Search_model extends CI_Model {
 			}
 				
 		} else {
-			if($all) {
+			if($all === TRUE) {
 				$query = $this->db->get('characters');
 				$result_array = $query->result_array();
 			} else {					
@@ -311,7 +307,7 @@ Class Search_model extends CI_Model {
 			
 			$result_array = $query->result_array();
 			
-			if($all != TRUE) {
+			if($all !== TRUE) {
 				$result_array = $this->add_characters_related_animes($result_array);
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_character_user_status($result_array);
@@ -327,7 +323,7 @@ Class Search_model extends CI_Model {
 		$actor = trim($actor);
 		$actor = addslashes($actor);
 	
-		if($all == TRUE) {
+		if($all === TRUE) {
 			$limit_offset = "";
 		} else {
 			$limit_offset = "LIMIT ". $limit .  " OFFSET " . $offset;
@@ -343,48 +339,20 @@ Class Search_model extends CI_Model {
 					AGAINST('{$actor}' IN BOOLEAN MODE) {$limit_offset}");
 	
 			$result_array = $query->result_array();
-	
-			for($i = 0; $i < count($result_array); $i++) {
-				$actor_slug = "";
-				if($result_array[$i]['first_name'] != "") {
-					$actor_slug.=$result_array[$i]['first_name'];
-				}
-				if($result_array[$i]['last_name'] != "") {
-					if($actor_slug != "")
-						$actor_slug.="-";
-						$actor_slug.=$result_array[$i]['last_name'];
-				}
-					
-				$result_array[$i]['actor_slug'] = $actor_slug;
-			}
 			
-			if($all != TRUE) {
+			if($all !== TRUE) {
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_actor_user_status($result_array);
 				}
 			}
 	
 		} else {
-			if($all) {
+			if($all === TRUE) {
 				$query = $this->db->get('actors');
 				$result_array = $query->result_array();
 			} else {
 				$query = $this->db->query("SELECT id,first_name,last_name,image_file_name,language,created_at FROM actors {$limit_offset}");
 				$result_array = $query->result_array();
-				
-				for($i = 0; $i < count($result_array); $i++) {
-					$actor_slug = "";
-					if($result_array[$i]['first_name'] != "") {
-						$actor_slug.=$result_array[$i]['first_name'];
-					}
-					if($result_array[$i]['last_name'] != "") {
-						if($actor_slug != "")
-							$actor_slug.="-";
-							$actor_slug.=$result_array[$i]['last_name'];
-					}
-						
-					$result_array[$i]['actor_slug'] = $actor_slug;
-				}
 				
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_actor_user_status($result_array);
@@ -399,22 +367,8 @@ Class Search_model extends CI_Model {
 					WHERE first_name LIKE '%{$actor}%' or last_name LIKE '%{$actor}%' {$limit_offset}");
 	
 			$result_array = $query->result_array();
-	
-			for($i = 0; $i < count($result_array); $i++) {
-				$actor_slug = "";
-				if($result_array[$i]['first_name'] != "") {
-					$actor_slug.=$result_array[$i]['first_name'];
-				}
-				if($result_array[$i]['last_name'] != "") {
-					if($actor_slug != "")
-						$actor_slug.="-";
-						$actor_slug.=$result_array[$i]['last_name'];
-				}
-					
-				$result_array[$i]['actor_slug'] = $actor_slug;
-			}
 			
-			if($all != TRUE) {
+			if($all !== TRUE) {
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_actor_user_status($result_array);
 				}

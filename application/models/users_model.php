@@ -50,10 +50,10 @@ Class Users_model extends CI_Model {
 		);
 		$query = $this->db->insert('users', $new_user_data);
 		
-		if($query) {			
+		if($query !== FALSE) {			
 			$user_id = $this->db->insert_id();			
 			$query = $this->db->insert('user_settings', array('user_id' => $user_id));
-			if(!$query) {
+			if($query === FALSE) {
 				return FALSE;
 			}
 		} else {
@@ -69,7 +69,7 @@ Class Users_model extends CI_Model {
 		
 		$query = $this->db->insert('facebook_accounts', $facebook_data);
 		
-		if(!$query) {
+		if($query === FALSE) {
 			return FALSE;
 		}
 	
@@ -102,10 +102,11 @@ Class Users_model extends CI_Model {
 			$this->db->where('id', $user_id);
 			$query = $this->db->get('users');
 			
-			if($query->num_rows() == 1)
+			if($query->num_rows() == 1) {
 				return $query->row_array();
-				else
-					return FALSE;
+			} else {
+				return FALSE;
+			}
 		} else {
 			return FALSE;
 		}
@@ -140,22 +141,14 @@ Class Users_model extends CI_Model {
 		$user_id = $this->session->userdata('id');
 		$this->db->where('id', $user_id);
 		$query = $this->db->update('users', array('cover_image' => $image));
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function update_avatar_image($image) {
 		$user_id = $this->session->userdata('id');
 		$this->db->where('id', $user_id);
 		$query = $this->db->update('users', array('profile_image' => $image));
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function update_cover_offset($offset) {
@@ -198,11 +191,7 @@ Class Users_model extends CI_Model {
 		$this->db->where('id', $id);
 		$query = $this->db->update('users', $data);
 		
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function update_user_acc_info($data) {
@@ -245,11 +234,7 @@ Class Users_model extends CI_Model {
 			$user_id = $this->session->userdata('id');
 			$this->db->where('user_id', $user_id);
 			$query = $this->db->update('user_settings', array('show_age' => $age_visibility));
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+			return $query;
 		} else {
 			return FALSE;
 		}
@@ -260,11 +245,7 @@ Class Users_model extends CI_Model {
 		$user_id = $this->session->userdata('id');
 			$this->db->where('user_id', $user_id);
 			$query = $this->db->update('user_settings', array('default_watchlist_page' => $default_watchlist_page));
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+			return $query;
 		} else {
 			return FALSE;
 		}

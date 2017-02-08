@@ -15,57 +15,67 @@ class UserUpdates extends CI_Controller {
 		$this->load->library('upload');
 		
 		if($this->session->userdata('is_logged_in')) {
-		
-			$unique_id = uniqid();
 			
-		    $config['upload_path']          = './assets/user_cover_images/';
-	        $config['allowed_types']        = 'gif|jpg|png';
-	        $config['max_size']             = 2048;
-	        $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
-	        $config['overwrite'] = TRUE;
-	        
-	        $this->upload->initialize($config);
-	
-	        $offset = $this->input->post('top_offset');
-	        
-	        if($offset != null) {
-	       		$this->users_model->update_cover_offset($offset);
-	        }
-	        
-	        if (!$this->upload->do_upload('edit_cover')) {
-	        	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
-	        	$this->session->set_flashdata('error', $error['error']);
-	        } else {
-	        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
-	        	unlink("./assets/user_cover_images/{$cover_image}");
-	        	$query = $this->users_model->update_cover_image($config['file_name']);
-	        	if($query === FALSE) {
-	        		$this->helpers_model->server_error();
-	        	}
-	         }             
+			$unique_id = uniqid();			
+			$offset = $this->input->post('top_offset');
+			
+			if($offset !== NULL) {
+				$this->users_model->update_cover_offset($offset);
+			}
+			
+			if (!empty($_FILES['edit_cover']['name'])) {
+				
+			    $config['upload_path'] = './assets/user_cover_images/';
+		        $config['allowed_types'] = 'gif|jpg|png';
+		        $config['max_size'] = 2048;
+		        $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
+		        $config['overwrite'] = TRUE;
+		        
+		        $this->upload->initialize($config);		
+		        
+		        if (!$this->upload->do_upload('edit_cover')) {
+		        	$error = array('error' => $this->upload->display_errors('<p class="error">(Cover) ', '</p>'));
+		        	$this->session->set_flashdata('error', $error['error']);
+		        } else {
+		        	$cover_image = $this->users_model->get_user_cover_image()['cover_image'];
+		        	if($cover_image != '') {
+		        		unlink("./assets/user_cover_images/{$cover_image}");
+		        	}
+		        	$query = $this->users_model->update_cover_image($config['file_name']);
+		        	if($query === FALSE) {
+		        		$this->helpers_model->server_error();
+		        	}
+		         }    
 	         
-	         $config['upload_path']          = './assets/user_profile_images/';
-	         $config['allowed_types']        = 'gif|jpg|png';
-	         $config['max_size']             = 2048;
-	         $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
-	         $config['overwrite'] = TRUE;
+			}
 	         
-	         $this->upload->initialize($config);     
-	         
-	         if (!$this->upload->do_upload('edit_avatar')) {
-	         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
-	         	$this->session->set_flashdata('error_a', $error['error_a']);
-	         } else {
-	         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
-	         	unlink("./assets/user_profile_images/{$avatar_image}");
-	         	$query = $this->users_model->update_avatar_image($config['file_name']);
-	         	if($query === FALSE) {
-	         		$this->helpers_model->server_error();
-	         	} else {
-	         		$this->session->set_userdata('user_avatar', $config['file_name']);
-	         		$this->write_users_json(VERIFICATION_TOKEN);
-	         	}
-	         }         
+			if (!empty($_FILES['edit_avatar']['name'])) {				
+				
+		         $config['upload_path'] = './assets/user_profile_images/';
+		         $config['allowed_types'] = 'gif|jpg|png';
+		         $config['max_size'] = 2048;
+		         $config['file_name'] = $this->session->userdata['id'] . "_" . $unique_id . ".jpg";
+		         $config['overwrite'] = TRUE;
+		         
+		         $this->upload->initialize($config);     
+		         
+		         if (!$this->upload->do_upload('edit_avatar')) {
+		         	$error = array('error_a' => $this->upload->display_errors('<p class="error_a">(Avatar) ', '</p>'));
+		         	$this->session->set_flashdata('error_a', $error['error_a']);
+		         } else {
+		         	$avatar_image = $this->users_model->get_user_avatar_image()['profile_image'];
+		         	if($avatar_image != '') {
+		         		unlink("./assets/user_profile_images/{$avatar_image}");
+		         	}
+		         	$query = $this->users_model->update_avatar_image($config['file_name']);
+		         	if($query === FALSE) {
+		         		$this->helpers_model->server_error();
+		         	} else {
+		         		$this->session->set_userdata('user_avatar', $config['file_name']);
+		         		$this->write_users_json(VERIFICATION_TOKEN);
+		         	}
+		         } 	         
+			}
 	         
 	         redirect("users/profile/{$this->session->userdata['username']}");
 		} else {

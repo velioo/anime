@@ -67,12 +67,14 @@
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Characters</a>
 		    	<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
+                  <li><a href="<?php echo site_url('searchC/search_people?search=""');?>">Browse Actors</a></li>
                   <li><a href="#">Top Loved Characters</a></li>
                   <li><a href="#">Top Hated Characters</a></li>
                 </ul>
 		    </li>
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Community</a>
 		    	<ul class="dropdown-menu">
+                  <li><a href="<?php echo site_url('searchC/search_users?search=""');?>">Browse Users</a></li>
                   <li><a href="#">Anime Reviews</a></li>
                   <li><a href="#">Custom Lists</a></li>
                 </ul>
@@ -92,6 +94,7 @@
 		  <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Characters</a>
 	      <ul class="dropdown-menu">
 			  <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
+			  <li><a href="<?php echo site_url('searchC/search_people?search=""');?>">Browse Actors</a></li>
 		      <li><a href="<?php echo base_url(); ?>">Top Loved Characters</a></li>
 		      <li><a href="<?php echo base_url(); ?>">Top Hated Characters</a></li>
 		  </ul>
@@ -99,6 +102,7 @@
 		  <li class="dropdown">
 			  <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Community</a>
 		      <ul class="dropdown-menu">
+		      	<li><a href="<?php echo site_url('searchC/search_users?search=""');?>">Browse Users</a></li>
 			  	<li><a href="<?php echo base_url(); ?>">Anime Reviews</a></li>
 		      	<li><a href="<?php echo base_url(); ?>">Custom Lists</a></li>
 			  </ul>
@@ -111,7 +115,7 @@
 				    <option value="animes" selected="selected" class="navigation_small_search_option">Anime</option>
 				    <option value="characters" class="navigation_small_search_option">Characters</option>
 				    <option value="users" class="navigation_small_search_option">Users</option>
-				    <option value="people" class="navigation_small_search_option">People</option>
+				    <option value="people" class="navigation_small_search_option">Actors</option>
 				</select>
 				<input type="text" name="search" id="small_search_box" placeholder="Search..."> 
 				<button type="submit" name="submit" id="submit_button">
@@ -145,7 +149,7 @@
 					    <option value="animes" selected="selected">Anime</option>
 					    <option value="characters">Characters</option>
 					    <option value="users">Users</option>
-					    <option value="people">People</option>
+					    <option value="people">Actors</option>
 					</select>
 					<input type="text" name="search" id="search_box" placeholder="Search...">
 					<button class="btn btn-primary dropdown-toggle" type="submit" name="submit" id="submit_button">

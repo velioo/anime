@@ -180,9 +180,9 @@
 			</div>
 			<?php if($is_you) {?>
 				<div class="div_content col-sm-12" id="edit_content_div">
-					<label for="user_bio" style="margin-right:10px;">Description </label><label for="user_bio" id="user_description_area_char_count">Left <?php ?></label>
+					<label for="user_bio" style="margin-right:10px;">Description </label><label for="user_bio" id="user_description_area_char_count">Left</label>
 					<input type="hidden" value="">
-					<textarea name="user_bio" rows="4" cols="43" maxlength="500" id="user_description_area" placeholder="Describe yourself here..."><?php echo stripslashes(htmlspecialchars(trim($user['bio'])));?></textarea>
+					<textarea name="user_bio" rows="4" cols="43" maxlength="1000" id="user_description_area" placeholder="Describe yourself here..."><?php echo stripslashes(htmlspecialchars(trim($user['bio'])));?></textarea>
 					<br><br>
 					<label style="margin-right:10px;">Birthdate:</label>
 					<select name="day_edit" class="edit_birth" id="day_edit">

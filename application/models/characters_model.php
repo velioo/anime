@@ -233,13 +233,16 @@ Class Characters_model extends CI_Model {
 	
 	function change_character_user_status($character_id, $status) {
 		$user_id = $this->session->userdata('id');
-		$query = $this->db->get_where('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id));
+		$query = $this->db->get_where('characters_users_status', array('character_id' => $character_id, 
+																	   'user_id' => $user_id));
 		if($query->num_rows() == 0) {
-			$query = $this->db->insert('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id, 'status' => $status));
+			$query = $this->db->insert('characters_users_status', array('character_id' => $character_id, 
+																		'user_id' => $user_id, 'status' => $status));
 			return $query;
 		} else {
 			if($query->row_array()['status'] == $status) {
-				$query = $this->db->delete('characters_users_status', array('character_id' => $character_id, 'user_id' => $user_id));
+				$query = $this->db->delete('characters_users_status', array('character_id' => $character_id, 
+																			'user_id' => $user_id));
 				return $query;
 			} else {
 				$this->db->where('character_id', $character_id);

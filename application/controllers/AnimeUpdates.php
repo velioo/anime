@@ -17,16 +17,18 @@ class AnimeUpdates extends CI_Controller {
 			$unique_id = uniqid();
 			
 			$offset = $this->input->post('top_offset');		
-			$this->animes_model->update_cover_offset($anime_id, $offset);
+			if($offset !== NULL) {
+				$this->animes_model->update_cover_offset($anime_id, $offset);
+			}
 			
 			$result = $this->animes_model->get_anime_slug($anime_id);
 			$slug = str_replace(" ", "-", $result['slug']);
 			
 			if (!empty($_FILES['edit_cover']['name'])) {
 				
-				$config['upload_path']          = './assets/anime_cover_images/';
-				$config['allowed_types']        = 'gif|jpg|png|jpeg';
-				$config['max_size']             = 8192;
+				$config['upload_path'] = './assets/anime_cover_images/';
+				$config['allowed_types'] = 'gif|jpg|png|jpeg';
+				$config['max_size'] = 8192;
 				$config['file_name'] = "manual_" . $anime_id . "_" . $unique_id . ".jpg";
 				$config['overwrite'] = TRUE;
 			
@@ -50,9 +52,9 @@ class AnimeUpdates extends CI_Controller {
 		
 			if (!empty($_FILES['edit_poster']['name'])) {
 			
-				$config['upload_path']          = './assets/poster_images/';
-				$config['allowed_types']        = 'gif|jpg|png|jpeg';
-				$config['max_size']             = 8192;
+				$config['upload_path'] = './assets/poster_images/';
+				$config['allowed_types'] = 'gif|jpg|png|jpeg';
+				$config['max_size'] = 8192;
 				$config['file_name'] = "manual_". $anime_id . "_" . $unique_id . ".jpg";
 				$config['overwrite'] = TRUE;
 				

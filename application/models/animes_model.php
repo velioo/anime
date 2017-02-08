@@ -166,36 +166,21 @@ Class Animes_model extends CI_Model {
 	function update_cover_offset($id, $offset) {
 		$this->db->where('id', $id);
 		$query = $this->db->update('animes', array('cover_image_top_offset' => $offset));
-
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function update_cover_image($id, $image) {
 		$date = date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
 		$query = $this->db->update('animes', array('cover_image_file_name' => $image, 'cover_image_updated_at' => $date));
-
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function update_poster_image($id, $image) {
 		$date = date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
 		$query = $this->db->update('animes', array('poster_image_file_name' => $image, 'poster_image_updated_at' => $date));
-
-		if($query) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $query;
 	}
 	
 	function add_anime_genre($id, $anime_array) {

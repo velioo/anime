@@ -26,7 +26,7 @@ class Notifications extends CI_Controller {
 		
 		echo "<span>$unseen_count</span>";
 		
-		if($unseen_count != 0 || $first_load == 1) {
+		if($unseen_count != 0 || $first_load == 1 || $group_number != NULL) {
 		
 			$elements = array();			
 			$link = "";		
