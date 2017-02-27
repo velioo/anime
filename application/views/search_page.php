@@ -1,7 +1,7 @@
 <?php include 'head.php';?>
 
-<link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
-<script src="<?php echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>
+<!--  <link rel="stylesheet" type="text/css" href="<?php //echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
+<script src="<?php //echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>-->
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
 
@@ -275,25 +275,7 @@
 						echo "</p></div>";
 						
 						if(isset($anime['user_status'])) {
-							switch($anime['user_status']) {
-								case 1:
-									$status = "blue";
-									break;
-								case 2:
-									$status = "green";
-									break;
-								case 3:
-									$status = "yellow";
-									break;								
-								case 4:
-									$status = "orange";
-									break;								
-								case 5:
-									$status = "red";
-									break;
-								default:	
-									break;
-							}
+							$status = get_status_square($anime['user_status']);
 						}
 						
 	 				 ?>				 

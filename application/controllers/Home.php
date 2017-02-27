@@ -19,7 +19,7 @@ class Home extends CI_Controller {
 		$this->load->view('home_page', $data);
 	}
 	
-	function test_v3() {
+/* 	function test_v3() {
 		$headers = array( 
 				"Accept: application/vnd.api+json",
 				"Content-Type: application/vnd.api+json"			
@@ -92,7 +92,7 @@ class Home extends CI_Controller {
 		$time_post = microtime(true);
 		$exec_time = $time_post - $time_pre;
 		echo $exec_time;
-	}
+	} */
 
 	
 }

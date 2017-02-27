@@ -9,7 +9,6 @@ h1 {
 	border-bottom: 1px solid #D0D0D0;
 }
 
-
 #users_table {
 	font-size: 15px;
 }
@@ -21,10 +20,6 @@ tr {
 th {
 	color: black;
 	outline: none;
-}
-
-th:hover {
-	background-color: #F5F5F5;
 }
 
 td {
@@ -47,8 +42,4 @@ td {
 	height: 100%; 
 	width: 100%; 
 	object-fit: cover;
-}
-
-#users_table th {
-	cursor: pointer;
 }

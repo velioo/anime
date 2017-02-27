@@ -12,7 +12,7 @@
 		<h5>Latest Anime</h5>
 	    <?php include 'slider.php';?>
 	    <br/>
-	    <!--<button onclick="myFunction()">Try it</button>-->
+	    <button onclick="myFunction()">Try it</button>
 		<p id="demo"></p>
 	
 		   <?php //echo '<a href="' . site_url("home/speed_test") . '">Speed test</a>'; ?>

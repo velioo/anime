@@ -66,7 +66,7 @@ function getCharacterUserStatusUrl() {
 				<a href="<?php echo site_url("animeContent/characters/{$slug}");?>" class="menu_title" id="characters_menu_title">CHARACTERS</a>
 			</div>
 			<div class="menu_title_div" id="menu_user_stats_div">
-				<a href="#" class="menu_title" id="user_stats_menu_title">USER STATS</a>
+				<a href="<?php echo site_url("animeContent/user_stats/{$slug}")?>" class="menu_title" id="user_stats_menu_title">USER STATS</a>
 			</div>
 			<div class="menu_title_div" id="menu_gallery_div">
 				<a href="#" class="menu_title" id="gallery_menu_title">GALLERY</a>

@@ -121,7 +121,7 @@ Class Watchlist_model extends CI_Model {
 	function update_status($anime_id, $status) {		
 		$user_id = $this->session->userdata('id');
 		
-		$data = array('status' => $status);
+		$data = array('status' => $status, 'status_updated_at' => date('Y-m-d H:i:s'));
 			
 		if($status == 1) {
 			$this->db->select('episode_count');

@@ -163,6 +163,44 @@ Class Animes_model extends CI_Model {
 		}
 	}
 	
+	function get_users_count($anime_id, $status=NULL) {
+		
+		$this->db->where('anime_id', $anime_id);
+		if($status != NULL) {			
+			$this->db->where('status', $status);		
+		}
+		
+		$query = $this->db->get('watchlists');
+		
+		return $query->num_rows();
+	}
+	
+	function get_users_count_grouped_by_status($anime_id) {
+		
+		$this->db->select("status, COUNT(status) as users_count");
+		$this->db->where('anime_id', $anime_id);
+		$this->db->group_by('status');	
+		$query = $this->db->get('watchlists');
+		
+		return $query->result_array();
+	}
+	
+	function get_users($anime_id, $status, $offset, $limit, $sort=NULL) {	
+		$this->db->select('username, profile_image, eps_watched, score, status_updated_at, status');
+		$this->db->where('anime_id', $anime_id);		
+		$this->db->where('status', $status);	
+		$this->db->join('users as u', 'u.id=w.user_id');
+		if($sort != NULL) {
+			$this->db->order_by($sort[0], $sort[1]);
+			$this->db->order_by("username", "ASC");
+		}
+		$this->db->limit($limit, $offset);	
+		
+		$query = $this->db->get('watchlists as w');
+		
+		return $query->result_array();
+	}
+	
 	function update_cover_offset($id, $offset) {
 		$this->db->where('id', $id);
 		$query = $this->db->update('animes', array('cover_image_top_offset' => $offset));

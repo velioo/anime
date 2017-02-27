@@ -488,7 +488,10 @@ body {
 
 #reviews {
 	min-height: 200px;
+	display: inline-block;
+	margin-right: 20px;
 }
+
 
 .add_edit_review {
 	float: right;
@@ -500,8 +503,28 @@ body {
 	cursor: pointer;
 }
 
+
+.anime_content_title_div {
+	background: #E9E9E9;
+	margin-top: -45px;
+}
+
 .anime_content_title {
 	font-size: 25px;
+}
+
+.stat {
+	display: block;
+	margin: 5px;
+}
+
+.status_number {
+	display: inline-block;
+	margin-left: 8px;
+	margin-right: 5px;
+	font-weight: bold;
+	color: #5AA5CE;
+	font-size: 16px;
 }
 
 #write_review {
@@ -596,6 +619,63 @@ body {
 	border-radius: 0px;
 	font-weight: normal;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#user_stats_div {
+	min-height: 200px;
+	display: inline-block;
+	background: white;
+	width: 23%;
+	float: right;
+	padding-top: 0px;
+}
+
+#user_stats {
+	font-family: "Open Sans", sans-serif;
+	padding: 20px;
+}
+
+#stats_square_number {
+	display: inline-block;
+}
+
+#stats_text {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#stats_text a {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 7px;
+}
+
+.status-square {
+	display: inline-block;
+	height: 14px;
+	width: 14px;
+	margin-bottom: -1px;
+	margin-right: 3px;
+}
+
+.blue {
+	background-color: #6F99E4;
+}
+
+.green {
+	background-color: #8DEA43;
+}
+
+.yellow {
+	background-color: #FCFC3C;
+}
+
+.orange {
+	background-color: #FC9F3C;
+}
+
+.red {
+	background-color: #D93D48;
 }
 
 .error {
@@ -768,6 +848,10 @@ label.rb10l:hover ~ .rating
 @media (max-width: 970px) {
 	#wrap_synopsis_genres {
 		width: 400px;
+	}
+	
+	#user_stats {
+		width: 100%;
 	}
 }
 

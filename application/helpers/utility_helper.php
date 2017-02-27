@@ -338,12 +338,87 @@ function get_users_sort($sort_by) {
 			$sort[] = "anime_count";
 			$sort[] = "DESC";
 			break;
+		case "eps_asc":
+			$sort[] = "eps_watched";
+			$sort[] = "ASC";
+			break;			
+		case "eps_desc":
+			$sort[] = "eps_watched";
+			$sort[] = "DESC";
+			break;
+		case "rating_asc":
+			$sort[] = "score";
+			$sort[] = "ASC";
+			break;
+		case "rating_desc":
+			$sort[] = "score";
+			$sort[] = "DESC";
+			break;
+		case "date_asc":
+			$sort[] = "status_updated_at";
+			$sort[] = "ASC";
+			break;
+		case "date_desc":
+			$sort[] = "status_updated_at";
+			$sort[] = "DESC";
+			break;
 		default:
 			$sort[] = "username";
 			$sort[] = "ASC";
 	}
 	
 	return $sort;
+}
+
+function get_status_square($status) {
+	switch($status) {
+		case 1:
+			$status = "blue";
+			break;
+		case 2:
+			$status = "green";
+			break;
+		case 3:
+			$status = "yellow";
+			break;
+		case 4:
+			$status = "orange";
+			break;
+		case 5:
+			$status = "red";
+			break;
+		default:
+			break;
+	}
+	
+	return $status;
+}
+
+function process_and_return_stats($user_stats) {
+	$processed_stats = array(0, 0, 0, 0, 0);
+	for($i = 0; $i < count($user_stats); $i++) {
+		switch($user_stats[$i]['status']) {
+			case 1:
+				$processed_stats[0] = $user_stats[$i]['users_count'];
+				break;
+			case 2:
+				$processed_stats[1] = $user_stats[$i]['users_count'];
+				break;
+			case 3:
+				$processed_stats[2] = $user_stats[$i]['users_count'];
+				break;
+			case 4:
+				$processed_stats[3] = $user_stats[$i]['users_count'];
+				break;
+			case 5:
+				$processed_stats[4] = $user_stats[$i]['users_count'];
+				break;
+			default:
+				break;
+		}
+	}
+	
+	return $processed_stats;
 }
 
 function validateDate($date, $format = 'Y-m-d H:i:s') {

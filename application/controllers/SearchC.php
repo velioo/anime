@@ -191,71 +191,6 @@ class SearchC extends CI_Controller {
 		$this->load->view('search_page', $data);
 	}
 	
-	function array_sort($array, $on, $order="ASC") {
-		$new_array = array();
-		$sortable_array = array();
-	
-		if (count($array) > 0) {
-			foreach ($array as $k => $v) {
-				if (is_array($v)) {
-					foreach ($v as $k2 => $v2) {
-						if ($k2 == $on) {
-							$sortable_array[$k] = $v2;
-						}
-					}
-				} else {
-					$sortable_array[$k] = $v;
-				}
-			}
-	
-			switch ($order) {
-				case "ASC":
-					asort($sortable_array);
-					break;
-				case "DESC":
-					arsort($sortable_array);
-					break;
-			}
-	
-			foreach ($sortable_array as $k => $v) {
-				$new_array[$k] = $array[$k];
-			}
-		}
-	
-		return $new_array;
-	}
-
-	function configure_pagination() {
-		$config['num_links'] = 4;
-		$config['use_page_numbers'] = TRUE;
-		$config['page_query_string'] = TRUE;
-		$config['reuse_query_string'] = TRUE;
-		$config['query_string_segment'] = 'page';
-		$config['full_tag_open'] = "<ul class='pagination'>";
-		$config['full_tag_close'] ="</ul>";
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
-		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
-		$config['next_tag_open'] = "<li>";
-		$config['next_tagl_close'] = "</li>";
-		$config['prev_tag_open'] = "<li>";
-		$config['prev_tagl_close'] = "</li>";
-		$config['first_tag_open'] = "<li>";
-		$config['first_tagl_close'] = "</li>";
-		$config['last_tag_open'] = "<li>";
-		$config['last_tagl_close'] = "</li>";
-		
-		return $config;
-	}
-	
-	function get_sortable_columns_anime() {		
-		$columns = "id,slug,episode_count,episode_length,synopsis,average_rating, age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at";	
-		$columns = explode(",", $columns);
-		
-		return $columns;
-	}
-	
 	public function search_character() {
 		
 		$this->load->model('characters_model');
@@ -431,6 +366,71 @@ class SearchC extends CI_Controller {
 		$data['title'] = 'V-Anime';
 		$data['css'] = 'login.css';
 		$this->load->view('search_page', $data);
+	}
+	
+	function configure_pagination() {
+		$config['num_links'] = 4;
+		$config['use_page_numbers'] = TRUE;
+		$config['page_query_string'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['query_string_segment'] = 'page';
+		$config['full_tag_open'] = "<ul class='pagination'>";
+		$config['full_tag_close'] ="</ul>";
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+		$config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+		$config['next_tag_open'] = "<li>";
+		$config['next_tagl_close'] = "</li>";
+		$config['prev_tag_open'] = "<li>";
+		$config['prev_tagl_close'] = "</li>";
+		$config['first_tag_open'] = "<li>";
+		$config['first_tagl_close'] = "</li>";
+		$config['last_tag_open'] = "<li>";
+		$config['last_tagl_close'] = "</li>";
+	
+		return $config;
+	}
+	
+	function array_sort($array, $on, $order="ASC") {
+		$new_array = array();
+		$sortable_array = array();
+	
+		if (count($array) > 0) {
+			foreach ($array as $k => $v) {
+				if (is_array($v)) {
+					foreach ($v as $k2 => $v2) {
+						if ($k2 == $on) {
+							$sortable_array[$k] = $v2;
+						}
+					}
+				} else {
+					$sortable_array[$k] = $v;
+				}
+			}
+	
+			switch ($order) {
+				case "ASC":
+					asort($sortable_array);
+					break;
+				case "DESC":
+					arsort($sortable_array);
+					break;
+			}
+	
+			foreach ($sortable_array as $k => $v) {
+				$new_array[$k] = $array[$k];
+			}
+		}
+	
+		return $new_array;
+	}
+	
+	function get_sortable_columns_anime() {
+		$columns = "id,slug,episode_count,episode_length,synopsis,average_rating, age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at";
+		$columns = explode(",", $columns);
+	
+		return $columns;
 	}
 
 }

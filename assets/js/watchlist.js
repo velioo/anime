@@ -15,19 +15,19 @@ $(document).ready(function() {
 		$('#all_tab').css("background-color", "#DEDEDE");
 		break;
 	case 1: 
-		$('#watched_tab').css("background-color", "#DEDEDE");
+		$('#watched_tab').css("background-color", "#6F99E4");
 		break;
 	case 2: 			
-		$('#watching_tab').css("background-color", "#DEDEDE");
+		$('#watching_tab').css("background-color", "#8DEA43");
 		break;
 	case 3: 			
-		$('#want_watch_tab').css("background-color", "#DEDEDE");
+		$('#want_watch_tab').css("background-color", "#FCFC3C");
 		break;
 	case 4: 
-		$('#stalled_tab').css("background-color", "#DEDEDE");
+		$('#stalled_tab').css("background-color", "#FC9F3C");
 		break;
 	case 5: 			
-		$('#dropped_tab').css("background-color", "#DEDEDE");
+		$('#dropped_tab').css("background-color", "#D93D48");
 		break;
 	default: 
 		$('#all_tab').css("background-color", "#DEDEDE");

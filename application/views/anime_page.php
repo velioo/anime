@@ -101,7 +101,7 @@ function showEditFields() {
 			<a href="<?php echo site_url("animeContent/characters/{$anime['slug']}");?>" class="menu_title" id="characters_menu_title">CHARACTERS</a>
 		</div>
 		<div class="menu_title_div" id="menu_user_stats_div">
-			<a href="#" class="menu_title" id="user_stats_menu_title">USER STATS</a>
+			<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}")?>" class="menu_title" id="user_stats_menu_title">USER STATS</a>
 		</div>
 		<div class="menu_title_div" id="menu_gallery_div">
 			<a href="#" class="menu_title" id="gallery_menu_title">GALLERY</a>
@@ -260,7 +260,7 @@ function showEditFields() {
 			</div>
 			<?php }?>
 		</div>
-		<p class="anime_content_title">Reviews</p>
+		<h1 class="anime_content_title">Reviews</h1>
 		<div class="col-sm-9" id="reviews">	
 		<a href="<?php if($logged) { echo site_url("reviews/add_edit_review/" . $anime['slug']);} else echo "#";?>" class="add_edit_review disable-link-decoration"><?php if($logged && $has_written_review) echo "<span class='blue-text'> Edit your Review</span>"; else echo "<span class='red-text log_in_modal'> Write a Review</span>";?></a>
 			<?php if(isset($reviews)) foreach($reviews as $review) {?>
@@ -299,6 +299,29 @@ function showEditFields() {
 			  		<a id="link_see_all_reviews" href="<?php if($logged) { echo site_url("animeContent/reviews/" . $anime['slug']);} else echo "#";?>"><button id="see_all_reviews_button" class="btn btn-primary button-blue">See All</button></a>
 			   </div>
 		   <?php } ?>
+		</div>
+		
+		<div id="user_stats_div">
+			<div class="anime_content_title_div">
+				<h1 class="anime_content_title">User Stats</h1>
+			</div>	
+			<div id="user_stats">	
+				<div id="stats_square_number">
+					<div class="stat"><span class="status-square blue"></span><a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/watched");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user_stats[0] . "</span>";?></a></div>
+					<div class="stat"><span class="status-square green"></span><a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/watching");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user_stats[1] . "</span>";?></a></div>
+					<div class="stat"><span class="status-square yellow"></span><a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/want_to_watch");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user_stats[2] . "</span>";?></a></div>
+					<div class="stat"><span class="status-square orange"></span><a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/stalled");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user_stats[3] . "</span>";?></a></div>
+					<div class="stat"><span class="status-square red"></span><a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/dropped");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" .  $user_stats[4] . "</span>";?></a></div>
+				</div>	
+				
+				<div id="stats_text">
+					<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/watched");?>" class="disable-link-decoration">Watched</a>
+					<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/watching");?>" class="disable-link-decoration">Watching</a>
+					<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/want_to_watch");?>" class="disable-link-decoration">Want to Watch</a>
+					<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/stalled");?>" class="disable-link-decoration">Stalled</a>
+					<a href="<?php echo site_url("animeContent/user_stats/{$anime['slug']}/dropped");?>" class="disable-link-decoration">Dropped</a>
+				</div>		
+			</div>
 		</div>
 	</div>
 </div>
