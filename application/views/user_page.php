@@ -267,17 +267,27 @@
 					<p class="status_header">Watchlist status</p>
 				</div>
 				<div class="status_div" style="background-color: white;">
-					<div class="wrap_watchlist_status_div">
-						<p><span class="status-square blue"></span><?php echo "<span class='status_number'>" . $user['watched'] . "</span>";?> Watched</p>
-						<p><span class="status-square green"></span><?php echo "<span class='status_number'>" . $user['watching'] . "</span>";?> Watching</p>
-						<p><span class="status-square yellow"></span><?php echo "<span class='status_number'>" . $user['want_to_watch'] . "</span>";?> Want to Watch</p>
-						<p><span class="status-square orange"></span><?php echo "<span class='status_number'>" . $user['stalled'] . "</span>";?> Stalled</p>
-						<p><span class="status-square red"></span><?php echo "<span class='status_number'>" .  $user['dropped'] . "</span>";?> Dropped</p>
+					<div class="wrap_watchlist_status_div">					
+						<div id="stats_square_number">
+							<div class="stat"><span class="status-square blue"></span><a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watched");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user['watched'] . "</span>";?></a></div>
+							<div class="stat"><span class="status-square green"></span><a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watching");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user['watching'] . "</span>";?></a></div>
+							<div class="stat"><span class="status-square yellow"></span><a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/want_to_watch");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user['want_to_watch'] . "</span>";?></a></div>
+							<div class="stat"><span class="status-square orange"></span><a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/stalled");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" . $user['stalled'] . "</span>";?></a></div>
+							<div class="stat"><span class="status-square red"></span><a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/dropped");?>" class="disable-link-decoration"><?php echo "<span class='status_number'>" .  $user['dropped'] . "</span>";?></a></div>
+						</div>							
+						<div id="stats_text">
+							<a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watched");?>" class="disable-link-decoration">Watched</a>
+							<a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/watching");?>" class="disable-link-decoration">Watching</a>
+							<a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/want_to_watch");?>" class="disable-link-decoration">Want to Watch</a>
+							<a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/stalled");?>" class="disable-link-decoration">Stalled</a>
+							<a href="<?php echo site_url("watchlists/user_watchlist/{$user['username']}/dropped");?>" class="disable-link-decoration">Dropped</a>
+						</div>							
 					</div>
 					<div class="all_episodes_div">
 						<p class="total_episodes_paragraph"><span class="total_episodes"><?php echo number_format($user['total_episodes']);?></span><span class="total_episodes_text">Total episodes</span></p>
 					</div>
 				</div>
+								
 				<div class="wrap_header">
 					<p class="status_header">Anime Ratings</p>
 				</div>

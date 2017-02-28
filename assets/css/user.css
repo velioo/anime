@@ -227,6 +227,26 @@ body.modal-open {
 	padding: 20px;
 }
 
+.stat {
+	display: block;
+	margin: 5px;
+}
+
+#stats_square_number {
+	display: inline-block;
+}
+
+#stats_text {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#stats_text a {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 7px;
+}
+
 .all_episodes_div {
 	display: inline-block;
 	width: 35%;
@@ -266,8 +286,7 @@ body.modal-open {
 
 .status_number {
 	display: inline-block;
-	min-width: 35px;
-	margin-left: 10px;
+	margin-left: 8px;
 	margin-right: 5px;
 	font-weight: bold;
 	color: #5AA5CE;
