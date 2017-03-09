@@ -59,8 +59,7 @@ class Characters extends CI_Controller {
 			}				
 			$data['user'] = $query;
 					
-			$config = $this->configure_pagination();
-			
+			$config = $this->configure_pagination();		
 			$config['base_url'] = site_url("characters/loves/{$username}");
 			$config['per_page'] = 25;
 			
@@ -113,7 +112,7 @@ class Characters extends CI_Controller {
 			$config['base_url'] = site_url("characters/hates/{$username}");
 			$config['per_page'] = 25;
 			
-			if($this->input->get('page') != NULL and is_numeric($this->input->get('page'))) { //calculate the offset for next page
+			if($this->input->get('page') != NULL and is_numeric($this->input->get('page')) and $this->input->get('page') > 0) { //calculate the offset for next page
 				$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
 			} else {
 				$start = 0;
@@ -314,7 +313,7 @@ class Characters extends CI_Controller {
 	}
 	
 	function configure_pagination() {
-		$config['num_links'] = 10;
+		$config['num_links'] = 5;
 		$config['use_page_numbers'] = TRUE;
 		$config['page_query_string'] = TRUE;
 		$config['reuse_query_string'] = TRUE;
@@ -333,6 +332,8 @@ class Characters extends CI_Controller {
 		$config['first_tagl_close'] = "</li>";
 		$config['last_tag_open'] = "<li>";
 		$config['last_tagl_close'] = "</li>";
+		$config["next_link"] = "Next";
+		$config["prev_link"] = "Prev";
 	
 		return $config;
 	}

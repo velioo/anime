@@ -6,10 +6,10 @@ class AnimeUpdates extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('helpers_model');
+		$this->load->model('animes_model');
 	}
 	
 	public function update_anime($anime_id) {
-		$this->load->model('animes_model');
 		$this->load->library('upload');
 		
 		if($this->session->userdata('is_logged_in') && $this->session->userdata('admin')) {
@@ -90,8 +90,6 @@ class AnimeUpdates extends CI_Controller {
 	function get_update_animes($verification_token=null) {	
 
 		if($verification_token === VERIFICATION_TOKEN) {
-			
-			$this->load->model('animes_model');
 		
 			$file_to_write_counter = 'assets/txt/anime_id_counter.txt';
 			$fp = fopen($file_to_write_counter, 'r');
@@ -101,14 +99,16 @@ class AnimeUpdates extends CI_Controller {
 			$cover_images_path = asset_url() . "anime_cover_images/";
 			$anime_id_counter = fgets($fp);
 			$anime_id_counter-=500;
+			
+			//$anime_id_counter = 0;
 				
 			while($failed_request < 100) {
 					
 				$anime_id_counter++;
 				
 				$headers = array(
-						"Accept: application/vnd.api+json",
-						"Content-Type: application/vnd.api+json"
+					"Accept: application/vnd.api+json",
+					"Content-Type: application/vnd.api+json"
 				);
 				
 				$ch = curl_init();
@@ -194,19 +194,70 @@ class AnimeUpdates extends CI_Controller {
 							$anime_object->data->attributes->youtubeVideoId = "";
 						}
 						
-						$anime_object->data->attributes->alternateTitle = get_alternate_title($anime_object->data->attributes->canonicalTitle, $anime_object->data->attributes->titles);
-																												
- 						$titles = '"alt"=>"' . $anime_object->data->attributes->alternateTitle . '", "main"=>"' . $anime_object->data->attributes->canonicalTitle . '"';
+						//$anime_object->data->attributes->alternateTitle = get_alternate_title($anime_object->data->attributes->canonicalTitle, $anime_object->data->attributes->titles);																											
+ 						//$titles = '"alt"=>"' . $anime_object->data->attributes->alternateTitle . '", "main"=>"' . $anime_object->data->attributes->canonicalTitle . '"';
+ 						
+						$titles = '"main"=>"' . $anime_object->data->attributes->canonicalTitle . '"';					
+						foreach($anime_object->data->attributes->titles as $key => $value) {
+							$titles.=', "' . $key . '"=>"' . $value . '"';
+						}
+							
 						$anime_object->data->attributes->titles = $titles;
+						
+						///////////Studio
+						
+						/* $ch = curl_init();
+						curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+						curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+						curl_setopt($ch, CURLOPT_URL, $anime_object->data->relationships->animeProductions->links->related);
+						$result = curl_exec($ch);
+						$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+						curl_close($ch);		
+						
+						if($httpcode == 200) {
+						
+							$productions_object = json_decode($result);
+							
+							foreach($productions_object->data as $production) {							
+									
+								$ch = curl_init();
+								curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+								curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+								curl_setopt($ch, CURLOPT_URL, $production->relationships->producer->links->related);
+								$result = curl_exec($ch);
+								$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+								curl_close($ch);
+								
+								if($httpcode == 200) {
+										
+									$studio_object = json_decode($result);		
+									
+									$studio_exists = $this->animes_model->check_if_studio_exists($studio_object->data->id);									
+									
+							 		if($studio_exists === FALSE) {																															
+										$success = $this->animes_model->add_studio($studio_object);
+										if($success !== FALSE) {
+											$this->animes_model->make_anime_studio_relation($anime_object->data->id, $studio_object->data->id);
+										}
+									} else {
+										$this->animes_model->make_anime_studio_relation($anime_object->data->id, $studio_object->data->id);
+									} 
+								}
+							}						
+						} */
+						
+						//////////
 						
 						echo "Id: " . $anime_id_counter . " " . $anime_object->data->attributes->titles . "<br/>";
 		
-						$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->data->id);
+			 			$anime_exists = $this->animes_model->check_if_anime_exists($anime_object->data->id);
 						if($anime_exists === FALSE) {
-							$success =  $this->animes_model->add_anime($anime_object);
+							$success = $this->animes_model->add_anime($anime_object);
 						} else {
 							$success = $this->animes_model->update_anime($anime_object);
-						}   
+						}    
 												
 					}
 				} else {	
@@ -228,8 +279,6 @@ class AnimeUpdates extends CI_Controller {
 		
 		if($verification_token === VERIFICATION_TOKEN) {
 		
-			$this->load->model('animes_model');
-		
 			$result_array = $this->animes_model->get_anime_json_data();
 		
 			if($result_array !== FALSE) {
@@ -242,11 +291,20 @@ class AnimeUpdates extends CI_Controller {
 					$titles = convert_titles_to_hash($temp);
 	
 					$all_names = "";
-					if($titles['main'] != "" && $titles['main'] != "NULL") {
-						$all_names.=$titles['main'] . " ";
-					} if($titles['alt'] != "" && $titles['alt'] != "NULL") {
-						$all_names.=$titles['alt'] . " ";
-					}		
+					
+					foreach($titles as $key => $value) {
+						if($key != "main")
+						if($value != "" && $value != NULL && $value != "NULL") {
+							$all_names.=$value . " ";
+						}
+					}
+					
+					if($anime['abbreviated_titles'] != NULL) {
+						$abbreviated_titles = explode("___", $anime['abbreviated_titles']);
+						foreach($abbreviated_titles as $abb_title) {
+							$all_names.=$abb_title . " ";
+						}
+					}			
 					
 					$all_names.=$anime['slug'];
 		
@@ -270,6 +328,14 @@ class AnimeUpdates extends CI_Controller {
 					redirect("home");
 				}			
 			}
+		} else {
+			$this->helpers_model->unauthorized();
+		}
+	}
+	
+	public function calculate_anime_ranks($verification_token=null) {
+		if($verification_token === VERIFICATION_TOKEN) {
+			$this->animes_model->calculate_anime_ranks();
 		} else {
 			$this->helpers_model->unauthorized();
 		}

@@ -1,25 +1,9 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php'; ?>
 
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>">
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_user_stats.css";?>">
 <script src="<?php //echo asset_url() . "js/characters.js";?>"></script>
-
-<?php
-	if(isset($this->session->userdata['is_logged_in'])) 
-		$logged = TRUE;
-	else 
-		$logged = FALSE;
-?>
-
-<?php 
-	if(isset($this->session->userdata['admin'])) {
-		if($this->session->userdata['admin'] === TRUE and $logged === TRUE) {
-			$is_admin = TRUE;
-		}
-	} else {
-		$is_admin = FALSE;
-	}
-?>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -44,7 +28,6 @@ $(document).ready(function() {
 });
 </script>
 
-<?php include 'navigation.php'; ?>
 <?php $slug = str_replace(" ", "-", $anime['slug']);?>
 
 <div id="wrap">

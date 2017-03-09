@@ -19,26 +19,54 @@ class Home extends CI_Controller {
 		$this->load->view('home_page', $data);
 	}
 	
-/* 	function test_v3() {
+ 	function test_v3() {
 		$headers = array( 
-				"Accept: application/vnd.api+json",
-				"Content-Type: application/vnd.api+json"			
+			"Accept: application/vnd.api+json",
+			"Content-Type: application/vnd.api+json"			
 		);
 		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_URL, 'https://kitsu.io/api/edge/anime/8270');
+		curl_setopt($ch, CURLOPT_URL, 'https://kitsu.io/api/edge/anime/4528');
+		$result = curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		
+		$anime_object = json_decode($result);
+		var_dump($anime_object->data);
+		
+		//var_dump($anime_object->data->relationships->animeProductions->links->related);
+	/* 	
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_URL, $anime_object->data->relationships->animeProductions->links->related);
 		$result = curl_exec($ch);
 		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
 		
 		$anime_object = json_decode($result);
 		
-		var_dump($anime_object);
+		var_dump($anime_object->data);	 */	
+		
+	 /* 	$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_URL, $anime_object->data[0]->relationships->producer->links->related);
+		$result = curl_exec($ch);
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		
+		$anime_object = json_decode($result);
+		
+		var_dump($anime_object); */ 
+		
 	}
-	
+/*	
 	function character_v1() {	
 		$data = array(
 				'grant_type' => 'client_credentials',

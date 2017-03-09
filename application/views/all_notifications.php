@@ -1,4 +1,5 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php'; ?>
 
 <script src="<?php echo asset_url() . "js/all_notifications.js";?>"></script>
 
@@ -8,8 +9,6 @@
 		return total_groups;
 	}
 </script>
-
-<?php include 'navigation.php'; ?>
 
 <div id="wrap">
 	<div class="container-fluid scrollable" style="text-align: center;">

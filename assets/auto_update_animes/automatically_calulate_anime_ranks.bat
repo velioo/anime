@@ -1,0 +1,1 @@
+start http://localhost/anime/animeUpdates/calculate_anime_ranks/8ghj30jhkll70gvk19f8kkujai90816k

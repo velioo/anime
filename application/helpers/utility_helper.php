@@ -5,12 +5,15 @@ function asset_url(){
 
 function convert_titles_to_hash($temp) {
 	$temp = explode(", \"", $temp);
-		$hash_titles = array();
-		foreach ($temp as $title) {
+	$hash_titles = array();
+	$counter = 0;
+	foreach ($temp as $title) {
+		$counter++;
 		$key_values = explode("=>", $title);
 		$key_values[0] = trim($key_values[0]);
 		$key_values[1] = trim($key_values[1]);	
-		if($key_values[0] == "\"alt\"") {
+		//if($key_values[0] == "\"alt\"") {
+		if($counter == 1) {
 			$key = substr($key_values[0], 1, (strlen($key_values[0]) - 2));
 		} else {
 			$key = substr($key_values[0], 0, (strlen($key_values[0]) - 1));

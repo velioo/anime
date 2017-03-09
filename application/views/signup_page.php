@@ -1,11 +1,10 @@
 <?php include 'head.php';?>
-
 <?php include 'navigation.php';?>
-<?php 
-if (isset($this->session->userdata['is_logged_in'])) {
-	header("location: " . site_url("Login/log_in"));
-}
 
+<?php 
+	if (isset($this->session->userdata['is_logged_in'])) {
+		header("location: " . site_url("Login/log_in"));
+	}
 ?>
 
 <div id="wrap">
@@ -16,18 +15,22 @@ if (isset($this->session->userdata['is_logged_in'])) {
 		<?php 
 			$username = set_value('username') == false ? '' : set_value('username');
 			$email = set_value('email') == false ? '' : set_value('email');
-					
-			echo form_open('signUp/create_user', 'class="signloginform" autocomplete="off"'); 			
-			echo form_label('Username', 'username');
+			
+			$label_attr = array(
+				'class' => 'signup_label'
+			);
+			
+			echo form_open('signUp/create_user', 'class="signloginform" autocomplete="off"'); 	
+			echo form_label('Username', 'username', $label_attr);
 			echo form_input('username', set_value('username', $username)); 
 			echo form_error('username', '<p class="error">*', '</p>');echo "<br/>";
-			echo form_label('Email', 'email');
+			echo form_label('Email', 'email', $label_attr);
 			echo form_input('email', set_value('email', $email));
 			echo form_error('email', '<p class="error">*', '</p>');echo "<br/>";
-			echo form_label('Password', 'password');
+			echo form_label('Password', 'password', $label_attr);
 			echo form_password('password', '');
 			echo form_error('password', '<p class="error">*', '</p>');echo "<br/>";
-			echo form_label('Confirm Password', 'password_confirm');
+			echo form_label('Confirm Password', 'password_confirm', $label_attr);
 			echo form_password('password_confirm', '');
 			echo form_error('password_confirm', '<p class="error">*', '</p>');echo "<br/>";
 			echo form_submit('submit', 'Sign Up !', 'class="submit button-black"');

@@ -1,3 +1,18 @@
+<?php
+	if(isset($this->session->userdata['is_logged_in'])) 
+		$logged = TRUE;
+	else 
+		$logged = FALSE;
+	
+	if(isset($this->session->userdata['admin'])) {
+		if($this->session->userdata['admin'] === TRUE and $logged === TRUE) {
+			$is_admin = TRUE;
+		}
+	} else {
+		$is_admin = FALSE;
+	}
+?>
+
 <script>
 	function get_asset_url() {
 		var assetUrl = "<?php echo asset_url(); ?>";
@@ -52,7 +67,6 @@
       </a>
     </div>
     <br/>
-
     <div class="dropdown" id="small_menu_dropdown_div">
   	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive; font-size:10px;">Menu
 		  <span class="caret"></span></button>
@@ -61,7 +75,7 @@
 		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
 		  		<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_anime?search=""');?>">Browse Anime</a></li>
-                  <li><a href="#">Top Anime</a></li>
+                  <li><a href="<?php echo site_url("animeContent/top_anime");?>">Top Anime</a></li>
                  </ul>
 		  	</li>
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Characters</a>
@@ -87,7 +101,7 @@
 		      <a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default">Anime</a>
 	      <ul class="dropdown-menu">
 		      <li><a href="<?php echo site_url('searchC/search_anime?search=""')?>">Browse Anime</a></li>
-	      	  <li><a href="<?php echo base_url(); ?>">Top Anime</a></li>
+	      	  <li><a href="<?php echo site_url("animeContent/top_anime");?>">Top Anime</a></li>
 		  </ul>
 	  </li>
 	  <li class="dropdown">
@@ -127,7 +141,7 @@
 		<div id="navigation_small_logsign">
 			<?php if(!isset($this->session->userdata['is_logged_in'])) {?>
 		      		<a id="navigation_small_signup" href="<?php echo site_url("SignUp")?>"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
-		      		<a id="navigation_small_login" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+		      		<a id="navigation_small_login" class="log_in_modal" href="<?php //echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in log_in_modal"></span> Login</a>
 		    <?php } else {?>
 		    	<i class="notifications_icon fa fa-bell" aria-hidden="true"><span class="notifications_number"></span></i>	
 				<div class="dropdown small_profile_menu">
@@ -159,7 +173,7 @@
 			</li>
 			<?php if(!isset($this->session->userdata['is_logged_in'])) {?>
 	      		<li><a id="signup_button" href="<?php echo site_url("SignUp")?>"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-	      		<li><a id="login_button" href="<?php echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+	      		<li><a id="login_button" class="log_in_modal" href="<?php //echo site_url("Login")?>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
       		<?php } else {?>  
       		   <i class="notifications_icon fa fa-bell" aria-hidden="true"><span class="notifications_number"></span></i>	       		   
       	   	   <li class="dropdown profile_menu">     	   	   	  
@@ -181,3 +195,5 @@
 		</div>
   </div>
 </nav>
+
+<?php if(!$logged) { include 'login_modal.php'; }?>

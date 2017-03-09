@@ -229,7 +229,7 @@ body {
 	border-bottom: 1px solid #DEDEDE;
 }
 
-#anime_titles_header {
+.anime_titles_header {
 	text-align: center; 
 	font-weight: bold; 
 	margin-top: 15px; 

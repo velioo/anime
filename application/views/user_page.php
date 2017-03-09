@@ -1,4 +1,5 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php'; ?>
 
 <link rel="stylesheet" href="<?php echo asset_url() . "css/user_navigation_bar.css";?>" type="text/css" />
 <script src="<?php echo asset_url() . "jquery.ns-autogrow-1.1.6/dist/jquery.ns-autogrow.js";?>"></script>
@@ -8,13 +9,8 @@
 <?php
 	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) {
 		$is_you = TRUE;
-		$logged = TRUE;
 	} else {
 		$is_you = FALSE;
-		if(isset($this->session->userdata['is_logged_in']))
-			$logged = TRUE;
-		else
-			$logged = FALSE;
 	}
 ?>
 
@@ -144,8 +140,6 @@
 	<?php }?>
  	
 </script>
-
-<?php include 'navigation.php'; ?>
 
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>
@@ -389,4 +383,4 @@
     </div>
 </div>
 
-<?php if(!$logged) { include 'login_modal.php'; }?>
+<?php //if(!$logged) { include 'login_modal.php'; }?>

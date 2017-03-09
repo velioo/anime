@@ -16,7 +16,7 @@ h3 {
 	border-bottom: 1px solid #D0D0D0;
 }
 
-label {
+.signup_label {
 	font-size: 16px;
 	display: inline-block;
 	width:170px;

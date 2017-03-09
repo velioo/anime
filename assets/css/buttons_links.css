@@ -141,6 +141,29 @@
 	background-color: #cb3434;
 }
 
+.button-white {
+	color: black;
+	background-color: white;
+	outline:none;
+	border: 1px solid #cccccc;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+
+.button-white:hover {
+	background-color: #DEDEDE;
+	opacity: 1;
+}
+
+.button-white:active {
+	outline:none;
+	background-color: #DEDEDE;
+}
+
+.button-white:focus {
+	background-color: #DEDEDE;
+}
+
 .disable-link-decoration:hover, .disable-link-decoration:active, .disable-link-decoration:focus {
 	text-decoration: none;
 }

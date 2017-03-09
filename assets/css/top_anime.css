@@ -1,0 +1,281 @@
+@CHARSET "UTF-8";
+@import url("home.css");
+
+#animes_content {
+	background: none;
+	border: none;
+}
+
+.main_title {
+	background-color: white;
+}
+
+#watchlist_content {
+	background-color: white;
+	height: auto;
+	padding: 0px;
+}
+
+#wrap_table_div {
+	position: relative;
+	margin-top: 10px;
+	padding: 10px 10px 5px 10px;
+	border-bottom: 1px solid #DEDEDE;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+}
+
+.table-responsive {
+	border: none;
+	font-size: 15px;
+	font-family: "klavika", Helvetica, Arial, sans-serif;
+	overflow-y: hidden;
+}
+
+.table {
+	margin-bottom: 0px;
+	border: none;
+}
+
+.table > thead > tr > th {
+	border: none;
+	padding-left: 0px;
+	padding-top: 6px;
+	font-family: Verdana,sans-serif;
+	color:black;
+}
+
+.table > tbody > tr > td {
+	padding: 10px 15px 10px 0px;
+	padding-bottom: 10px;
+}
+
+.rank {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #F2F1EC;
+}
+
+.title {
+	width: 40%;
+}
+
+.rank_title {
+	text-align: center;
+}
+
+.user_rating {
+	width: 100px;
+}
+
+td {
+	text-align: left;
+}
+
+.status-square {
+	display: inline-block;
+	height: 12px;
+	width: 12px;
+	margin-bottom: -1px;
+	margin-right: 5px;
+}
+
+.blue {
+	background-color: #6F99E4;
+}
+
+.green {
+	background-color: #8DEA43;
+}
+
+.yellow {
+	background-color: #FCFC3C;
+}
+
+.orange {
+	background-color: #FC9F3C;
+}
+
+.red {
+	background-color: #D93D48;
+}
+
+.star-rating {
+    margin: 0 auto;
+    height: 28px;
+    width: 110%;
+    display:inline-block;
+    margin-top: -2px;
+}
+
+.rb0:checked ~ .rating,
+label.rb0l:hover ~ .rating
+{
+    width: 0px; 
+} 
+
+.rb1:checked ~ .rating,
+label.rb1l:hover ~ .rating
+{
+    width: 11.5px;
+} 
+
+.rb2:checked ~ .rating,
+label.rb2l:hover ~ .rating
+{
+    width: 23px; 
+} 
+
+.rb3:checked ~ .rating,
+label.rb3l:hover ~ .rating
+{
+    width: 34.5px; 
+}
+
+.rb4:checked ~ .rating,
+label.rb4l:hover ~ .rating
+{
+    width: 46px;
+}
+.rb5:checked ~ .rating,
+label.rb5l:hover ~ .rating
+{
+    width: 57.5px;
+}
+.rb6:checked ~ .rating,
+label.rb6l:hover ~ .rating
+{
+    width: 69px;
+}
+.rb7:checked ~ .rating,
+label.rb7l:hover ~ .rating
+{
+    width: 80.5px;
+}
+.rb8:checked ~ .rating,
+label.rb8l:hover ~ .rating
+{
+    width: 92px;
+}
+.rb9:checked ~ .rating,
+label.rb9l:hover ~ .rating
+{
+    width: 103.5px;
+}
+.rb10:checked ~ .rating,
+label.rb10l:hover ~ .rating
+{
+    width: 115px; 
+}
+
+.star-rating label.star {
+    width: 11.5px; 
+    left: -11.5px; 
+    padding: 0;
+    height: 28px; 
+    position: relative;
+    z-index: 3;
+    float: left;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.star-rating label.star.last {
+    width: 11.5px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.star-rating input[type=radio],
+.star-rating label.rb
+{
+    display: none;
+}
+
+.rating {
+    position: relative;
+    z-index: 2;
+    top: 4px; 
+    height: 32px;
+    width:0px;
+}
+
+.rating-bg {
+    position: relative;
+    z-index: 1;
+    top: -28px; 
+    height: 32px; 
+    width: 115px;
+}
+
+.ie8 .star-rating input,
+.ie8 .star-rating label.rb
+ {
+    display: inline-block;
+}
+
+.ie8 .rating,
+.ie8 .rating-bg,
+.ie8 .star-rating label.star {
+    display: none;
+}
+
+.star-ratings-sprite {
+  font-size: 0;
+  height: 23px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 115px;
+  margin: 0 auto;
+}
+
+.star-ratings-sprite-rating {
+    background-position: 0 100%;
+    float: left;
+    height: 23px;
+    display:inline;
+}
+
+.watchlist_button {
+	width: 140px;
+	text-align: center;
+	font-size: 13px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.watchlist_dropdown {
+	font-size: 12px;
+	max-width: 140px;
+	min-width: 140px;
+	z-index: 3;
+	cursor: pointer;
+}
+
+.watchlist_caret {
+	display: inline;
+	color: black;
+	font-size: 13px;
+	margin-left: 10px;
+}
+
+.loader_image_div {
+	position: absolute;
+	display: none;
+	height: 30px;
+	width: 43px;
+	text-align: center;
+	margin-top: -47px;
+	margin-left: 140px;
+}
+
+.loader_image {
+	width: 60px;
+	height: 80px;
+}

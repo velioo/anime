@@ -1,17 +1,8 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php';?>
 
-<!--  <link rel="stylesheet" type="text/css" href="<?php //echo asset_url() . "tablesorter-master/css/theme.default.css";?>">
-<script src="<?php //echo asset_url() . "tablesorter-master/js/jquery.tablesorter.js";?>"></script>-->
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
-
-
-<?php
-	if(isset($this->session->userdata['is_logged_in'])) 
-		$logged = TRUE;
-	else 
-		$logged = FALSE;
-?>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -94,8 +85,6 @@
 		return avg_values;
 	}
 </script>
-
-<?php include 'navigation.php';?>
 
 <div id="wrap">
 	<div class="container-fluid scrollable content">
@@ -384,7 +373,7 @@
 			      <tr class="user_row">
 			        <td class="character_name_image">
 				        <a href="<?php echo site_url("characters/character/{$character['id']}/{$character_slug}");?>" class="disable-link-decoration red-text">
-				        	<img src="<?php echo asset_url() . "character_images/{$character['image_file_name']}";?>" class="character_image">				        	
+				        	<img src="<?php echo asset_url() . "character_images/{$character['image_file_name']}";?>" class="character_image" onerror="this.src='<?php echo asset_url() . "imgs/Default_Character.jpg";?>'">				        	
 				        </a>
 				        
 				        <div class="wrap_character_name_div">
@@ -450,7 +439,7 @@
 			      <tr class="user_row">
 			        <td class="actor_name_image">
 				        <a href="<?php echo site_url("actors/actor/{$actor['id']}/{$actor['actor_slug']}");?>" class="disable-link-decoration red-text">
-				        	<img src="<?php echo asset_url() . "actor_images/{$actor['image_file_name']}";?>" class="actor_image">				        	
+				        	<img src="<?php echo asset_url() . "actor_images/{$actor['image_file_name']}";?>" class="actor_image" onerror="this.src='<?php echo asset_url() . "imgs/Default_Actor.jpg";?>'">				        	
 				        </a>				        
 				        <div class="wrap_actor_name_div">
 					    	<a href="<?php echo site_url("actors/actor/{$actor['id']}/{$actor['actor_slug']}");?>" class="disable-link-decoration red-text">
@@ -568,4 +557,4 @@
     </div>
 </div>
 
-<?php if(!$logged) { include 'login_modal.php'; }?>
+<?php //if(!$logged) { include 'login_modal.php'; }?>

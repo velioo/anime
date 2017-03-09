@@ -1,4 +1,5 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php';?>
 
 <script>
 $(document).ready(function() {
@@ -18,8 +19,6 @@ $(document).ready(function() {
 });
 
 </script>
-
-<?php include 'navigation.php';?>
 
 <?php 
 if (!isset($this->session->userdata['is_logged_in'])) {

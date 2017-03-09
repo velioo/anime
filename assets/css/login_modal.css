@@ -13,6 +13,13 @@
     background-color: rgba(0,0,0,0.6); 
 }
 
+.login_modal_title {
+	color: #2F343B;
+	text-align: left;
+	padding: 0px 5px 5px 0px;
+	border: none;
+}
+
 .wrap_modal_elements.modal_login {
 	position: fixed;
 	top: 45%;
@@ -81,6 +88,7 @@ input.submit.modal_login {
 	width:100px;
 	margin-top: -20px;
 	margin-bottom: 10px;
+	margin-left: 0px;
 	font-weight: normal;
 	border: none;
 	opacity: 1;
@@ -92,4 +100,28 @@ input.submit.modal_login {
 
 .log_in_modal {
 	cursor: pointer;	
+}
+
+
+.close {
+    position: relative;
+    top: 0;
+    right:0;
+    margin-right: -30px;
+    margin-top:-50px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    opacity: 1;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+	border: none;
 }

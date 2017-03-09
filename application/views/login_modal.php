@@ -17,7 +17,7 @@
         <div class="modal-content modal_login">
 		    <div class="modal-header modal_login">
 		        <a href="#" data-dismiss="modal" class="close">&times;</a>
-		         <h3>Login</h3>
+		         <h3 class="login_modal_title">Login</h3>
 		    </div>
 		    <div class="modal-body modal_login">
 		    	 <p id="login_error" style="color: red; display: none;">Username or password is incorrect</p>

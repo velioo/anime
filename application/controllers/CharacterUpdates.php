@@ -331,9 +331,9 @@ class CharacterUpdates extends CI_Controller {
 	function get_access_token() {
 		echo "Getting new access token<br>";
 		$data = array(
-				'grant_type' => 'client_credentials',
-				'client_id' => 'velioo-umtdx',
-				'client_secret' => 'bSvLMpaKvwSo55Cv8zrF',
+			'grant_type' => 'client_credentials',
+			'client_id' => 'velioo-umtdx',
+			'client_secret' => 'bSvLMpaKvwSo55Cv8zrF',
 		);
 		$data = http_build_query($data);
 		$ch = curl_init();

@@ -1,23 +1,7 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php'; ?>
 
 <link rel="stylesheet" type="text/css" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>">
-
-<?php
-	if(isset($this->session->userdata['is_logged_in'])) 
-		$logged = TRUE;
-	else 
-		$logged = FALSE;
-?>
-
-<?php 
-	if(isset($this->session->userdata['admin'])) {
-		if($this->session->userdata['admin'] === TRUE and $logged === TRUE) {
-			$is_admin = TRUE;
-		}
-	} else {
-		$is_admin = FALSE;
-	}
-?>
 
 <script type="text/javascript">
 $('head').append('<link rel="stylesheet" href="<?php echo asset_url() . "css/anime_navigation_bar.css";?>" type="text/css" />');
@@ -71,8 +55,6 @@ function showEditFields() {
 	}
 <?php }?>
 </script>
-
-<?php include 'navigation.php'; ?>
 
 <div id="wrap">
 	<?php include 'anime_page_top.php';?>
@@ -154,16 +136,25 @@ function showEditFields() {
 					<span style="width:<?php echo $percentage?>" class="star-ratings-sprite-rating"></span>
 				</div>
 				<div id="ranked_div">
-					<p id="ranked">Rank #</p>
+					<p id="ranked">Rank #<?php echo $anime['rank'];?></p>
 				</div>
 			</div>
 			<div id="wrap_poster_info_div">
 				<img src="<?php if($anime['poster_image_file_name'] != "") echo asset_url() . "poster_images/" . $anime['poster_image_file_name']; else echo asset_url()."imgs/None.jpg";?>"  alt="Image" id="poster_image">
 				<span id="edit_poster_span" class="fa fa-camera"></span>
 				<div class="anime_titles">
-					<p id="anime_titles_header">Titles</p>
-					<p class="anime_titles_p"><?php echo "<strong>Main: </strong>" . $titles['main'];?></p>
-					<p class="anime_titles_p"><?php if($titles['alt'] != "") echo "<strong>Alt: </strong>" . $titles['alt'];?></p>
+					<p class="anime_titles_header">Titles</p>
+					<p class="anime_titles_p"><?php echo "<strong>Official: </strong>" . $titles['main'];?></p>
+					<?php 
+						if(isset($titles['en'])) echo "<p class='anime_titles_p'>" . "<strong>English: </strong>" . $titles['en'] . "</p>";
+						if(isset($titles['en_jp'])) echo "<p class='anime_titles_p'>" . "<strong>Rōmaji: </strong>" . $titles['en_jp'] . "</p>";
+						if(isset($titles['jp'])) echo "<p class='anime_titles_p'>" . "<strong>Japanese: </strong>" . $titles['jp'] . "</p>";
+					?>
+					<p class="anime_titles_header">Abbreviated Titles</p>
+					<?php $abbreviated_titles = explode("___", $anime['abbreviated_titles']);
+						  foreach($abbreviated_titles as $abb_title) {?>
+							<p class="anime_titles_p"><?php echo $abb_title;?></p>
+					<?php }?>
 				</div>
 			</div>
 			<div id="anime_modal" class="modal">
@@ -291,7 +282,7 @@ function showEditFields() {
 		   <?php } else { ?>
 		   		<p style="margin-top:20px;">No Reviews yet</p> 
 		   		<div id="wrap_write_first_review">
-		   			<a id="write_first_review" href="<?php if($logged) { echo site_url("reviews/add_edit_review/" . $anime['slug']); } else echo "#";?>"><button id="write_first_review_button" class="btn btn-primary button-red log_in_modal">Be the first to write one</button> </a>
+		   			<a id="write_first_review" href="<?php if($logged) { echo site_url("reviews/add_edit_review/" . $anime['slug']); } else echo "#";?>"><button id="write_first_review_button" class="btn btn-primary button-red log_in_modal">Be the first to write one</button></a>
 		   		</div>
 		   <?php }?>
 		   <?php if(isset($reviews)) {?>
@@ -328,4 +319,4 @@ function showEditFields() {
 
 <?php include 'footer.php';?>
 
-<?php if(!$logged) { include 'login_modal.php'; }?>
+<?php //if(!$logged) { include 'login_modal.php'; }?>

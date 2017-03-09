@@ -33,11 +33,7 @@ Class Watchlist_model extends CI_Model {
 			$this->db->where('id', $anime_id);
 			$query = $this->db->update('animes', array('average_rating' => $average_rating, 'total_votes' => $total_votes));
 	
-			if($query) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+			return $query;
 			
 		} else {
 			return FALSE;
@@ -158,16 +154,16 @@ Class Watchlist_model extends CI_Model {
 		$query = $this->db->get('watchlists as w');
 
 		if($query->num_rows() == 1) {
-			$data = array('w.score' => $score);
-			
+			$data = array('w.score' => $score);			
 			$this->db->where('w.anime_id', $anime_id);
 			$this->db->where('w.user_id', $user_id);
 			$query = $this->db->update('watchlists as w', $data);
+			$afftected_rows = $this->db->affected_rows();
 		} else {
 			return FALSE;
 		} 	
 
-		if($query) {
+		if($query === TRUE && $afftected_rows > 0) {
 			$this->calculate_anime_score($anime_id);
 			return TRUE;
 		} else {

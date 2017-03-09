@@ -211,6 +211,8 @@ class AnimeContent extends CI_Controller {
 					$this->pagination->initialize($config);
 					$data['pagination'] = $this->pagination->create_links();
 					$data['users'] = $users;
+				} else {
+					$this->helpers_model->server_error();
 				}
 			
 				$data['sort_by'] = $sort_by;
@@ -231,8 +233,37 @@ class AnimeContent extends CI_Controller {
 		}
 	}
 	
+	function top_anime() {
+		
+		$this->load->library('pagination');
+		$config = $this->configure_pagination();
+		$config['base_url'] = site_url("animeContent/top_anime");
+		$config['per_page'] = 100;
+		
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page')) and $this->input->get('page') > 0) {
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+		} else {
+			$start = 0;
+		}
+		
+		$animes = $this->animes_model->get_all_animes($config['per_page'], $start);
+		$config['total_rows'] = $this->animes_model->get_all_animes_count();
+		
+		if($animes !== FALSE) {
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();
+			$data['animes'] = $animes;
+		} else {
+			$this->helpers_model->server_error();
+		}
+		
+		$data['title'] = "Top Animes";
+		$data['css'] = 'top_anime.css';
+		$this->load->view('top_anime', $data);
+	}
+	
 	function configure_pagination() {
-		$config['num_links'] = 4;
+		$config['num_links'] = 5;
 		$config['use_page_numbers'] = TRUE;
 		$config['page_query_string'] = TRUE;
 		$config['reuse_query_string'] = TRUE;
@@ -251,6 +282,8 @@ class AnimeContent extends CI_Controller {
 		$config['first_tagl_close'] = "</li>";
 		$config['last_tag_open'] = "<li>";
 		$config['last_tagl_close'] = "</li>";
+		$config["next_link"] = "Next";
+		$config["prev_link"] = "Prev";
 	
 		return $config;
 	}

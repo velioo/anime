@@ -1,5 +1,6 @@
 <?php include 'head.php';?>
-   
+<?php include 'navigation.php';?>
+
 <link rel="stylesheet" href="<?php echo asset_url() . "css/user_navigation_bar.css";?>" type="text/css" />
 <script src="<?php echo asset_url() . "js/edit_user_info.js";?>"></script>
 <script src="<?php echo asset_url() . "js/follow.js";?>"></script>
@@ -7,13 +8,8 @@
 <?php
 	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $user['username'])) {
 		$is_you = TRUE;
-		$logged = TRUE;
 	} else {
 		$is_you = FALSE;
-		if(isset($this->session->userdata['is_logged_in']))
-			$logged = TRUE;
-		else
-			$logged = FALSE;
 	}
 ?>
 
@@ -30,8 +26,6 @@
 		return character_status_url;
 	}
 </script>
-
-<?php include 'navigation.php';?>
    
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>

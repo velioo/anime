@@ -1,21 +1,5 @@
 <?php include 'head.php';?>
-
-<?php
-	if(isset($this->session->userdata['is_logged_in'])) 
-		$logged = TRUE;
-	else 
-		$logged = FALSE;
-?>
-
-<?php 
-	if(isset($this->session->userdata['admin'])) {
-		if($this->session->userdata['admin'] === TRUE and $logged === TRUE) {
-			$is_admin = TRUE;
-		}
-	} else {
-		$is_admin = FALSE;
-	}
-?>
+<?php include 'navigation.php';?>
 
 <script>
 	$(document).ready(function() {
@@ -53,8 +37,6 @@
 		return total_hate_groups;
 	}
 </script>
-
-<?php include 'navigation.php';?>
 
 <div id="wrap">
 	<div class="container-fluid scrollable" id="character_div">	
@@ -157,4 +139,4 @@
   </div>
 </div>
 
-<?php if(!$logged) { include 'login_modal.php'; }?>
+<?php //if(!$logged) { include 'login_modal.php'; }?>

@@ -1,4 +1,5 @@
 <?php include 'head.php';?>
+<?php include 'navigation.php'; ?>
 
 <script src="<?php echo asset_url() . "js/post_permalink.js";?>"></script>
 <script src="<?php echo asset_url() . "jquery.ns-autogrow-1.1.6/dist/jquery.ns-autogrow.js";?>"></script>
@@ -6,13 +7,8 @@
 <?php
 	if(isset($this->session->userdata['is_logged_in']) and ($this->session->userdata['username'] == $post['username'])) {
 		$is_you = TRUE;
-		$logged = TRUE;
 	} else {
 		$is_you = FALSE;
-		if(isset($this->session->userdata['is_logged_in']))
-			$logged = TRUE;
-		else
-			$logged = FALSE;
 	}
 ?>
 
@@ -85,8 +81,6 @@
 	}
 
 </script>
-
-<?php include 'navigation.php'; ?>
 
 <div id="wrap">
 	<div class="container-fluid scrollable" style="text-align: center;">
@@ -178,4 +172,4 @@
     </div>
 </div>
 
-<?php if(!$logged) { include 'login_modal.php'; }?>
+<?php //if(!$logged) { include 'login_modal.php'; }?>

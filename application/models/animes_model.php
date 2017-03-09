@@ -23,8 +23,13 @@ Class Animes_model extends CI_Model {
        			'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,    			      					
 				'poster_image_file_name' => $anime_object->data->attributes->posterImage,
 				'cover_image_file_name' => $anime_object->data->attributes->coverImage,
-       			'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
+       			'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset,
+       			'abbreviated_titles' => implode("___", $anime_object->data->attributes->abbreviatedTitles)
 		);   
+       	
+       	if($anime_object->data->attributes->abbreviatedTitles != NULL) {
+       		$new_anime_data['abbreviated_titles'] = implode("___", $anime_object->data->attributes->abbreviatedTitles);
+       	}
        	
 		$query = $this->db->insert('animes', $new_anime_data);
 		
@@ -55,8 +60,12 @@ Class Animes_model extends CI_Model {
 				'end_date' => $anime_object->data->attributes->endDate,
 				'titles' => $anime_object->data->attributes->titles,
 		 		'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,
-		 		'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
+		 		'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset,
 		); 
+		 
+		 if($anime_object->data->attributes->abbreviatedTitles != NULL) {
+		 	$update_anime_data['abbreviated_titles'] = implode("___", $anime_object->data->attributes->abbreviatedTitles);
+		 }
 	
 		$this->db->select('poster_image_file_name, cover_image_file_name');
 		$this->db->where('id', $anime_object->data->id);
@@ -91,6 +100,34 @@ Class Animes_model extends CI_Model {
 		}
 	}
 	
+	function add_studio($studio_object) {
+		$studio = array(
+			'id' => $studio_object->data->id,
+			'slug' => $studio_object->data->attributes->slug,
+			'name' => $studio_object->data->attributes->name
+		);
+		
+		$query = $this->db->insert('studios', $studio);
+		
+		return $query;
+	}
+	
+	function make_anime_studio_relation($anime_id, $studio_id) {
+		
+		$data = array(
+			'anime_id' => $anime_id,
+			'studio_id' => $studio_id
+		);
+		
+		$query = $this->db->get_where('rel_anime_studios', $data);
+		
+		if($query->num_rows() == 0) {
+			$query = $this->db->insert('rel_anime_studios', $data);
+		}	
+		
+		return $query;
+	}
+	
 	function get_anime($id) {
 		$query = $this->db->get_where('animes', array('id' => $id));
 		
@@ -100,6 +137,24 @@ Class Animes_model extends CI_Model {
 		} else {
 			return FALSE;
 		}
+	}
+	
+	function get_all_animes_count() {
+		$query = $this->db->get("animes");
+		return $query->num_rows();
+	}
+	
+	function get_all_animes($limit, $offset) {
+		if($this->session->userdata['is_logged_in']) {
+			$user_id = $this->session->userdata('id');
+			$this->db->select("a.id,a.slug,a.titles,a.rank,a.average_rating,a.show_type,a.start_date,w.status,w.score,w.eps_watched");			
+			$this->db->join("watchlists as w", "w.anime_id=a.id and w.user_id={$user_id}", "left");
+		}
+		$this->db->limit($limit, $offset);
+		$this->db->order_by("rank", "ASC");
+		$this->db->order_by("slug", "ASC");
+		$query = $this->db->get("animes as a");
+		return $query->result_array();
 	}
 	
 	function get_anime_id($slug) {
@@ -233,13 +288,37 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime_json_data() {
-		$this->db->select('id, slug, titles, poster_image_file_name');
+		$this->db->select('id, slug, titles, abbreviated_titles, poster_image_file_name');
 		$query = $this->db->get('animes');
 		return $query->result_array();
 	}
 	
+	function calculate_anime_ranks() {
+		$this->db->select("id,average_rating");
+		$this->db->order_by("average_rating", "DESC");
+		$this->db->order_by("slug", "ASC");
+		$query = $this->db->get("animes");
+	
+		$counter = 0;
+		foreach($query->result_array() as $row) {
+			$counter++;
+			$this->db->where("id", $row['id']);
+			$this->db->update("animes", array('rank' => $counter));
+		}
+	}
+	
 	function check_if_anime_exists($id) {		
 		$query = $this->db->get_where('animes', array('id' => $id));
+		
+		if($query->num_rows() == 1) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+	
+	function check_if_studio_exists($id) {
+		$query = $this->db->get_where('studios', array('id' => $id));
 		
 		if($query->num_rows() == 1) {
 			return TRUE;
