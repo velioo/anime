@@ -1,0 +1,27 @@
+if($this->session->userdata('is_logged_in')) {
+			$user_id = $this->session->userdata('id');
+			$this->db->select("a.id,a.slug,a.titles,a.rank,a.average_rating,a.show_type,a.start_date,w.status,w.score,w.eps_watched");			
+			$this->db->join("watchlists as w", "w.anime_id=a.id and w.user_id={$user_id}", "left");
+		}
+		$this->db->limit($limit, $offset);
+		$this->db->order_by("average_rating", "DESC");
+		$this->db->order_by("slug", "ASC");
+		$query = $this->db->get("animes as a");
+		
+		
+		
+		top_animes_characters:
+		
+		if($this->session->userdata('is_logged_in')) {
+			$user_id = $this->session->userdata('id');	
+			$this->db->select('c.id,c.first_name,c.last_name,c.alt_name,c.image_file_name, COUNT(c.id) as count, CONCAT_WS("", first_name, last_name) as name');
+			$this->db->join('characters_users_status as cus', 'cus.character_id=c.id');
+		} else {
+			$this->db->select('c.id,c.first_name,c.last_name,c.alt_name,c.image_file_name');
+		}				
+		$this->db->where('cus.status', $status);
+		$this->db->group_by('c.id');
+		$this->db->order_by('count', 'DESC');
+		$this->db->order_by('name');
+		$this->db->limit($limit, $offset);
+		$query = $this->db->get('characters as c');

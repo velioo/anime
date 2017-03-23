@@ -254,9 +254,9 @@ class Posts extends CI_Controller {
 			$query = $this->posts_model->edit_comment($comment_id, $content);
 				
 			if($query !== FALSE) {
-				echo "Success";
+				echo 1;
 			} else {
-				echo "Fail";
+				echo 0;
 			}
 				
 		} else {

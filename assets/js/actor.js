@@ -11,7 +11,7 @@ $("#actor_image").click(function(){
     $("#modal_image").attr("src", $(this).attr("src"));
 });
 
-$('#close_modal').click(function(){
+$('#close_modal, #actor_modal').click(function(){
 	$("#center_div").css("-webkit-animation-name", "zoom_out");
 	$("#center_div").css("animation-name", "zoom_out");
 	$("#center_div").css("-webkit-animation-duration", "0.3s");
@@ -23,6 +23,10 @@ $('#close_modal').click(function(){
 		 $("#center_div").css("-webkit-animation-duration", "0.6s");
 		 $("#center_div").css("animation-duration", "0.6s");
 	}, 250);
+});
+
+$('#modal_image').click(function(e) {
+	e.stopPropagation();
 });
 
 $('.see_all').click(function() {

@@ -4,7 +4,7 @@ $(document).ready(function() {
 	var is_you = getIsYou();
 	var is_logged = getIsLogged();
 	var comment_id;
-	var update = null
+	var update = false;
 	
 	add_fix_comments();
 	
@@ -28,8 +28,8 @@ $(document).ready(function() {
 				        url: url,
 				        data: { post_id: post_id, content: content }
 				      })
-				    .done(function(msg) {
-				    	if(msg == "Success") {
+				    .done(function(comment_id) {
+				    	if(comment_id) {
 				    		
 							var modify_div = "<div class='post_settings_div'>\
 								        	<span class='fa fa-angle-down open_post_settings'></span>\
@@ -39,7 +39,7 @@ $(document).ready(function() {
 								        	</div>\
 								        </div>";
 							 
-							self.parent().prev().append("<div class='comment'>\
+							self.parent().prev().append("<div class='comment' data-id='" + comment_id + "'>\
 										<div class='user_image_div'>\
 								      		<a href='" + user_url + "'><img class='user_image' src='" + user_image + "'></a>\
 								        </div>\
@@ -55,7 +55,7 @@ $(document).ready(function() {
 				    });
 				}
 			 } else {
-				 var content = $(this).val();
+				 var content = strip_tags($(this).val());
 				 var url = getEditCommentUrl();
 				 var self = $(this);
 				 
@@ -64,8 +64,8 @@ $(document).ready(function() {
 				        url: url,
 				        data: { comment_id: comment_id, content: content }
 				      })
-				    .done(function(msg) {
-				    	if(msg == "Success") {
+				    .done(function(success) {
+				    	if(success) {
 				    		$('.comment').each(function() {
 				    			if($(this).data('id') == comment_id) {
 				    				$(this).find('.comment_text').find('.content').text(content);			
@@ -79,7 +79,7 @@ $(document).ready(function() {
 		
 							add_fix_comments();				    		
 				    	} else {
-				    		window.alert("Failed to update comment")
+				    		window.alert("Failed to update comment");
 				    	}
 						 comment_id = null;
 						 update = false;
@@ -198,6 +198,10 @@ $(document).ready(function() {
 	});
 	
 });
+
+function strip_tags(str){
+	return str.replace(/<\/?[^>]+>/gi, '');
+}
 
 function add_fix_comments() {
 	$('.comment_text').each(function() {

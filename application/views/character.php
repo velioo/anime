@@ -138,5 +138,3 @@
 	  <img class="modal-content" id="modal_image">
   </div>
 </div>
-
-<?php //if(!$logged) { include 'login_modal.php'; }?>

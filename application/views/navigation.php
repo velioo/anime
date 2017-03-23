@@ -82,8 +82,8 @@
 		    	<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
                   <li><a href="<?php echo site_url('searchC/search_people?search=""');?>">Browse Actors</a></li>
-                  <li><a href="#">Top Loved Characters</a></li>
-                  <li><a href="#">Top Hated Characters</a></li>
+                  <li><a href="<?php echo site_url('characters/top_loved_characters');?>">Top Loved Characters</a></li>
+                  <li><a href="<?php echo site_url('characters/top_hated_characters');?>">Top Hated Characters</a></li>
                 </ul>
 		    </li>
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Community</a>
@@ -109,8 +109,8 @@
 	      <ul class="dropdown-menu">
 			  <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
 			  <li><a href="<?php echo site_url('searchC/search_people?search=""');?>">Browse Actors</a></li>
-		      <li><a href="<?php echo base_url(); ?>">Top Loved Characters</a></li>
-		      <li><a href="<?php echo base_url(); ?>">Top Hated Characters</a></li>
+		      <li><a href="<?php echo site_url('characters/top_loved_characters');?>">Top Loved Characters</a></li>
+              <li><a href="<?php echo site_url('characters/top_hated_characters');?>">Top Hated Characters</a></li>
 		  </ul>
 	  </li>
 		  <li class="dropdown">

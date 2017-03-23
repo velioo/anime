@@ -14,10 +14,13 @@ if (isset($this->session->userdata['is_logged_in'])) {
 		<p style="color:#2F343B;">Forgot your info? No problem! Enter your account's email address and we'll send you instructions on how to update your password.</p>
 		<?php 		
 		
-			$email = set_value('email') == false ? '' : set_value('email');
+			$email = set_value('email') == false ? '' : set_value('email');			
+			$label_attr = array(
+				'class' => 'signup_label'
+			);
 			
 			echo form_open('emails/send_password_reset_link', 'class="signloginform"');
-			echo form_label('Email', 'email');
+			echo form_label('Email', 'email', $label_attr);
 			echo form_input('email', set_value('email', $email) );
 			echo form_error('email', '<p class="error">*', '</p>');echo "<br/>";
 			echo form_submit('submit', 'Send', 'class="submit button-black"');echo "<br/>";echo "<br/>";

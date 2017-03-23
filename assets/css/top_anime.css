@@ -50,9 +50,13 @@
 }
 
 .rank {
-	font-size: 20px;
+	font-size: 25px;
 	font-weight: bold;
 	text-align: center;
+}
+
+td.likes {
+	width: 10%;
 }
 
 tr:nth-child(even) {

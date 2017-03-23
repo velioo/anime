@@ -23,7 +23,7 @@ h3 {
 	text-align:right;
 }
 
-#forgot_password, .center_paragraph {
+.center_paragraph {
 	margin-left:37%;
 	margin-right:25%;
 }
@@ -84,5 +84,6 @@ input.submit {
 .error {
 	color:red;
 	display:inline-block;
+	margin-top: 10px;
 }
 

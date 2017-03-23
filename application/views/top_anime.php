@@ -51,7 +51,8 @@
 					    			<td class="type"><?php echo get_show_type($anime['show_type']);?></td>
 					    			<td class="year"><?php $date = explode("-", $anime['start_date']); if($date[2] != "0000") echo $date[0]; else echo "????";?></td>
 					    			<td class="avg"><?php echo number_format((float)$anime['average_rating']/2, 2, '.', '');?></td>		
-					    			<td class="user_rating">		    			
+					    			<td class="user_rating">	
+					    				<?php if(isset($anime['status'])) {?>	    			
 						    			<div class="star-rating" data-id="<?php echo $anime['id'];?>" <?php if($anime['status'] == NULL) echo " style='display:none;'";?>>			
 										    <input class="rb0" id="Ans_<?php echo $counter++;?>" name="userScore<?php echo $anime['id'];?>" type="radio" value="0" <?php if($anime['score'] == 0) echo "checked";?>/>                       
 										    <input class="rb1" id="Ans_<?php echo $counter++;?>" name="userScore<?php echo $anime['id'];?>" type="radio" value="1" <?php if($anime['score'] == 1) echo "checked";?>/>
@@ -91,10 +92,12 @@
 										    
 										    <div class="rating"></div>
 										    <div class="rating-bg"></div> 
-										</div> 		    			
+										</div> 		
+										<?php }?>    			
 					    			</td>		
 					    			
 					    			<td class="status"> 
+					    				<?php if(isset($anime['status'])) {?>
 										<button class="watchlist_button button-white"><?php if($anime['status'] != NULL) { echo "<span class='status-square " . get_status_square($anime['status']). "'></span>" . get_watchlist_status_name($anime['status']);} else echo "Add to Watchlist"; ?><span class="watchlist_caret fa fa-caret-down"></span></button>
 									    <div class="w3-dropdown-content w3-border watchlist_dropdown" data-id="<?php echo $anime['id'];?>">
 									      <a class="watchlist_item" data-id="1">Watched</a>
@@ -107,6 +110,7 @@
 										<div class="loader_image_div">
 											<img src="<?php echo asset_url() . "imgs/loading_icon_2.gif";?>" class="loader_image">
 										</div>	
+										<?php }?>
 									</td>	    					    						    			
 					    		</tr>		
 					    	<?php }?>			    	

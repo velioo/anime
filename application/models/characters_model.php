@@ -105,6 +105,35 @@ Class Characters_model extends CI_Model {
 		return $row_array;
 	}
 	
+	function add_characters_related_animes($result_array) {
+		$character_ids = array();
+	
+		foreach($result_array as $character) {
+			$character_ids[] = $character['id'];
+		}
+	
+		$this->db->select('c.id as character_id, a.id as id, a.slug as slug, a.titles as titles');
+		$this->db->join('character_animes as ca', 'ca.character_id = c.id');
+		$this->db->join('animes as a', 'a.id = ca.anime_id');
+		$this->db->where_in('c.id', $character_ids);
+		$animes = $this->db->get('characters as c');
+	
+		$animes = $animes->result_array();
+		for($i = 0; $i < count($animes); $i++) {
+			$animes[$i]['slug'] = str_replace(" ", "-", $animes[$i]['slug']);
+		}	
+		
+		for($i = 0; $i < count($result_array); $i++) { // add animes to the according characters
+			foreach($animes as $anime) {
+				if($anime['character_id'] == $result_array[$i]['id']) {
+					$result_array[$i]['animes'][] = $anime;
+				}
+			}
+		}
+	
+		return $result_array;
+	}
+	
 	function add_character_user_statuses($row_array) {
 		$this->db->select('u.username');
 		$this->db->join('users as u', 'u.id=cus.user_id');
@@ -192,25 +221,26 @@ Class Characters_model extends CI_Model {
 	
 	function get_user_characters($user_id, $status=null, $limit="", $offset="", $details=FALSE) {
 		$data = array(
-			'characters_users_status.user_id' => $user_id
+			'cus.user_id' => $user_id
 		);	
 		
 		if($status !== null) {
-			$data['characters_users_status.status'] = $status;
+			$data['cus.status'] = $status;
 		}
 		
-		$this->db->select('characters.id,characters.first_name, characters.last_name, characters.alt_name, characters.image_file_name');
-		$this->db->join('characters', 'characters.id=characters_users_status.character_id');
-		$this->db->order_by('characters.first_name, characters.last_name');
-		$query = $this->db->get_where('characters_users_status', $data, $limit, $offset);			
+		$this->db->select('c.id,c.first_name,c.last_name,c.alt_name,c.image_file_name');
+		$this->db->join('characters as c', 'c.id=cus.character_id');
+		$this->db->order_by('COALESCE(NULLIF(c.first_name, ""), c.last_name)');
+		$query = $this->db->get_where('characters_users_status as cus', $data, $limit, $offset);			
 		$characters = $query->result_array();
 		
 		if($details) {		
-			for($i = 0; $i < count($characters); $i++) {
-				$characters[$i] = $this->add_character_related_animes($characters[$i]);
-			}
 			
-			$characters = $this->add_character_user_status($characters, TRUE);
+			$characters = $this->add_characters_related_animes($characters);
+			
+			if($this->session->userdata('is_logged_in')) {
+				$characters = $this->add_character_user_status($characters, TRUE);
+			}
 		}
 
 		return $characters;
@@ -229,6 +259,37 @@ Class Characters_model extends CI_Model {
 		$query = $this->db->get_where('characters_users_status', $data);
 		
 		return $query->row_array()['count'];
+	}
+	
+	function get_all_characters($status, $limit, $offset) {
+		
+		$query = $this->db->query("
+				SELECT @rn:=@rn+1 AS rank,id,first_name,last_name,alt_name,image_file_name,count
+				FROM (
+				SELECT c.id,c.first_name,c.last_name,c.alt_name,c.image_file_name, COUNT(c.id) as count, CONCAT_WS('', first_name, last_name) as name
+				FROM characters as c JOIN characters_users_status as cus ON cus.character_id=c.id
+				WHERE cus.status={$status}
+				GROUP BY c.id
+				ORDER BY count DESC, name ASC LIMIT {$limit} OFFSET {$offset}
+				) t1, (SELECT @rn:={$offset}) t2");
+		
+		$characters = $query->result_array();
+		
+		$characters = $this->add_characters_related_animes($characters);	
+		
+		if($this->session->userdata('is_logged_in')) {		
+			$characters = $this->add_character_user_status($characters, TRUE);	
+		}
+		
+		return $characters;
+	}
+	
+	function get_all_characters_count($status) {
+		$this->db->where('cus.status', $status);
+		$this->db->group_by("cus.character_id");
+		$query = $this->db->get('characters_users_status as cus');
+		
+		return $query->num_rows();
 	}
 	
 	function change_character_user_status($character_id, $status) {

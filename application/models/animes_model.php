@@ -23,9 +23,9 @@ Class Animes_model extends CI_Model {
        			'youtube_video_id' => $anime_object->data->attributes->youtubeVideoId,    			      					
 				'poster_image_file_name' => $anime_object->data->attributes->posterImage,
 				'cover_image_file_name' => $anime_object->data->attributes->coverImage,
-       			'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset,
-       			'abbreviated_titles' => implode("___", $anime_object->data->attributes->abbreviatedTitles)
-		);   
+       			'cover_image_top_offset' => $anime_object->data->attributes->coverImageTopOffset
+       			
+       	);   
        	
        	if($anime_object->data->attributes->abbreviatedTitles != NULL) {
        		$new_anime_data['abbreviated_titles'] = implode("___", $anime_object->data->attributes->abbreviatedTitles);
@@ -129,10 +129,27 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime($id) {
+		
+		$query = $this->db->query("SELECT @rn:=@rn+1 AS rank,id
+									FROM (
+									SELECT id
+									FROM animes
+									GROUP BY id
+									ORDER BY average_rating DESC, slug ASC									
+									) t1, (SELECT @rn:=0) t2");
+		$result_array = $query->result_array();		
+		$rank = 0;		
+		foreach($result_array as $arr) {
+			if($arr['id'] == $id) {
+				$rank = $arr['rank'];
+			}
+		}
+	
 		$query = $this->db->get_where('animes', array('id' => $id));
 		
 		if($query->num_rows() == 1) {
 			$row_array = $this->add_anime_genre($id, $query->row_array());
+			$row_array['rank'] = $rank;
 			return $row_array;
 		} else {
 			return FALSE;
@@ -145,15 +162,25 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_all_animes($limit, $offset) {
-		if($this->session->userdata['is_logged_in']) {
-			$user_id = $this->session->userdata('id');
-			$this->db->select("a.id,a.slug,a.titles,a.rank,a.average_rating,a.show_type,a.start_date,w.status,w.score,w.eps_watched");			
-			$this->db->join("watchlists as w", "w.anime_id=a.id and w.user_id={$user_id}", "left");
-		}
-		$this->db->limit($limit, $offset);
-		$this->db->order_by("rank", "ASC");
-		$this->db->order_by("slug", "ASC");
-		$query = $this->db->get("animes as a");
+		if($this->session->userdata('is_logged_in')) {
+			$user_id = $this->session->userdata('id');		
+			
+			$query = $this->db->query("
+					SELECT @rn:=@rn+1 AS rank,id,slug,titles,average_rating,show_type,start_date,status,score,eps_watched
+					FROM (
+					SELECT a.id,a.slug,a.titles,a.average_rating,a.show_type,a.start_date,w.status,w.score,w.eps_watched
+					FROM animes as a LEFT JOIN watchlists as w ON w.anime_id=a.id and w.user_id={$user_id}
+					ORDER BY average_rating DESC, slug ASC LIMIT {$limit} OFFSET {$offset}
+					) t1, (SELECT @rn:={$offset}) t2");
+		} else {
+			$query = $this->db->query("
+					SELECT @rn:=@rn+1 AS rank,id,slug,titles,average_rating,show_type,start_date
+					FROM (
+					SELECT a.id,a.slug,a.titles,a.average_rating,a.show_type,a.start_date
+					FROM animes as a
+					ORDER BY average_rating DESC, slug ASC LIMIT {$limit} OFFSET {$offset}
+					) t1, (SELECT @rn:={$offset}) t2");
+		}		
 		return $query->result_array();
 	}
 	
@@ -182,7 +209,7 @@ Class Animes_model extends CI_Model {
 	}
 	
 	function get_anime_id_by_title($anime_title_en, $anime_title_en_jp, $anime_title_ja_jp) {
-		$this->db->select('id, titles');
+		$this->db->select('id, titles, abbreviated_titles');
 		$this->db->like('titles', $anime_title_en);
 		$this->db->or_like('titles', $anime_title_en_jp);
 		$this->db->or_like('titles', $anime_title_ja_jp);
@@ -293,7 +320,7 @@ Class Animes_model extends CI_Model {
 		return $query->result_array();
 	}
 	
-	function calculate_anime_ranks() {
+/* 	function calculate_anime_ranks() {
 		$this->db->select("id,average_rating");
 		$this->db->order_by("average_rating", "DESC");
 		$this->db->order_by("slug", "ASC");
@@ -305,7 +332,7 @@ Class Animes_model extends CI_Model {
 			$this->db->where("id", $row['id']);
 			$this->db->update("animes", array('rank' => $counter));
 		}
-	}
+	} */
 	
 	function check_if_anime_exists($id) {		
 		$query = $this->db->get_where('animes', array('id' => $id));

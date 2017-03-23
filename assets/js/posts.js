@@ -57,7 +57,6 @@ $(document).ready(function() {
 	function strip_tags(str){
 		return str.replace(/<\/?[^>]+>/gi, '');
 	}
-
 	
 	$('#submit_post').click(function() {
 		var content = strip_tags($('#new_post_area').val());
@@ -176,8 +175,8 @@ $(document).ready(function() {
 				        url: url,
 				        data: { comment_id: comment_id, content: content }
 				      })
-				    .done(function(msg) {
-				    	if(msg == "Success") {
+				    .done(function(success) {
+				    	if(success) {
 				    		$('.comment').each(function() {
 				    			if($(this).data('id') == comment_id) {
 				    				$(this).find('.comment_text').find('.content').text(content);			
@@ -191,7 +190,7 @@ $(document).ready(function() {
 		
 							add_fix_comments();				    		
 				    	} else {
-				    		window.alert("Failed to update comment")
+				    		window.alert("Failed to update comment");
 				    	}
 						 comment_id = null;
 						 edited_post_id = null;

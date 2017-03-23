@@ -18,6 +18,28 @@ $(document).ready(function() {
 		    }); 
 	});
 	
+	$("#modal_username, #modal_password").keypress(function(e) {
+		if(e.keyCode == 13) {
+			var url = getLoginUrl();
+			var username = $('#modal_username').val();
+			var password = $('#modal_password').val();
+
+			 $.ajax({
+			        method: "POST",
+			        url: url,
+			        data: { username: username, password: password}
+			      })
+			    .done(function(msg) {	  
+			    	if(msg != "Fail") {
+			    		location.reload();
+			    	} else {
+			    		$('#login_error').show();
+			    	}
+			    }); 
+		}
+	
+	});
+	
 	$('#login_modal').on('hidden.bs.modal', function () {
 		$('#login_error').hide();
 	});

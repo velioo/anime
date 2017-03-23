@@ -5,7 +5,7 @@ $("#poster_image").click(function(){
     $("#modal_image").attr("src", $(this).attr("src"));
 });
 
-$('#close_modal').click(function(){
+$('#close_modal, #anime_modal').click(function(){
 	$("#center_div").css("-webkit-animation-name", "zoom_out");
 	$("#center_div").css("animation-name", "zoom_out");
 	$("#center_div").css("-webkit-animation-duration", "0.3s");
@@ -22,7 +22,7 @@ $('#close_modal').click(function(){
 var video_url = $("#anime_video").attr('src');
 $("#anime_video").attr('src', '');
 
-$('#close_youtube_video_button').click(function() {
+$('#close_youtube_video_button, #youtube_modal').click(function() {
 	$("#center_video_div").css("-webkit-animation-name", "zoom_out");
 	$("#center_video_div").css("animation-name", "zoom_out");
 	$("#center_video_div").css("-webkit-animation-duration", "0.2s");
@@ -35,6 +35,10 @@ $('#close_youtube_video_button').click(function() {
 		 $("#center_video_div").css("-webkit-animation-duration", "0.6s");
 		 $("#center_video_div").css("animation-duration", "0.6s");
 	}, 150);
+});
+
+$('#modal_image').click(function(e) {
+	e.stopPropagation();
 });
 
 $('#show_video').click(function() {

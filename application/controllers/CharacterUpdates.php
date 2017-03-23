@@ -30,7 +30,8 @@ class CharacterUpdates extends CI_Controller {
 			$anime_id = 0;			
 			$counter = 0;
 			
-			$anime_counter-=5000;
+			//$anime_counter-=5000;
+			$anime_counter = 8500;
 			
 			while($failed_request < 100) {
 				
@@ -60,11 +61,49 @@ class CharacterUpdates extends CI_Controller {
 					$anime_query = $this->animes_model->get_anime_id_by_title($anime->title_english, $anime->title_romaji, $anime->title_japanese);				
 					
 					//$anime_query = $this->animes_model->get_anime(4854);
-					
+										
 					if($anime_query !== FALSE) {
 						$temp = 0;
  	 	 			 	foreach($anime_query as $a) {
-							if(    (strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_english)) || 
+ 	 	 			 		 	 			 		
+ 	 	 			 		$titles = array(strtolower(convert_titles_to_hash($a['titles'])['main']));	 	 			 			
+ 	 	 			 		if(isset(convert_titles_to_hash($a['titles'])['en'])) {
+ 	 	 			 			$titles[] = strtolower(convert_titles_to_hash($a['titles'])['en']);
+ 	 	 			 		} 	 			 			
+ 	 	 			 		if(isset(convert_titles_to_hash($a['titles'])['en_jp'])) {
+ 	 	 			 			$titles[] = strtolower(convert_titles_to_hash($a['titles'])['en_jp']);
+ 	 	 			 		}	 	 			 			
+ 	 	 			 		if(isset(convert_titles_to_hash($a['titles'])['ja_jp'])) {
+ 	 	 			 			$titles[] = strtolower(convert_titles_to_hash($a['titles'])['ja_jp']);
+ 	 	 			 		}
+ 	 	 			 		
+ 	 	 			 		$abbreviated_titles = explode("___", $a['abbreviated_titles']);	 	 			 		
+ 	 	 			 		foreach($abbreviated_titles as $at) {
+ 	 	 			 			$titles[] = $at;
+ 	 	 			 		}
+ 	 	 			 		
+ 	 	 			 		foreach($titles as $t) {
+ 	 	 			 			if($t == strtolower($anime->title_english) ||
+ 	 	 			 			   $t == strtolower($anime->title_romaji) ||
+ 	 	 			 			   $t == strtolower($anime->title_japanese)) {
+ 	 	 			 			   	
+ 	 	 			 			   $temp++;
+ 	 	 			 			   
+ 	 	 			 			   if($temp > 1) { 	 			 			   	
+	 	 	 			 			   if($t == strtolower($anime->title_english) ||
+	 	 	 			 			   	  $t == strtolower($anime->title_romaji)) {
+	 	 	 			 			   	  	
+	 	 	 			 			   	  $anime_id = $a['id'];
+	 	 	 			 			   	  
+	 	 	 			 			   } 	 	 			 			   
+ 	 	 			 			   } else {
+ 	 	 			 			   	 $anime_id = $a['id'];
+ 	 	 			 			   }
+ 	 	 			 			}
+ 	 	 			 		}	
+ 	 	 			 		
+ 	 	 			 		$titles = NULL;
+				/* 			if(     (strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_english)) || 
 									(strtolower(convert_titles_to_hash($a['titles'])['alt']) == strtolower($anime->title_english)) || 
 									(strtolower(convert_titles_to_hash($a['titles'])['main']) == strtolower($anime->title_romaji)) || 
 									(strtolower(convert_titles_to_hash($a['titles'])['alt']) == strtolower($anime->title_romaji)) ||
@@ -83,7 +122,7 @@ class CharacterUpdates extends CI_Controller {
  									$anime_id = $a['id'];
  								}															
 								
-							} 
+							}  */
 						}   
 						
 						$temp = 0;
@@ -197,7 +236,7 @@ class CharacterUpdates extends CI_Controller {
 							echo "------------------------------------------------------------------------------------------------------";																
 						}
 
-						//file_put_contents($file_to_write_counter, $anime_counter);
+						
 						$anime_id = null;
 					}  
 					
@@ -206,6 +245,8 @@ class CharacterUpdates extends CI_Controller {
 				} else {
 					$failed_request++;
 				}
+				
+				file_put_contents($file_to_write_counter, $anime_counter);
 				
 				//fclose($fp);							
 			}

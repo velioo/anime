@@ -9,7 +9,7 @@ Class Search_model extends CI_Model {
 	}
 	
 	function get_latest_anime() {
-		$query = $this->db->query("SELECT id,slug,titles,poster_image_file_name FROM animes WHERE start_date <= CURDATE() ORDER BY start_date DESC, created_at DESC LIMIT 28");	
+		$query = $this->db->query("SELECT id,slug,titles,poster_image_file_name FROM animes WHERE start_date <= CURDATE() ORDER BY start_date DESC LIMIT 28");	
 		return $query->result_array();
 	}
 	

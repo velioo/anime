@@ -139,6 +139,72 @@ class Characters extends CI_Controller {
 		}
 	}
 	
+	public function top_loved_characters() {
+				
+			$this->load->model('characters_model');
+			$this->load->library('pagination');
+				
+			$config = $this->configure_pagination();
+		
+			$config['base_url'] = site_url("characters/top_loved_characters");
+			$config['per_page'] = 25;
+				
+			if($this->input->get('page') != NULL and is_numeric($this->input->get('page')) and $this->input->get('page') > 0) { //calculate the offset for next page
+				$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+			} else {
+				$start = 0;
+			}
+			
+			$status = 1;
+				
+			$query = $this->characters_model->get_all_characters($status, $config['per_page'], $start);
+			$config['total_rows'] = $this->characters_model->get_all_characters_count($status);
+			
+			if($query !== FALSE) {
+				$this->pagination->initialize($config);
+				$data['pagination'] = $this->pagination->create_links();
+				$data['characters'] = $query;
+			}
+		
+			$data['title'] = 'Top Loved Characters';
+			$data['css'] = 'top_characters.css';
+			$data['header'] = 'Top Loved Characters';
+			$this->load->view('top_characters', $data);
+	}
+	
+	public function top_hated_characters() {
+	
+		$this->load->model('characters_model');
+		$this->load->library('pagination');
+	
+		$config = $this->configure_pagination();
+	
+		$config['base_url'] = site_url("characters/top_hated_characters");
+		$config['per_page'] = 25;
+	
+		if($this->input->get('page') != NULL and is_numeric($this->input->get('page')) and $this->input->get('page') > 0) { //calculate the offset for next page
+			$start = $this->input->get('page') * $config['per_page'] - $config['per_page'];
+		} else {
+			$start = 0;
+		}
+			
+		$status = 0;
+	
+		$query = $this->characters_model->get_all_characters($status, $config['per_page'], $start);
+		$config['total_rows'] = $this->characters_model->get_all_characters_count($status);
+			
+		if($query !== FALSE) {
+			$this->pagination->initialize($config);
+			$data['pagination'] = $this->pagination->create_links();
+			$data['characters'] = $query;
+		}
+	
+		$data['title'] = 'Top Hated Characters';
+		$data['css'] = 'top_characters.css';
+		$data['header'] = 'Top Hated Characters';
+		$this->load->view('top_characters', $data);
+	}
+	
 	public function load_characters($anime_id=NULL) {
 		if($anime_id != NULL and is_numeric($anime_id)) {
 			

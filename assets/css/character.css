@@ -246,7 +246,7 @@ tr:nth-child(even) {
     position: relative;
     top: 0;
     right:0;
-    margin-right: -30px;
+    /* margin-right: -30px; */
     margin-top:-50px;
     color: white;
     font-size: 40px;

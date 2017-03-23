@@ -58,6 +58,9 @@
 						$character_slug.="-";
 					$character_slug.=$character['last_name'];
 				}
+				
+				$character_slug = preg_replace('/[^\00-\255]+/u', ' ', $character_slug);
+				$character_slug = str_replace(" ", "-", $character_slug);
 			   ?>
 		      <tr class="user_row">
 		        <td class="character_name_image">
@@ -76,7 +79,7 @@
 		        </td>
 		        <td class="character_appears_in">
 		        	<?php foreach($character['animes'] as $anime) {?>
-		        		<a href="<?php echo site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug']));?>" class="disable-link-decoration red-text"><?php echo convert_titles_to_hash($anime['titles'])['main'];?></a><br/>
+		        		<a href="<?php echo site_url("animeContent/anime/" . str_replace(" ", "-", $anime['slug']));?>" class="disable-link-decoration red-text related_animes"><?php echo convert_titles_to_hash($anime['titles'])['main'];?></a><br/>
 		        	<?php }?>
 		        </td>
 		        <td class="character_user_status">

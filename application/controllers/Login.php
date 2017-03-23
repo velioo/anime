@@ -213,12 +213,12 @@ class Login extends CI_Controller {
 		if($connect_existing_account != "connect") {
 			if($user !== FALSE) {			
 					$data = array(
-							'id' => $user['id'],
-							'username' => $user['username'],
-							'is_logged_in' => true,
-							'email' => $user['email'],
-							'user_avatar' => $user['profile_image'],
-							'fb_access_token' => (string) $accessToken
+						'id' => $user['id'],
+						'username' => $user['username'],
+						'is_logged_in' => true,
+						'email' => $user['email'],
+						'user_avatar' => $user['profile_image'],
+						'fb_access_token' => (string) $accessToken
 					);
 					
 					$is_admin = $this->users_model->check_if_user_is_admin($user['id']);
