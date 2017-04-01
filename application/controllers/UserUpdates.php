@@ -290,11 +290,13 @@ class UserUpdates extends CI_Controller {
 				$query = $this->users_model->disconnect_facebook($this->session->userdata['id']);
 					
 				if($query !== FALSE) {
-					redirect("userUpdates/user_settings");
-				} else {
-					$error = "Please add a password to your account before disconnecting Facebook";
-					redirect("userUpdates/user_settings/$error");
+					$message = "You successfully disconnected your facebook";
+				} else {				
+					$message = "Please add a password to your account before disconnecting Facebook";								
 				}
+				
+				$this->session->set_flashdata('message', $message);
+				redirect("userUpdates/user_settings");
 					
 			} else {
 				redirect("login/facebook_login/connect");

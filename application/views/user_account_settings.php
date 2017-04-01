@@ -33,7 +33,7 @@ $(document).ready(function() {
 		
 		<div class="tab-content">
 		  	<div id="change_acc_info_div" class="tab-pane fade in active">
-				<p class="error"><?php if (strpos($message, 'updated') !== false) { echo "<span style='color:green;'>" . $message . "</span>"; } else { echo $message; }?></p>
+				<p class="error"><?php if (stripos($message, 'successfully') !== false) { echo "<span style='color:green;'>" . $message . "</span>"; } else { echo $message; }?></p>
 				<?php 
 					$username = set_value('username') == false ? $user['username'] : set_value('username');
 					$email = set_value('email') == false ? $user['email'] : set_value('email');

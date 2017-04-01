@@ -66,7 +66,7 @@ class Login extends CI_Controller {
 					
 					redirect("users/profile/{$username}");
 				} else {
-					echo "error";
+					$this->helpers_model->server_error();
 				}
 			} else {
 				$data['incorrect'] = "Username or password is incorrect !";
@@ -271,7 +271,7 @@ class Login extends CI_Controller {
 					}
 								
 					if($email_available !== FALSE)
-						$message = "";
+						$message = "You successfully connected your facebook";
 					else 
 						$message = "The email associated with your Facebook account was taken but you were still connected.";
 					
@@ -289,9 +289,10 @@ class Login extends CI_Controller {
 							
 						$this->session->set_userdata($data);					
 					} else {
-						$message = "There was an error connecting your account.";
-						$this->session->set_flashdata('message', $message);						
+						$message = "There was an error connecting your account.";										
 					}
+					
+					$this->session->set_flashdata('message', $message);
 					redirect("userUpdates/user_settings");
 				} else {
 					$this->helpers_model->unauthorized();

@@ -20,8 +20,15 @@ if (isset($this->session->userdata['is_logged_in'])) {
 				  		'class' => 'signup_label'
 				  );
 				  
+				  $fb_info = array(
+				  		'fb_user_id' => $fb_user_id,
+				  		'fb_access_token' => $fb_access_token,
+				  		'fb_email' => $fb_email
+				  );
 				  
-				echo form_open("signUp/create_facebook_user/{$fb_user_id}/{$fb_access_token}/{$fb_email}", 'class="signloginform" autocomplete="off"'); 				
+				$this->session->set_tempdata('fb_info', $fb_info, 30);						  
+				
+				echo form_open("signUp/create_facebook_user", 'class="signloginform" autocomplete="off"');
 				echo form_label('Username', 'username', $label_attr);
 				echo form_input('username', set_value('username', $username)); 
 				echo form_error('username', '<p class="error">*', '</p>');echo "<br/>";

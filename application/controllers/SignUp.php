@@ -46,26 +46,28 @@ class SignUp extends CI_Controller {
 		}
 	}
 	
-	public function create_facebook_user($fb_user_id, $fb_access_token, $fb_email="") {
+	public function create_facebook_user() {
  		$this->load->library('form_validation');
 		
+ 		$fb_info = $this->session->tempdata('fb_info');
+ 		
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[4]|max_length[15]|callback_check_if_username_exists|alpha_dash');		
-		if($fb_email == "") {
+		if($fb_info['fb_email'] === FALSE) {
 			 $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_check_if_email_exists');
 			 $email = $this->input->post('email');
 		} else {
-			 $email = $fb_email;
+			 $email = $fb_info['fb_email'];
 		}
 		
 		if($this->form_validation->run() == FALSE) {
-			if($fb_email == "") {
+			if($fb_info['fb_email'] === FALSE) {
 				$data['header'] = 'Choose your Username and Email';
 			} else {
 				$data['header'] = 'Choose your Username';
 			}
-			$data['fb_access_token'] = $fb_access_token;
-			$data['fb_user_id'] = $fb_user_id;
-			$data['fb_email'] = $fb_email;
+			$data['fb_access_token'] = $fb_info['fb_access_token'];
+			$data['fb_user_id'] = $fb_info['fb_user_id'];
+			$data['fb_email'] = $fb_info['fb_email'];
 			$data['title'] = "Sign Up";
 			$data['css'] = 'login.css';
 			$this->load->view('fb_user_signup', $data);
@@ -75,7 +77,7 @@ class SignUp extends CI_Controller {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_URL, 'https://graph.facebook.com/me?access_token=' . $fb_access_token);
+			curl_setopt($ch, CURLOPT_URL, 'https://graph.facebook.com/me?access_token=' . $fb_info['fb_access_token']);
 			$result = curl_exec($ch);
 			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
@@ -83,7 +85,7 @@ class SignUp extends CI_Controller {
 			$result = json_decode($result);
 			
 			if(isset($result->id)) {				
-				$query = $this->users_model->create_new_user_by_facebook_login($fb_user_id,$this->input->post('username'), $email, $fb_access_token);					
+				$query = $this->users_model->create_new_user_by_facebook_login($fb_info['fb_user_id'],$this->input->post('username'), $email, $fb_info['fb_access_token']);					
 				if($query !== FALSE) {
 					$this->write_users_json(VERIFICATION_TOKEN);
 					$data = array(
@@ -92,7 +94,7 @@ class SignUp extends CI_Controller {
 							'is_logged_in' => true,
 							'email' => $query['email'],
 							'user_avatar' => $query['profile_image'],
-							'fb_access_token' => $fb_access_token
+							'fb_access_token' => $fb_info['fb_access_token']
 					);
 					$this->session->set_userdata($data);
 					$this->users_model->update_user_activity();

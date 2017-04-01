@@ -95,13 +95,13 @@ $(document).ready(function() {
 				} else if(text.length <= 70){
 					$(this).css("margin-top", "-69px");
 				} else {
-					$(this).css("margin-top", "-87px");
+					$(this).css("margin-top", "-88px");
 				}
 				var temp = $(this).text().split(" ");
 				var line_text = "", i;
 				var whole_text = "";
 				for (i = 0; i < temp.length; i++) {
-				    if((line_text.length + temp[i].length) > 26) { 
+				    if((line_text.length + temp[i].length + 1) > 26) { 
 				    	line_text = line_text + "\n";
 				    	whole_text = whole_text + line_text;
 				    	line_text = temp[i];
