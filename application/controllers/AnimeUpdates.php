@@ -98,7 +98,7 @@ class AnimeUpdates extends CI_Controller {
 			$poster_images_path = asset_url() . "poster_images/";
 			$cover_images_path = asset_url() . "anime_cover_images/";
 			$anime_id_counter = fgets($fp);
-			$anime_id_counter-=500;
+			$anime_id_counter-=1500;
 			
 			//$anime_id_counter = 0;
 				

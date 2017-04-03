@@ -10,10 +10,6 @@ body.modal-open {
 	opacity: 1;
 }
 
-.main_title {
-	background-color: white;
-}
-
 #confirm_delete_modal {
 	width: 100%;
 	height: 100%;

@@ -66,8 +66,23 @@
 		font-size: 30px;
 		text-align: center;
 		color: black;
+		background-color: white;
 		padding: 14px 15px 10px 15px;
 		border-bottom: 1px solid #D0D0D0;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.main_title2 {
+		font-size: 35px;
+		text-align: center;
+		color: black;
+		background-color: white;
+		padding: 14px 15px 10px 15px;
+		border-bottom: 1px solid #D0D0D0;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-family: "klavika", Helvetica, Arial, sans-serif;	
 	}
 	
 	.navbar-inverse {
@@ -551,7 +566,7 @@
 		 min-height:600px;
 		 overflow-y: scrollable;
 		 border: 1px solid rgba(211, 211, 211, 0.5);
-		 background: rgba(211, 211, 211, 0.5);
+		 /* background: rgba(211, 211, 211, 0.5); */
 	}	
 	
 	#slider {

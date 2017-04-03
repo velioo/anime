@@ -36,7 +36,7 @@
 				  <a href="<?php if($status == "LOVE") { echo site_url("actors/loves/{$user['username']}"); } else { echo site_url("actors/hates/{$user['username']}");}?>" class="disable-link-decoration btn btn-primary filter" id="actors_tab" style="background-color: #DEDEDE;">Actors</a>
 			</div>
 		</div>
-		<div class="main_title"><?php echo $header;?>				
+		<div class="main_title2"><?php echo $header;?>				
 		</div>	
 	    <div class="table-responsive">	    
 		   <table class="table">

@@ -24,9 +24,8 @@
 </script>
 
 <div id="wrap">
-	<div class="container-fluid scrollable" id="animes_content">	
-		<br>		
-		<p class="main_title">Top Anime</p>	
+	<div class="container-fluid scrollable" id="animes_content">		
+		<h1 class="main_title">Top Anime</h1>	
 		<div id="watchlist_content" class="col-sm-12">	
 			<div id="wrap_table_div">			
 				<div class="table-responsive">

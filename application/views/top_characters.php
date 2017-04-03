@@ -11,7 +11,7 @@
    
 <div id="wrap">
 	<div class="container-fluid scrollable" id="characters_content">
-		<p class="main_title"><?php echo $header;?></p>	
+		<h1 class="main_title"><?php echo $header;?></h1>	
 	    <div class="table-responsive">	    
 		   <table class="table">
 		    <thead>

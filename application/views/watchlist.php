@@ -98,8 +98,7 @@
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>
 	<div class="container-fluid scrollable" id="user_content">
-		<br>		
-		<p class="main_title">Watchlist</p>	
+		<h1 class="main_title2">Watchlist</h1>	
 		<div id="watchlist_content" class="col-sm-12">
 			<div id="watchlist_filter">
 				<div id="filter_group" class="btn-group" role="group">

@@ -76,6 +76,7 @@
 		  		<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_anime?search=""');?>">Browse Anime</a></li>
                   <li><a href="<?php echo site_url("animeContent/top_anime");?>">Top Anime</a></li>
+                  <li><a href="<?php echo site_url("recommendations/anime_recommendations");?>">Recommendations</a></li>
                  </ul>
 		  	</li>
 		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Characters</a>
@@ -102,6 +103,7 @@
 	      <ul class="dropdown-menu">
 		      <li><a href="<?php echo site_url('searchC/search_anime?search=""')?>">Browse Anime</a></li>
 	      	  <li><a href="<?php echo site_url("animeContent/top_anime");?>">Top Anime</a></li>
+	      	  <li><a href="<?php echo site_url("recommendations/anime_recommendations");?>">Recommendations</a></li>
 		  </ul>
 	  </li>
 	  <li class="dropdown">

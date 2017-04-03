@@ -57,13 +57,10 @@
 
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>
-	<div class="container-fluid scrollable" id="user_content">
-		<br>		
-		<p class="main_title">Reviews</p>	
+	<div class="container-fluid scrollable" id="user_content">	
+		<h1 class="main_title2">Reviews</h1>	
 		
-		<div id = "reviews_div">
-			
-		</div>
+		<div id = "reviews_div"></div>
 		<div id = "loader_image_div">
 			<img src="<?php echo asset_url() . "imgs/loading_records.gif";?>" class="loader_image">
 		</div>

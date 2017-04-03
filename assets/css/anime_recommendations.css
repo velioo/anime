@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+@import url("search_animes.css");
+
+#animes_content {
+}
+
+.main_title {
+	background-color: white;
+	margin-top: 20px;
+}
+
+.not_logged {
+ 	width: 100%; 
+ 	display: inline-block;
+ 	text-align: center;
+ 	background-color: white;
+ 	padding: 10px;
+}
+
+.anime_column {
+	border: 1px solid rgba(211, 211, 211, 0.3);
+}

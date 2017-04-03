@@ -88,7 +88,7 @@
 
 <div id="wrap">
 	<div class="container-fluid scrollable content">
-		<h1 class="main_header"><?php echo $header;?></h1>
+		<h1 class="main_title"><?php echo $header;?></h1>
 		<?php if(isset($animes_matched)) {  $counter = 0;?>			
 			<ul id="anime_filters" class="nav nav-tabs">
 			  <li class="active"><a data-toggle="tab" href="#filter_name">Name</a></li>

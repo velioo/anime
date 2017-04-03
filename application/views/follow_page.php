@@ -43,9 +43,8 @@
 
 <div id="wrap">
 	<?php include 'user_profile_top.php';?>
-	<div class="container-fluid scrollable" id="follow_content">
-		<br>		
-		<p class="main_title"><?php echo $header;?><span style="float: right;"><?php echo $users_count;?></span></p>	
+	<div class="container-fluid scrollable" id="follow_content">		
+		<h1 class="main_title2"><?php echo $header;?><span style="float: right;"><?php echo $users_count;?></span></h1>	
 		<div id="follow_div">
 			<?php foreach($users as $user_) {?>
 				<div class="user_image_div">
