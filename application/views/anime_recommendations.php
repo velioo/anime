@@ -93,17 +93,16 @@ function getScoreUrl() {
  				 </div>
 	 	</div>		
  		<?php $counter++;?>
-		<?php } } else { ?>
+		<?php } echo "</div> <br/>"; ?>
+			<div class="text-center recommend_new_button_div">
+				<a href="<?php echo site_url("recommendations/anime_recommendations");?>" class="disable-link-decoration button-black recommend_new_button">Recommend New</a>
+			</div>
+		<?php } else { ?>
 			<div class="not_logged">You should add more animes to your <a href="<?php echo site_url("watchlists/user_watchlist/{$this->session->userdata('username')}");?>" class="disable-link-decoration blue-text">Watchlist</a> for us to recommend you similar</div>
 		<?php } } else { ?>	
 			<div class="not_logged"><span class="disable-link-decoration blue-text log_in_modal">Log in</span> to receive personal recommendations</div>
 		<?php }?>
-		<?php echo "</div> <br/>"?>
-	<?php if(count($animes) > 0) {?>
-		<div class="text-center recommend_new_button_div">
-			<a href="<?php echo site_url("recommendations/anime_recommendations");?>" class="disable-link-decoration button-black recommend_new_button">Recommend New</a>
-		</div>
-	<?php }?>
+		<?php //echo "</div> <br/>";?>
 	</div>
 </div>
 
