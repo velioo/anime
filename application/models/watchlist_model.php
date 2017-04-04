@@ -203,6 +203,8 @@ Class Watchlist_model extends CI_Model {
 	function add_user_statuses($animes) {
 		$user_id = $this->session->userdata('id');
 		
+		$anime_ids = array();
+		
 		foreach($animes as $anime) {
 			$anime_ids[] = $anime['id'];
 		}

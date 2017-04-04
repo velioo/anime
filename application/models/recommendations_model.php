@@ -25,17 +25,17 @@ Class Recommendations_model extends CI_Model {
 		$all_animes = $query->result_array();	
 		shuffle($all_animes);
 		
-		$genre_names = array();
+/* 		$genre_names = array();
 		foreach($genres as $genre) {
 			$genre_names[] = $genre['name'];
-		}
+		} */
 		
 		$animes = array();		
 		$counter = 0;
 		foreach($all_animes as $anime) {
 			$temp_genres = explode(",", $anime['genres']);
 			foreach($temp_genres as $genre) {
-				if(in_array($genre, $genre_names)) {
+				if(in_array($genre, $genres)) {
 					$counter++;
 				}
 			}			
@@ -62,17 +62,36 @@ Class Recommendations_model extends CI_Model {
 		$user_id = $this->session->userdata('id');
 		$statuses = array(1, 2);
 		
-		$this->db->select('g.name, g.id, COUNT(g.id) as count, group_concat(DISTINCT a.id) as anime_ids');
+		//$this->db->select('g.name, g.id, COUNT(g.id) as count, group_concat(DISTINCT a.id) as anime_ids');
+		$this->db->select('group_concat(DISTINCT g.name) as genres');
 		$this->db->join('animes as a', 'a.id=w.anime_id');
 		$this->db->join('anime_genres as ag', 'ag.anime_id=a.id');
 		$this->db->join('genres as g', 'g.id=ag.genre_id');
 		$this->db->where('w.user_id', $user_id);
 		$this->db->where_in('w.status', $statuses);
-		$this->db->order_by('count', 'DESC');
-		$this->db->group_by('g.id');
+		//$this->db->order_by('count', 'DESC');
 		$query = $this->db->get('watchlists as w');
 		
-		return $query->result_array();
+		if($query->num_rows() > 0) {		
+			return $query->row_array()['genres'];
+		} else {
+			return NULL;
+		}
+		//return $query->result_array();
+	}
+	
+	function get_excluded_anime_ids() {
+		
+		$user_id = $this->session->userdata('id');
+		$statuses = array(1, 2, 3, 4, 5);
+		
+		$this->db->simple_query('SET group_concat_max_len = 4096');
+		$this->db->select('group_concat(w.anime_id) as anime_ids');
+		$this->db->where('w.user_id', $user_id);
+		$this->db->where_in('w.status', $statuses);
+		$query = $this->db->get('watchlists as w');
+		
+		return $query->row_array()['anime_ids'];
 	}
 	
 	function get_avarage_watch_year() {
@@ -85,14 +104,19 @@ Class Recommendations_model extends CI_Model {
 		$this->db->where_in('w.status', $statuses);
 		$query = $this->db->get('watchlists as w');
 		
-		$result_array = $query->result_array();
+		if($query->num_rows() > 0) {
 		
-		$sum = 0;
-		foreach($result_array as $year) {
-			$sum = $sum + $year['year'];
+			$result_array = $query->result_array();
+			
+			$sum = 0;
+			foreach($result_array as $year) {
+				$sum = $sum + $year['year'];
+			}
+			
+			$average_year = floor($sum/count($result_array));
+		} else {
+			return 0;
 		}
-		
-		$average_year = floor($sum/count($result_array));
 		
 		return $average_year;
 	}

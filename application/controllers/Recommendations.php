@@ -18,23 +18,26 @@ class Recommendations extends CI_Controller {
 		if($this->session->userdata('is_logged_in') === TRUE) {						
 			
 			$genres = $this->recommendations_model->get_most_watched_genres();
-			$average_year = $this->recommendations_model->get_avarage_watch_year();
 			
-			$anime_ids = array();
-			
-			foreach($genres as $genre) {
-				$temp = explode(',', $genre['anime_ids']);
-				foreach($temp as $t) {
-					if(!in_array($t, $anime_ids)) {
-						$anime_ids[] = $t;
-					}
-				}
+			if($genres !== NULL) {
+				
+				$anime_ids = $this->recommendations_model->get_excluded_anime_ids();
+				$average_year = $this->recommendations_model->get_avarage_watch_year();
+	
+				$anime_ids = explode(',', $anime_ids);
+				$genres = explode(',', $genres);
+				
+				$limit = 30;
+				
+				$animes = $this->recommendations_model->get_recommended_animes($genres, $anime_ids, $average_year, $limit);
+	
+				if(count($animes) > 0) {
+					$animes = $this->watchlist_model->add_user_statuses($animes);
+				}			
+				
+			} else {
+				$animes = array();
 			}
-			
-			$limit = 30;
-			
-			$animes = $this->recommendations_model->get_recommended_animes($genres, $anime_ids, $average_year, $limit);
-			$animes = $this->watchlist_model->add_user_statuses($animes);
 			
 			$data['animes'] = $animes;
 		} else {

@@ -12,15 +12,25 @@ $(document).ready(function() {
 	$('.rating-bg').css('background', 'url(' + star_empty_url_small + ') repeat-x top left');
 	$('.rating').css('background', 'url(' + star_fill_url_small + ') repeat-x top left');
 });
+
+function getStatusUrl() {
+	var url = "<?php echo site_url("watchlists/update_status");?>";
+	return url;
+}
+
+function getScoreUrl() {
+	var url = "<?php echo site_url("watchlists/update_score");?>";
+	return url;
+}
 </script>
 
 <div id="wrap">
 	<div class="container-fluid scrollable" id="animes_content">
-	<h1 class="main_title">Anime Recommendations</h1>	
+		<h1 class="main_title">Anime Recommendations</h1>	
 	
-	<?php $counter = 0; if(isset($animes)) foreach ($animes as $anime) { ?>
- 		<?php if ($counter == 0) echo '<div class="row">';?>
- 		<?php if (($counter % 3 == 0) and ($counter != 0)) echo '</div> <br/> <div class="row">';?>
+		<?php $counter = 0; if(isset($animes)){ if(count($animes) > 0) { foreach ($animes as $anime) { ?>
+	 		<?php if ($counter == 0) echo '<div class="row">';?>
+	 		<?php if (($counter % 3 == 0) and ($counter != 0)) echo '</div> <br/> <div class="row">';?>
  				 <?php
 	 				 $temp = $anime['titles'];	 				 
 	 				 $titles = convert_titles_to_hash($temp);	
@@ -81,13 +91,19 @@ $(document).ready(function() {
  				 	<?php }?>
 
  				 </div>
- 				 </div>		
- 				 <?php $counter++;?>
-		<?php } else { ?>	
+	 	</div>		
+ 		<?php $counter++;?>
+		<?php } } else { ?>
+			<div class="not_logged">You should add more animes to your <a href="<?php echo site_url("watchlists/user_watchlist/{$this->session->userdata('username')}");?>" class="disable-link-decoration blue-text">Watchlist</a> for us to recommend you similar</div>
+		<?php } } else { ?>	
 			<div class="not_logged"><span class="disable-link-decoration blue-text log_in_modal">Log in</span> to receive personal recommendations</div>
 		<?php }?>
 		<?php echo "</div> <br/>"?>
-	
+	<?php if(count($animes) > 0) {?>
+		<div class="text-center recommend_new_button_div">
+			<a href="<?php echo site_url("recommendations/anime_recommendations");?>" class="disable-link-decoration button-black recommend_new_button">Recommend New</a>
+		</div>
+	<?php }?>
 	</div>
 </div>
 
