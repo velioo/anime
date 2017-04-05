@@ -57,6 +57,22 @@
 	<?php if($this->session->userdata('is_logged_in')) {?>
 		$('head').append('<script src="<?php echo asset_url() . "js/notifications.js";?>">');
 	<?php }?>
+
+	$(document).ready(function() {
+
+			$(document).on('click', 'a', function (e) {
+				  e.stopPropagation();
+			});
+
+			$('a.dropdown-toggle').click(function() {
+				$(this).parent().parent().find('.dropdown-submenu').each(function() {
+					if($(this).hasClass('open')) {
+						$(this).toggleClass('open');
+					}
+				});
+				$(this).parent().toggleClass('open');
+			});
+	});
 </script>
 
 <nav class="navbar navbar-inverse navbar-fixed-top navigation">
@@ -71,15 +87,15 @@
   	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="navigation_small_button" style="font-family: cursive; font-size:10px;">Menu
 		  <span class="caret"></span></button>
 		  <ul class="dropdown-menu multi-level" role="menu" id="dropdown_list" style="border-radius: 0px;">
-		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="<?php echo site_url("home");?>" style="font-weight: normal;">Home</a>
-		  	<li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Anime</a>
+		  	<li class="dropdown-submenu"><a class="dropdown-toggle" href="<?php echo site_url("home");?>" style="font-weight: normal;">Home</a>
+		  	<li class="dropdown-submenu"><a class="dropdown-toggle" href="#" style="font-weight: normal;">Anime</a>
 		  		<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_anime?search=""');?>">Browse Anime</a></li>
                   <li><a href="<?php echo site_url("animeContent/top_anime");?>">Top Anime</a></li>
                   <li><a href="<?php echo site_url("recommendations/anime_recommendations");?>">Recommendations</a></li>
                  </ul>
 		  	</li>
-		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Characters</a>
+		    <li class="dropdown-submenu"><a class="dropdown-toggle" href="#" style="font-weight: normal;">Characters</a>
 		    	<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_character?search=""');?>">Browse Characters</a></li>
                   <li><a href="<?php echo site_url('searchC/search_people?search=""');?>">Browse Actors</a></li>
@@ -87,7 +103,7 @@
                   <li><a href="<?php echo site_url('characters/top_hated_characters');?>">Top Hated Characters</a></li>
                 </ul>
 		    </li>
-		    <li class="dropdown-submenu"><a class="dropdown-toggle disabled" data-toggle="dropdown" href="#" style="cursor:default; font-weight: normal;">Community</a>
+		    <li class="dropdown-submenu"><a class="dropdown-toggle" href="#" style="font-weight: normal;">Community</a>
 		    	<ul class="dropdown-menu">
                   <li><a href="<?php echo site_url('searchC/search_users?search=""');?>">Browse Users</a></li>
                   <li><a href="#">Anime Reviews</a></li>
