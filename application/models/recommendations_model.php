@@ -8,9 +8,7 @@ Class Recommendations_model extends CI_Model {
 		parent::__construct();
 	}
 	
-	function get_recommended_animes($genres, $anime_ids, $average_year, $limit) {
-		
-		$average_year = $average_year - 10;
+	function get_recommended_animes($anime_ids, $average_year, $limit) {
 		
 		$this->db->select('a.id,a.slug,episode_count,episode_length,synopsis,average_rating,
 							total_votes,age_rating_guide,show_type,start_date,end_date,poster_image_file_name,titles,created_at, 
@@ -25,39 +23,10 @@ Class Recommendations_model extends CI_Model {
 		$all_animes = $query->result_array();	
 		shuffle($all_animes);
 		
-/* 		$genre_names = array();
-		foreach($genres as $genre) {
-			$genre_names[] = $genre['name'];
-		} */
-		
-		$animes = array();		
-		$counter = 0;
-		foreach($all_animes as $anime) {
-			$temp_genres = explode(",", $anime['genres']);
-			foreach($temp_genres as $genre) {
-				if(in_array($genre, $genres)) {
-					$counter++;
-				}
-			}			
-			if($counter >= round(count($temp_genres)/2)) {
-				$animes[] = $anime;
-			}			
-			
-			if(count($animes) == $limit) {
-				break;
-			}
-			
-			$counter = 0;
-		}
-
-		for($i = 0; $i < count($animes); $i++) {
-			$animes[$i]['slug'] = str_replace(" ", "-", $animes[$i]['slug']);
-		}
-		
-		return $animes;
+		return $all_animes;
 	}
 	
-	function get_most_watched_genres() {
+	function get_watched_genres() {
 		
 		$user_id = $this->session->userdata('id');
 		$statuses = array(1, 2);
@@ -80,8 +49,7 @@ Class Recommendations_model extends CI_Model {
 		//return $query->result_array();
 	}
 	
-	function get_excluded_anime_ids() {
-		
+	function get_excluded_anime_ids() {		
 		$user_id = $this->session->userdata('id');
 		$statuses = array(1, 2, 3, 4, 5);
 		

@@ -369,7 +369,7 @@
 	.notifications_content {
 		display: none;
 		position: absolute;
-		width: 300px;
+		width: 320px;
 		height: auto;
 		margin-top: 64px;
 		max-height: 600px;
@@ -391,11 +391,16 @@
 	.notifications_content:before {
 	    content: "";
 	    position: absolute;
-	    left: 170px;                        
+	    left: 190px;                        
 	    margin-top: -25px;               
 	    border: solid 15px transparent;
 	    border-bottom-color: #F6F7F9;
 	    z-index: 1;
+	}
+	
+	.notifications {
+		height: 340px;
+		overflow-y: auto;
 	}
 	
 	.see_all_notifications {
@@ -412,7 +417,7 @@
 	
 	.notification {
 		width: inherit;
-		/* height: 50px; */
+		/* height: 61px; */
 		background-color: #F1F1F1;
 		border-bottom: 1px solid #e6e6e6;
 		/* border-right: 1px solid #e6e6e65;
@@ -424,9 +429,9 @@
 		transition: .3s ease-in-out;
 	}
 	
-	.notification:last-of-type {
+	/* .notification:last-of-type {
 		border-radius: 0px 0px 5px 5px;
-	}
+	} */
 	
 	.notification:hover {
 		background-color: #F8F8F8;

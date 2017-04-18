@@ -11,13 +11,10 @@ class Recommendations extends CI_Controller {
 	}
 	
 	public function anime_recommendations() {		
-		
-		$data['title'] = 'Anime Recommendations';
-		$data['css'] = 'anime_recommendations.css';
 					
 		if($this->session->userdata('is_logged_in') === TRUE) {						
 			
-			$genres = $this->recommendations_model->get_most_watched_genres();
+			$genres = $this->recommendations_model->get_watched_genres();
 			
 			if($genres !== NULL) {
 				
@@ -28,9 +25,33 @@ class Recommendations extends CI_Controller {
 				$genres = explode(',', $genres);
 				
 				$limit = 30;
+				$average_year = $average_year - 10;
 				
-				$animes = $this->recommendations_model->get_recommended_animes($genres, $anime_ids, $average_year, $limit);
-	
+				$all_animes = $this->recommendations_model->get_recommended_animes($anime_ids, $average_year, $limit);
+				/* $genre_names = array();
+				 foreach($genres as $genre) {
+				 $genre_names[] = $genre['name'];
+				 } */			
+				$animes = array();
+				$counter = 0;
+				foreach($all_animes as $anime) {
+					$temp_genres = explode(",", $anime['genres']);
+					foreach($temp_genres as $genre) {
+						if(in_array($genre, $genres)) {
+							$counter++;
+						}
+					}
+					if($counter >= round(count($temp_genres)/2)) {
+						$animes[] = $anime;
+					}						
+					if(count($animes) == $limit) {
+						break;
+					}						
+					$counter = 0;
+				}				
+				for($i = 0; $i < count($animes); $i++) {
+					$animes[$i]['slug'] = str_replace(" ", "-", $animes[$i]['slug']);
+				}				
 				if(count($animes) > 0) {
 					$animes = $this->watchlist_model->add_user_statuses($animes);
 				}			
@@ -43,6 +64,9 @@ class Recommendations extends CI_Controller {
 		} else {
 			
 		}
+		
+		$data['title'] = 'Anime Recommendations';
+		$data['css'] = 'anime_recommendations.css';
 		
 		$this->load->view('anime_recommendations', $data);
 	}

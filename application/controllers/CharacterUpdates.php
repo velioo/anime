@@ -30,8 +30,8 @@ class CharacterUpdates extends CI_Controller {
 			$anime_id = 0;			
 			$counter = 0;
 			
-			//$anime_counter-=5000;
-			$anime_counter = 8500;
+			$anime_counter-=5000;
+			//$anime_counter = 8500;
 			
 			while($failed_request < 100) {
 				

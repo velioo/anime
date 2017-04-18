@@ -24,7 +24,19 @@ Class Notifications_model extends CI_Model {
 			}		
 		}
 		$query = $this->db->get('notification_users as nu');
-		return $query->result_array();;
+		return $query->result_array();
+	}
+	
+	function get_unseen_notifications() {
+		$user_id = $this->session->userdata('id');
+		$this->db->select('nu.seen,u.username,u.profile_image, n.*');
+		$this->db->join('notifications as n', 'n.id=nu.notification_id');
+		$this->db->join('users as u', 'u.id=n.creator_id');
+		$this->db->where("nu.user_id = {$user_id}");
+		$this->db->where('nu.seen', 0);
+		$this->db->order_by("n.created_at", "asc"); // because prepend in javascript
+		$query = $this->db->get('notification_users as nu');
+		return $query->result_array();
 	}
 	
 	function get_unseen_count() {

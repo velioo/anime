@@ -160,6 +160,8 @@ $('.watchlist_item').click(function() {
 	var anime_id = getAnimeId();
 	var self = $(this);
 	
+	self.parent().removeClass('w3-show');
+	
     $.ajax({
         method: "POST",
         url: url,
@@ -188,7 +190,7 @@ $('.watchlist_item').click(function() {
 	    		self.hide();
 	    	default:
 	    		break;
-	    	}
+	    	}    	
     	} else {
     		window.alert("Failed to update watchlist");
     	}

@@ -80,7 +80,9 @@ $(document).ready(function() {
 		var url = getStatusUrl();
 		var anime_id = $(this).parent().parent().parent().find('.title').data('id');
 		var self = $(this);
-
+		
+		self.parent().removeClass('w3-show');
+		
 	    $.ajax({
 	        method: "POST",
 	        url: url,

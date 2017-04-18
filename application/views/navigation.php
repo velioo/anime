@@ -207,7 +207,7 @@
    		</ul>
    		<div class="notifications_content">
 		   	<a href="<?php echo site_url("notifications/all_notifications");?>" class="disable-link-decoration"><div class="see_all_notifications gray-text">See all notifications</div></a>
-		   	<div class="notifications">
+		   	<div class="notifications" id="notifications">
 		   	
 		   	</div>
 		</div>
