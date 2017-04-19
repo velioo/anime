@@ -241,15 +241,16 @@ input[type=checkbox].css-checkbox {
 	height:360px;
 	margin-left:10px;
 	padding-left: 0px;
+	padding-right: 0px;
 	background-color: white;
 }
 
 .title_paragraph {
 	padding-top:10px;
 	line-height: 15px;
-	height:35px;
+	min-height:35px;
 	text-align: center;
-	margin-left: 10px;
+	/* margin-left: 10px; */
 	vertical-align: middle;
 }
 
