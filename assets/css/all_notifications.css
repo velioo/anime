@@ -7,7 +7,7 @@
 	text-align: left;
 	width: 70%;
 	height: auto;
-	margin-top: 64px;
+/* 	margin-top: 64px; */
 	margin-bottom: 50px;
 	background-color: #F6F7F9;
 	border-radius: 5px;
@@ -15,4 +15,8 @@
 	margin-right: 10px;
 	box-shadow: 0 0 15px rgba(0,0,0,.1);
 	transition: visibility 0s, opacity 0.5s linear;
+}
+
+.wrap_notification_username_description {
+	width: 90%;
 }

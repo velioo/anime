@@ -261,6 +261,12 @@
 		object-fit: cover;
 	}
 	
+	.user_image.notify {
+		height: 100%; 
+		width: 100%; 
+		object-fit: cover;
+	}
+	
 	#submit_button {
 		background-color:#2F343B; 
 		border:none;		
@@ -439,7 +445,8 @@
 	
 	.wrap_notification_username_description {
 		display: inline-block;
-		width: 240px;
+		width: 242px;
+		margin-left: 3px;
 	}
 	
 	.notification_username {

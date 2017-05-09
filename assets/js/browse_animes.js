@@ -186,6 +186,8 @@ $(document).ready(function() {
 		var anime_id = $(this).parent().data('id');
 		var self = $(this);
 	
+		self.parent().removeClass('w3-show');
+		
 	    $.ajax({
 	        method: "POST",
 	        url: url,

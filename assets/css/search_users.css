@@ -30,14 +30,14 @@ td {
     background-color: #F2F1EC;
 }
 
-.user_image_div {
+.user_image_div.search {
 	width:30px;
 	height:30px; 
 	display:inline-block;
 	margin-right: 5px;
 } 
 
-.user_image {
+.user_image.search {
 	image-rendering: crisp-edges;
 	height: 100%; 
 	width: 100%; 

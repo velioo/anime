@@ -328,7 +328,7 @@
 			      <tr class="user_row">
 			        <td>
 				        <a href="<?php echo site_url("users/profile/{$user['username']}");?>" class="disable-link-decoration red-text">
-				        	<div class="user_image_div"><img src="<?php if($user['profile_image'] != "") echo asset_url() . "user_profile_images/{$user['profile_image']}"; else echo asset_url() . "imgs/Default_Avatar.jpg";?>" class="user_image">
+				        	<div class="user_image_div search"><img src="<?php if($user['profile_image'] != "") echo asset_url() . "user_profile_images/{$user['profile_image']}"; else echo asset_url() . "imgs/Default_Avatar.jpg";?>" class="user_image search">
 				        	</div>
 				        	<?php echo $user['username'];?>
 				        </a>

@@ -12,6 +12,7 @@
 
 <div id="wrap">
 	<div class="container-fluid scrollable" style="text-align: center;">
+		<h1 class="main_title">Notifications</h1>
 	   	<div class="notifications_content_all">
 	   		
 	   	</div>

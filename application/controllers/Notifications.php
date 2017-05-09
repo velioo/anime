@@ -143,9 +143,9 @@ class Notifications extends CI_Controller {
 			}
 		
 			$element ='<a href="' . $link .'" class="disable-link-decoration"> <div class="notification" data-id="'. $notification['id'] .'" >
-								<div class="user_image_div notify"><img src="' . asset_url() . "user_profile_images/{$notification['profile_image']}" . '" class="user_image"></div>
+								<div class="user_image_div notify"><img src="' . asset_url() . "user_profile_images/{$notification['profile_image']}" . '" class="user_image notify"></div>
 								<div class="wrap_notification_username_description">
-										<span class="notification_username">&nbsp;' . $notification['username'] . '&nbsp;</span><span class="description">'. $notification['description'] .'</span>
+										<span class="notification_username">' . $notification['username'] . '&nbsp;</span><span class="description">'. $notification['description'] .'</span>
 										<span class="ago">' . $time_ago .'</span>
 								</div>
 							</div></a>';

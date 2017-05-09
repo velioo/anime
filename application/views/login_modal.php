@@ -20,7 +20,7 @@
 		         <h3 class="login_modal_title">Login</h3>
 		    </div>
 		    <div class="modal-body modal_login">
-		    	 <p id="login_error" style="color: red; display: none;">Username or password is incorrect</p>
+		    	<p id="login_error" style="color: red; display: none;">Username or password is incorrect</p>
 		        <label for="username" class="modal_login">Username</label><input id="modal_username" type="text" name="username" class="modal_login">
 		        <label for="password" class="modal_login">Password</label><input id="modal_password" type="password" name="password" class="modal_login">
 		    </div>
