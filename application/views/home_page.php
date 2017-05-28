@@ -12,10 +12,10 @@
 		<h5>Latest Anime</h5>
 	    <?php include 'slider.php';?>
 	    <br/>
-	    <button onclick="myFunction()">Try it</button>
+	   <!--  <button onclick="myFunction()">Try it</button> --> 
 		<p id="demo"></p>
 	
-		   <?php echo '<a href="' . site_url("home/test_v3") . '">Get JSON</a>'; ?>
+		   <?php //echo '<a href="' . site_url("home/test_v3") . '">Get JSON</a>'; ?>
 		   <?php //echo '<a href="' . site_url("CharacterUpdates/get_add_characters_actors/8ghj30jhkll70gvk19f8kkujai90816k") . '">Update Characters</br></a>'; ?>
 		   <?php //echo '<a href="' . site_url("characterUpdates/write_actors_json/8ghj30jhkll70gvk19f8kkujai90816k") . '">Write actors json<br/></a>'; ?>
 		   <?php //echo '<a href="' . site_url("posts/delete_comment/82") . '">Test Comment</a></br>'; ?>
