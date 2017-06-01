@@ -236,11 +236,13 @@ Class Characters_model extends CI_Model {
 		
 		if($details) {		
 			
-			$characters = $this->add_characters_related_animes($characters);
-			
-			if($this->session->userdata('is_logged_in')) {
-				$characters = $this->add_character_user_status($characters, TRUE);
-			}
+		    if(count($characters) > 0) {
+    			 $characters = $this->add_characters_related_animes($characters);
+    
+    			if($this->session->userdata('is_logged_in')) {
+    				$characters = $this->add_character_user_status($characters, TRUE);
+    			}		
+		    }
 		}
 
 		return $characters;

@@ -277,8 +277,8 @@ Class Search_model extends CI_Model {
 							      AGAINST('{$character}' IN BOOLEAN MODE) {$limit_offset}");
 						
 			$result_array = $query->result_array();
-			
-			if($all !== TRUE) {			
+
+			if($all !== TRUE && count($result_array) > 0) {				    
 				$result_array = $this->add_characters_related_animes($result_array);
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_character_user_status($result_array);
@@ -299,7 +299,7 @@ Class Search_model extends CI_Model {
 			}			
 		}
 	
-		if(count($result_array) > 0) {
+		if(count($result_array) > 0) {	    
 			return $result_array;
 		} else {
 			$query = $this->db->query("SELECT id,first_name,last_name,alt_name,image_file_name,created_at FROM characters
@@ -307,7 +307,7 @@ Class Search_model extends CI_Model {
 			
 			$result_array = $query->result_array();
 			
-			if($all !== TRUE) {
+			if($all !== TRUE && count($result_array) > 0) {
 				$result_array = $this->add_characters_related_animes($result_array);
 				if($this->session->userdata('is_logged_in')) {
 					$result_array = $this->add_character_user_status($result_array);
@@ -384,7 +384,7 @@ Class Search_model extends CI_Model {
 		
 		foreach($result_array as $character) {
 			$character_ids[] = $character['id'];
-		}
+		}		
 		
 		$this->db->select('c.id as character_id, a.id as id, a.slug as slug, a.titles as titles');
 		$this->db->join('character_animes as ca', 'ca.character_id = c.id');
@@ -401,7 +401,7 @@ Class Search_model extends CI_Model {
 				} 
 			}			
 		}
-
+		
 		return $result_array;		
 	}
 	

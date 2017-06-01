@@ -54,8 +54,8 @@ class AnimeContent extends CI_Controller {
 					}
 					
 					$user_stats = $this->animes_model->get_users_count_grouped_by_status($anime_id);
-					
-					$user_stats = process_and_return_stats($user_stats);
+
+					$user_stats = process_and_return_stats($user_stats);	
 					
 					if($user_stats !== FALSE) {
 						$data['user_stats'] = $user_stats;

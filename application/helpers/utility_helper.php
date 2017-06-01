@@ -1,4 +1,5 @@
 <?php
+
 function asset_url(){
    return base_url().'assets/';
 }
@@ -398,7 +399,7 @@ function get_status_square($status) {
 }
 
 function process_and_return_stats($user_stats) {
-	$processed_stats = array(0, 0, 0, 0, 0);
+	$processed_stats = array("0", "0", "0", "0", "0");
 	for($i = 0; $i < count($user_stats); $i++) {
 		switch($user_stats[$i]['status']) {
 			case 1:
